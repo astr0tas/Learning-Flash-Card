@@ -2,11 +2,10 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Config\Routes;
 
-class AuthenticationController extends AbstractController
+class AuthenticationController extends BaseController
 {
   #[Route(path: Routes::LOGIN_ROUTE['URL'], name: Routes::LOGIN_ROUTE['NAME'])]
   public function LoginAction() {}
