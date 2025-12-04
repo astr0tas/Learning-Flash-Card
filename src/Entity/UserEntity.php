@@ -20,6 +20,9 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
   #[ORM\Column(type: 'string')]
   private string $password;
 
+  #[ORM\Column(type: 'string', length: 255, unique: true)]
+  private string $username;
+
   #[ORM\Column(type: 'string', length: 255)]
   protected string $firstName;
 
@@ -51,7 +54,7 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
    */
   public function getUserIdentifier(): string
   {
-    return (string) $this->email;
+    return (string) $this->username;
   }
 
   /**

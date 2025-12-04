@@ -1,0 +1,24 @@
+login:
+  title: "Đăng nhập"
+  submit_button: "Đăng nhập"
+  username_or_email: "Tên đăng nhập hoặc Email"
+  password: "Mật khẩu"
+  forgot_password: "Quên mật khẩu?"
+  remember_me: "Ghi nhớ đăng nhập"
+  register: "Đăng ký"
+  login_with: "Đăng nhập với {service_name}"
+
+logout: "Đăng xuất"
+
+register:
+  title: "Đăng ký"
+
+forgot_password:
+  title: "Quên mật khẩu"
+  username_or_email: "Tên đăng nhập hoặc Email"
+  reset_password: "Đặt lại mật khẩu"
+
+reset_password:
+  title: "Đặt lại mật khẩu"
+  new_password: "Mật khẩu mới"
+  confirm_new_password: "Xác nhận mật khẩu mới"

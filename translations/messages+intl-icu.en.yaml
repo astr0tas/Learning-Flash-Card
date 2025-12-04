@@ -1,0 +1,24 @@
+login:
+  title: "Login"
+  submit_button: "Log In"
+  username_or_email: "Username or Email"
+  password: "Password"
+  forgot_password: "Forgot Password?"
+  remember_me: "Remember Me"
+  register: "Register"
+  login_with: "Login with {service_name}"
+
+logout: "Logout"
+
+register:
+  title: "Register"
+
+forgot_password:
+  title: "Forgot Password"
+  username_or_email: "Username or Email"
+  reset_password: "Reset Password"
+
+reset_password:
+  title: "Reset Password"
+  new_password: "New Password"
+  confirm_new_password: "Confirm New Password"
