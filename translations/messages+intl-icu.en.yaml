@@ -1,14 +1,17 @@
 login:
-  title: "Login"
-  submit_button: "Log In"
+  title: "Sign In"
+  header: "Sign In"
+  submit_button: "Sign In"
   username_or_email: "Username or Email"
   password: "Password"
   forgot_password: "Forgot Password?"
   remember_me: "Remember Me"
-  register: "Register"
-  login_with: "Login with {service_name}"
+  dont_have_account: "Don't have an account?"
+  register: "Sign up now"
+  login_with: "Sign In with {service_name}"
+  or: "or"
 
-logout: "Logout"
+logout: "Sign Out"
 
 register:
   title: "Register"
@@ -22,3 +25,6 @@ reset_password:
   title: "Reset Password"
   new_password: "New Password"
   confirm_new_password: "Confirm New Password"
+
+verify_email:
+  title: "Verify Email Address"

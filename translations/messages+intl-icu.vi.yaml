@@ -1,12 +1,15 @@
 login:
   title: "Đăng nhập"
+  header: "Đăng nhập"
   submit_button: "Đăng nhập"
   username_or_email: "Tên đăng nhập hoặc Email"
   password: "Mật khẩu"
   forgot_password: "Quên mật khẩu?"
   remember_me: "Ghi nhớ đăng nhập"
-  register: "Đăng ký"
-  login_with: "Đăng nhập với {service_name}"
+  dont_have_account: "Bạn chưa có tài khoản?"
+  register: "Đăng ký ngay"
+  login_with: "Đăng nhập bằng {service_name}"
+  or: "hoặc"
 
 logout: "Đăng xuất"
 
@@ -22,3 +25,6 @@ reset_password:
   title: "Đặt lại mật khẩu"
   new_password: "Mật khẩu mới"
   confirm_new_password: "Xác nhận mật khẩu mới"
+
+verify_email:
+  title: "Xác minh địa chỉ email"

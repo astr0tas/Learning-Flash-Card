@@ -1,0 +1,13 @@
+<div class="w-full relative component-input">
+	<input {% if name|default(id) is not empty %} name="{{ name|default(id) }}" {% endif %} {% if id|default(name) is not empty %} id="{{ id|default(name) }}" {% endif %} {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: (error is empty ? "border border-gray-400 w-full rounded-lg px-3.5 py-3 text-#{size} focus:ring-blue-200 outline-none focus:ring-2 focus:ring-offset-0 focus:ring-offset-white focus:border-blue-500 transition-all peer" : "border border-[var(--red)] w-full rounded-lg px-3.5 py-3 text-#{size} text-red-900 placeholder-red-700 focus:ring-red-300 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer" ) } ) }} placeholder="">
+	{% if label is not empty %}
+		<label {% if name|default(id) is not empty %} for="{{ name|default(id) }}" {% endif %} {% if error is not empty %} class="pointer-events-none absolute left-2.5 -top-2.5 max-w-[calc(100%-18px)] truncate px-1 text-xs text-[var(--red)] transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-{{size}} peer-focus:-top-2.5 peer-focus:text-xs text-[var(--red)] peer-focus:text-[var(--red)]" {% else %} class="pointer-events-none absolute left-2.5 -top-2.5 max-w-[calc(100%-18px)] truncate px-1 text-xs text-zinc-400 transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-{{size}} peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-blue-400" {% endif %}>
+			{{ label }}
+		</label>
+	{% endif %}
+	{% if error is not empty %}
+		<div class="mt-1 text-{{ size is same as('sm') ? 'xs' : 'sm'}} text-[var(--red)]">
+			{{ error }}
+		</div>
+	{% endif %}
+</div>

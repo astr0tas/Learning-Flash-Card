@@ -54,4 +54,7 @@ class AuthenticationController extends BaseController
       // Handle reset password submission
     }
   }
+
+  #[Route(path: Routes::EMAIL_VERIFICATION_ROUTE['URL'], name: Routes::EMAIL_VERIFICATION_ROUTE['NAME'], methods: ['GET'])]
+  public function EmailVerificationAction(Request $request) {}
 }

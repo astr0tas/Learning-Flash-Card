@@ -1,0 +1,11 @@
+<div class="fixed bottom-5 right-5 z-50 flex flex-col gap-2" x-data="{ expanded: false }">
+	<div x-show="expanded" x-collapse.duration.100ms class="flex flex-col gap-2">
+		<div class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button"></div>
+		<div class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button"></div>
+	</div>
+	<div class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button" @click="expanded = !expanded">
+		<div class="w-6 h-6">
+			{{include('icons/setting.svg')}}
+		</div>
+	</div>
+</div>

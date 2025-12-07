@@ -26,6 +26,16 @@ class Routes
     'NAME' => 'reset_password',
   ];
 
+  public const EMAIL_VERIFICATION_ROUTE = [
+    'URL' => '/verify-email',
+    'NAME' => 'verify_email',
+  ];
+
+  public const SET_LOCALE_ROUTE = [
+    'URL' => '/set-locale/{locale}',
+    'NAME' => 'set_locale',
+  ];
+
   public const HOME_ROUTE = [
     'URL' => '/',
     'NAME' => 'home',

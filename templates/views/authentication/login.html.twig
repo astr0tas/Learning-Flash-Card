@@ -1,6 +1,39 @@
 {% extends 'layouts/authentication.html.twig' %}
 
-{% block title %}{{ 'login.title'|trans }}{% endblock %}
+{% block title %}
+	{{ 'login.title'|trans }}
+{% endblock %}
 
 {% block auth_body %}
+	<h1 class="font-bold text-2xl text-center">{{ 'login.header'|trans }}</h1>
+	<div class="my-5 flex flex-col gap-3">
+		<div class="flex-1 flex items-center justify-center gap-3 border-[1px] border-gray-400 rounded-md py-2 hover:cursor-pointer hover:opacity-90 active:opacity-80 select-none">
+			<img class="w-8 h-8" src="/svg/google.svg"/>
+			{{ 'login.login_with'|trans({'service_name': 'Google'}) }}
+		</div>
+		{# <div class="flex-1 flex items-center justify-center gap-3 border-[1px] border-gray-400 rounded-md py-2 hover:cursor-pointer hover:opacity-90 active:opacity-80 select-none">
+											<img class="w-9 h-9 ms-3" src="/svg/facebook.svg"/>
+											{{ 'login.login_with'|trans({'service_name': 'Facebook'}) }}
+										</div> #}
+	</div>
+	<div class="my-5 flex items-center">
+		<div class="border-t-[1px] flex-1 border-gray-400"></div>
+		<p class="text-center mx-5 pb-1">{{ 'login.or'|trans }}</p>
+		<div class="border-t-[1px] flex-1 border-gray-400"></div>
+	</div>
+	<form action="{{ constant('App\\Config\\Routes::LOGIN_ROUTE')['URL'] }}" method="POST">
+		<div>
+			<twig:Input name="username_or_email" label="{{ 'login.username_or_email'|trans }}" aria-label="{{ 'login.username_or_email'|trans }}" type="text" autocomplete="username"/></div>
+		<div class="my-3">
+			<twig:Input name="password" label="{{ 'login.password'|trans }}" aria-label="{{ 'login.password'|trans }}" type="password" autocomplete="current-password"/>
+		</div>
+		<div class="flex justify-between items-center">
+			<twig:ClickInput name="remember_me" label="{{ 'login.remember_me'|trans }}" type="checkbox"/>
+			<a class="text-[var(--blue)] hover:cursor-pointer hover:opacity-90 active:opacity-80" href="{{ constant('App\\Config\\Routes::FORGOT_PASSWORD_ROUTE')['URL'] }}">{{ 'login.forgot_password'|trans }}</a>
+		</div>
+		<twig:Button type="button" variant="primary" class="my-5">{{'login.submit_button'|trans }}</twig:Button>
+		<p class="text-center">{{ 'login.dont_have_account'|trans }}
+			<a href="{{ constant('App\\Config\\Routes::REGISTER_ROUTE')['URL'] }}" class="text-[var(--blue)] hover:cursor-pointer hover:opacity-90 active:opacity-80">{{ 'login.register'|trans }}</a>
+		</p>
+	</form>
 {% endblock %}

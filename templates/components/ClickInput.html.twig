@@ -1,0 +1,4 @@
+<div class="flex gap-1.5 items-center cursor-pointer select-none hover:opacity-80 active:opacity-70" x-data="{ selected: false }" @click="selected = !selected; $refs.input.checked = selected;" x-init="selected = $refs.input.checked">
+	<input {% if type is not empty %} type="{{ type }}" {% endif %} {% if name|default(id) is not empty %} name="{{ name|default(id) }}" {% endif %} {% if id|default(name) is not empty %} id="{{ id|default(name) }}" {% endif %} {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{attributes.defaults({class:"#{element_class} cursor-pointer"} )}} x-ref="input"/>
+	<label {% if name|default(id) is not empty %} for="{{ name|default(id) }}" {% endif %} class="select-none text-{{size}} cursor-pointer" @click="selected = !selected; $refs.input.checked = selected;">{{ label }}</label>
+</div>

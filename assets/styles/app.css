@@ -1,3 +1,92 @@
-body {
+/* body {
     background-color: skyblue;
+} */
+
+:root{
+  --dark-theme-bg-color: #0A0A0A;
+  --blue:#2b7fff;
+  --red:#fb2c36;
+  --green:#00c951;
+  --white:#ffffff;
+}
+
+.float-labels {
+  transition-property: top, font-size, line-height;
+  transition-duration: 150ms;
+  pointer-events: none;
+  transition-timing-function: linear;
+}
+
+.dark_theme{
+  background: var(--dark-theme-bg-color);
+  color: var(--white);
+
+  .component-input label {
+    background-color: var(--dark-theme-bg-color);
+  }
+
+  .app-setting-button {
+    background-color: #1f1f1f;
+    color: #e5e7eb; /* text-gray-200 */
+  }
+}
+
+.light_theme{
+  .component-input label{
+    background-color: var(--white);
+  }
+
+  .app-setting-button {
+    /* border-[1px] border-gray-400 */
+    border: 1px solid #9ca3af;
+    /* bg-white */
+    background-color: #ffffff;
+    /* text-black */
+    color: #000000;
+    /* shadow-xl */
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  }
+}
+
+input[type="checkbox"]{
+  appearance: none; /* Removes default browser styling */
+  -webkit-appearance: none; /* For Webkit browsers */
+  border: 1px solid #6a7282; /* Border for the custom checkbox */
+  border-radius: 3px; /* Optional: rounded corners */
+  background-color: transparent; /* Default background color for unchecked state */
+  cursor: pointer;
+  position: relative; /* For positioning the checkmark */
+  accent-color: var(--blue);
+}
+
+/* Style the checked state */
+input[type="checkbox"]:checked {
+  background-color: var(--blue); /* Background color when checked */
+  border-color: var(--blue); /* Border color when checked */
+}
+
+/* Create the checkmark using a pseudo-element */
+input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+
+  /* 1. Position the top-left corner in the exact center */
+  left: 40%;
+  top: 55%;
+
+  /* 2. Scale size using percentages of the checkbox size
+     (Works for 12px, 16px, and 20px automatically) */
+  width: 40%;
+  height: 75%;
+
+  /* 3. The Checkmark Style */
+  border: solid var(--white);
+  /* 2px is generally the sweet spot for 12-20px boxes */
+  border-width: 0 2px 2px 0;
+
+  /* 4. The Magic Centering */
+  /* translate(-50%, -50%) moves the element back to center it.
+     rotate(35deg) creates the check shape.
+     translateY(-25%) pulls it slightly UP so it looks optically centered. */
+  transform: translate(-50%, -50%) rotate(35deg) translateY(-25%);
 }
