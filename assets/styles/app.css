@@ -71,7 +71,7 @@ input[type="checkbox"]:checked::after {
   position: absolute;
 
   /* 1. Position the top-left corner in the exact center */
-  left: 40%;
+  left: 39%;
   top: 55%;
 
   /* 2. Scale size using percentages of the checkbox size
