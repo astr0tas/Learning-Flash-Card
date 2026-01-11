@@ -2,7 +2,7 @@ login:
   title: "Đăng nhập"
   header: "Đăng nhập"
   submit_button: "Đăng nhập"
-  username_or_email: "Tên đăng nhập hoặc Email"
+  email: "Email"
   password: "Mật khẩu"
   forgot_password: "Quên mật khẩu?"
   remember_me: "Ghi nhớ đăng nhập"
@@ -10,6 +10,7 @@ login:
   register: "Đăng ký ngay"
   login_with: "Đăng nhập bằng {service_name}"
   or: "hoặc"
+  incorrect_credentials: "Email hoặc mật khẩu không đúng."
 
 logout: "Đăng xuất"
 
@@ -18,7 +19,7 @@ register:
 
 forgot_password:
   title: "Quên mật khẩu"
-  username_or_email: "Tên đăng nhập hoặc Email"
+  email: "Email"
   reset_password: "Đặt lại mật khẩu"
 
 reset_password:
@@ -28,3 +29,13 @@ reset_password:
 
 verify_email:
   title: "Xác minh địa chỉ email"
+
+dashboard:
+  title: "Trang chủ"
+
+validation:
+  email:
+    not_blank: "Email không được để trống."
+    invalid: "Định dạng email không hợp lệ."
+  password:
+    not_blank: "Mật khẩu không được để trống."

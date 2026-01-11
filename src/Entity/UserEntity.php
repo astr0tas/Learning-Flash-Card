@@ -7,21 +7,20 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 use App\Config\Constants;
 use App\Repository\UserRepository;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
 class UserEntity extends BaseEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
-  #[ORM\Column(type: 'string', length: 255, unique: true)]
+  #[ORM\Column(type: 'string', length: 255)]
   private string $email;
 
   #[ORM\Column(type: 'json')]
   private array $roles = [];
 
-  #[ORM\Column(type: 'string')]
+  #[ORM\Column(type: 'string', nullable: true)]
   private string $password;
-
-  #[ORM\Column(type: 'string', length: 255, unique: true)]
-  private string $username;
 
   #[ORM\Column(type: 'string', length: 255)]
   protected string $firstName;
@@ -35,6 +34,9 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
   #[ORM\Column(type: 'string', length: 12, nullable: true)]
   protected string $phone;
 
+  #[ORM\Column(type: 'datetime', nullable: true)]
+  private ?\DateTimeInterface $deletedAt = null;
+
   public function getEmail(): string
   {
     return $this->email;
@@ -47,6 +49,20 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
     return $this;
   }
 
+  public function setFirstName(string $firstName): self
+  {
+    $this->firstName = $firstName;
+
+    return $this;
+  }
+
+  public function setLastName(string $lastName): self
+  {
+    $this->lastName = $lastName;
+
+    return $this;
+  }
+
   /**
    * The public representation of the user (e.g. a username, an email address, etc.)
    *
@@ -54,7 +70,7 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
    */
   public function getUserIdentifier(): string
   {
-    return (string) $this->username;
+    return (string) $this->email;
   }
 
   /**
@@ -64,7 +80,7 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
   {
     $roles = $this->roles;
     // guarantee every user at least has ROLE_USER
-    $roles[] = Constants::DEFAULT_ROLE;
+    $roles[] = Constants::ROLES['user'];
 
     return array_unique($roles);
   }
@@ -84,11 +100,23 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
     return $this->password;
   }
 
-  public function setPassword(string $password): self
+  public function setPassword(string $password, bool $hash = true): self
   {
-    $this->password = $password;
+    if ($hash) {
+      $hasedPassword = password_hash($password, PASSWORD_BCRYPT, [
+        'cost' => Constants::BCRYPT_COST,
+      ]);
+      $this->password = $hasedPassword;
+    } else {
+      $this->password = $password;
+    }
 
     return $this;
+  }
+
+  public function comparePassword(string $plainPassword): bool
+  {
+    return password_verify($plainPassword, $this->password);
   }
 
   /**

@@ -4,11 +4,22 @@ namespace App\Config;
 
 class Constants
 {
-  public const DEFAULT_ROLE = 'ROLE_USER';
-  public const ROLE_ADMIN = 'ROLE_ADMIN';
-  public const DARK_MODE_COOKIE_NAME = 'dark_mode';
-  public const LOCALE_COOKIE_NAME = 'locale';
-  public const VI_LOCALE = 'vi';
-  public const EN_LOCALE = 'en';
-  public const DEFAULT_LOCALE = self::VI_LOCALE;
+  public const ROLES = [
+    'user' => 'ROLE_USER',
+    'admin' => 'ROLE_ADMIN',
+    'public' => 'PUBLIC_ACCESS',
+  ];
+  public const COOKIES = [
+    'dark_mode' => 'dark_mode',
+    'locale'    => 'locale',
+  ];
+  public const LOCALES = [
+    'vi' => 'vi',
+    'en' => 'en',
+  ];
+  public const DEFAULT_LOCALE = self::LOCALES['vi'];
+  public const BCRYPT_COST = 12;
+  public const SESSION = [
+    'google_oauth_password' => 'google_oauth_password',
+  ];
 }

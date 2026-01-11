@@ -13,7 +13,7 @@ final class Button
   public function mount(string $variant): void
   {
     $this->element_class = match ($variant) {
-      "primary" => "bg-[var(--blue)] hover:opacity-90 text-white font-semibold py-2 px-4 rounded",
+      "primary" => "bg-[var(--blue)] hover:opacity-80 text-white font-semibold py-2 px-4 rounded",
       default => "",
     };
   }

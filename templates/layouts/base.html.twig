@@ -7,13 +7,17 @@
 			{% endblock %}
 		</title>
 		{# <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>"> #}
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+		<meta
+		name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<!-- Alpine Plugins -->
 		<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
 		<!-- Alpine Core -->
 		<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/> {% block stylesheets %}{% endblock %}
+		<!-- Animate.css -->
+		<link
+		rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+		<!-- App Styles -->
+		<link rel="stylesheet" href="{{ asset('styles/app.css') }}"> {% block stylesheets %}{% endblock %}{% block head_javascripts %}{% endblock %}
 		</head>
 		<body>
 			<div class="w-screen h-screen flex flex-col">
@@ -26,6 +30,7 @@
 					{{ importmap('app') }}
 				{% endblock %}
 			{% endblock %}
+			<!-- Validate.js -->
 			<script src="//cdnjs.cloudflare.com/ajax/libs/validate.js/0.13.1/validate.min.js"></script>
 		</body>
 	</html>

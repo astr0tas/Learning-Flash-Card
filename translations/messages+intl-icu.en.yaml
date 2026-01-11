@@ -2,7 +2,7 @@ login:
   title: "Sign In"
   header: "Sign In"
   submit_button: "Sign In"
-  username_or_email: "Username or Email"
+  email: "Email"
   password: "Password"
   forgot_password: "Forgot Password?"
   remember_me: "Remember Me"
@@ -10,6 +10,7 @@ login:
   register: "Sign up now"
   login_with: "Sign In with {service_name}"
   or: "or"
+  incorrect_credentials: "Incorrect email or password."
 
 logout: "Sign Out"
 
@@ -18,7 +19,7 @@ register:
 
 forgot_password:
   title: "Forgot Password"
-  username_or_email: "Username or Email"
+  email: "Email"
   reset_password: "Reset Password"
 
 reset_password:
@@ -28,3 +29,13 @@ reset_password:
 
 verify_email:
   title: "Verify Email Address"
+
+dashboard:
+  title: "Dashboard"
+
+validation:
+  email:
+    not_blank: "Email should not be blank."
+    invalid: "Invalid email format."
+  password:
+    not_blank: "Password should not be blank."

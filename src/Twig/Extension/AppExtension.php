@@ -7,14 +7,9 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use App\Config\Constants;
-use App\Service\BaseService;
 
 class AppExtension extends AbstractExtension
 {
-    public function __construct(
-        private BaseService $baseService
-    ) {}
-
     // public function getFilters(): array
     // {
     //     return [
@@ -29,16 +24,25 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFunction('is_dark_mode', [$this, 'isDarkMode']),
-            new TwigFunction('get_locale', [$this->baseService, 'getLocaleFromCookie']),
+            new TwigFunction('get_locale', [$this, 'getLocaleFromCookie']),
         ];
     }
 
     public function isDarkMode(): bool
     {
-        if (empty($_COOKIE[Constants::DARK_MODE_COOKIE_NAME])) {
+        if (empty($_COOKIE[Constants::COOKIES['dark_mode']])) {
             return false;
         }
 
-        return \boolval($_COOKIE[Constants::DARK_MODE_COOKIE_NAME]) ?? false;
+        return \boolval($_COOKIE[Constants::COOKIES['dark_mode']]) ?? false;
+    }
+
+    public function getLocaleFromCookie(): string
+    {
+        if (empty($_COOKIE[Constants::COOKIES['locale']])) {
+            return Constants::DEFAULT_LOCALE;
+        }
+
+        return \strval($_COOKIE[Constants::COOKIES['locale']]) ?? Constants::DEFAULT_LOCALE;
     }
 }

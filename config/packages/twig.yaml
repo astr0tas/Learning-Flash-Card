@@ -1,5 +1,7 @@
 twig:
     file_name_pattern: '*.twig'
+    globals:
+        google_oauth_client_id: '%app.google_oauth.client_id%'
 
 when@test:
     twig:

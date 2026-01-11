@@ -2,4 +2,6 @@
 
 namespace App\Repository;
 
-class BaseRepository {}
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+
+abstract class BaseRepository extends ServiceEntityRepository {}

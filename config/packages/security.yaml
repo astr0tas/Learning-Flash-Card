@@ -2,16 +2,40 @@ security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         users_in_memory: { memory: null }
+        app_user_provider:
+            entity:
+                class: App\Entity\UserEntity
+                property: email
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
-            provider: users_in_memory
+            provider: app_user_provider
+
+            # --- A. STANDARD LOGIN CONFIG ---
+            form_login:
+                login_path: login
+                check_path: non_existent_path
+                enable_csrf: true
+                # default_target_path: home
+
+            # --- B. SHARED FEATURES ---
+            logout:
+                path: non_existent_path
+                target: login
+
+            # Both Google users and Form users will get this cookie!
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 week
+                remember_me_parameter: remember_me
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -22,8 +46,9 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/(login|register|reset-password|forgot-password|verify-email), roles: PUBLIC_ACCESS }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/, roles: ROLE_USER }
 
 when@test:
     security:

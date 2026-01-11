@@ -23,4 +23,16 @@ class BaseEntity
   {
     return $this->id;
   }
+
+  #[ORM\PrePersist]
+  public function onPrePersist(): void
+  {
+    $this->createdAt = new \DateTimeImmutable();
+  }
+
+  #[ORM\PreUpdate]
+  public function onPreUpdate(): void
+  {
+    $this->updatedAt = new \DateTimeImmutable();
+  }
 }

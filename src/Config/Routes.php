@@ -9,6 +9,10 @@ class Routes
     'URL' => '/login',
     'NAME' => 'login',
   ];
+  public const LOGIN_WITH_GOOGLE_ROUTE = [
+    'URL' => '/login/google',
+    'NAME' => 'login_with_google',
+  ];
   public const LOGOUT_ROUTE = [
     'URL' => '/logout',
     'NAME' => 'logout',
