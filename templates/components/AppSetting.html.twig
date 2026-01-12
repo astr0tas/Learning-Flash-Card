@@ -1,5 +1,5 @@
-<div class="fixed bottom-5 right-5 z-50 flex flex-col gap-2" x-data="{ expanded: false }">
-	<div x-show="expanded" x-collapse.duration.100ms class="flex flex-col gap-2">
+<div class="fixed bottom-5 right-5 z-50 flex flex-col gap-2" x-ref="appMenuRef">
+	<div x-show="appMenuExpanded" x-collapse.duration.100ms class="flex flex-col gap-2">
 		<div class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button"></div>
 		<div class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button" @click="setDarkMode(!darkMode)">
 			<div x-show="darkMode" class="w-6 h-6 cursor-pointer">
@@ -10,9 +10,12 @@
 			</div>
 		</div>
 	</div>
-	<div class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button" @click="expanded = !expanded">
-		<div class="w-6 h-6">
+	<div class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button" @click="appMenuExpanded = !appMenuExpanded">
+		<div x-show="!appMenuExpanded" class="w-6 h-6">
 			{{include('icons/setting.svg')}}
+		</div>
+		<div x-show="appMenuExpanded" class="w-4 h-4">
+			{{include('icons/close.svg')}}
 		</div>
 	</div>
 </div>

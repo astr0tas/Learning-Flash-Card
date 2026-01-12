@@ -12,7 +12,7 @@ const alpineAppData = {
     }
     return false;
   })(),
-
+  appMenuExpanded: false,
   setDarkMode(value)
   {
     this.darkMode = value;
@@ -21,9 +21,20 @@ const alpineAppData = {
     d.setTime(d.getTime() + (365*24*60*60*1000));
     const expires = "expires="+ d.toUTCString();
     document.cookie = "dark_mode=" + value + ";" + expires + ";path=/";
+  },
+  checkAppClick: function (event)
+  {
+    // 1. Access refs via $refs
+    const menu = this.$refs.appMenuRef;
+
+    // 2. Check if menu exists AND click was outside
+    if (menu && !menu.contains(event.target)) {
+        this.appMenuExpanded = false;
+    }
   }
 }
 
-document.addEventListener('alpine:init', () => {
+document.addEventListener('alpine:init', () =>
+{
   Alpine.data('appData', () => (alpineAppData));
-})
+});

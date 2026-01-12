@@ -23,8 +23,8 @@
 		{% block head_javascripts %}{% endblock %}
 	</head>
 	<body>
-		<div x-data="appData" class="w-screen h-screen flex flex-col">
-			<div class="flex-1 w-full" :class="darkMode ? 'dark_theme' : 'light_theme'" x-ref="app"> {% block body %}{% endblock %}
+		<div x-data="appData" class="w-screen h-screen flex flex-col" @click.window="checkAppClick($event)">
+			<div class="flex-1 w-full" :class="darkMode ? 'dark_theme' : 'light_theme'"> {% block body %}{% endblock %}
 				<twig:AppSetting/>
 			</div>
 		</div>
