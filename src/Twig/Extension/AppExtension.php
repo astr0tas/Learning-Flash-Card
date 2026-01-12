@@ -23,18 +23,8 @@ class AppExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('is_dark_mode', [$this, 'isDarkMode']),
             new TwigFunction('get_locale', [$this, 'getLocaleFromCookie']),
         ];
-    }
-
-    public function isDarkMode(): bool
-    {
-        if (empty($_COOKIE[Constants::COOKIES['dark_mode']])) {
-            return false;
-        }
-
-        return \boolval($_COOKIE[Constants::COOKIES['dark_mode']]) ?? false;
     }
 
     public function getLocaleFromCookie(): string

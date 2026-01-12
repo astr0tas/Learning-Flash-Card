@@ -1,14 +1,16 @@
 <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none"
-  xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
+  xmlns="http://www.w3.org/2000/svg">
   <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
   <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
   <g id="SVGRepo_iconCarrier">
-    <g clip-path="url(#a)" fill="#ffffff">
-      <path d="M12 0a1 1 0 0 1 1 1v4a1 1 0 1 1-2 0V1a1 1 0 0 1 1-1ZM4.929 3.515a1 1 0 0 0-1.414 1.414l2.828 2.828a1 1 0 0 0 1.414-1.414L4.93 3.515ZM1 11a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2H1ZM18 12a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2h-4a1 1 0 0 1-1-1ZM17.657 16.243a1 1 0 0 0-1.414 1.414l2.828 2.828a1 1 0 1 0 1.414-1.414l-2.828-2.828ZM7.757 17.657a1 1 0 1 0-1.414-1.414L3.515 19.07a1 1 0 1 0 1.414 1.414l2.828-2.828ZM20.485 4.929a1 1 0 0 0-1.414-1.414l-2.828 2.828a1 1 0 1 0 1.414 1.414l2.828-2.828ZM13 19a1 1 0 1 0-2 0v4a1 1 0 1 0 2 0v-4ZM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Z"></path>
+    <g clip-path="url(#a)" stroke="#ffffff" stroke-width="1.5" stroke-miterlimit="10" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: var(--darkreader-text-000000, #e8e6e3);">
+      <path d="M5 12H1M23 12h-4M7.05 7.05 4.222 4.222M19.778 19.778 16.95 16.95M7.05 16.95l-2.828 2.828M19.778 4.222 16.95 7.05" stroke-linecap="round"></path>
+      <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" fill="#ffffff" fill-opacity=".16" data-darkreader-inline-fill="" style="--darkreader-inline-fill: var(--darkreader-background-000000, #000000);"></path>
+      <path d="M12 19v4M12 1v4" stroke-linecap="round"></path>
     </g>
     <defs>
       <clipPath id="a">
-        <path fill="#ffffff" d="M0 0h24v24H0z"></path>
+        <path fill="#ffffff" d="M0 0h24v24H0z" data-darkreader-inline-fill="" style="--darkreader-inline-fill: var(--darkreader-text-ffffff, #e8e6e3);"></path>
       </clipPath>
     </defs>
   </g>

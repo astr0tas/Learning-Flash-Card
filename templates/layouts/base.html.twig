@@ -17,20 +17,23 @@
 		<link
 		rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 		<!-- App Styles -->
-		<link rel="stylesheet" href="{{ asset('styles/app.css') }}"> {% block stylesheets %}{% endblock %}{% block head_javascripts %}{% endblock %}
-		</head>
-		<body>
-			<div class="w-screen h-screen flex flex-col">
-				<div class="flex-1 w-full {{ is_dark_mode() ? 'dark_theme' : 'light_theme' }}" x-data="{isDarkMode:{{ is_dark_mode() ? 1 : 0 }}}" x-ref="app"> {% block body %}{% endblock %}
-					<twig:AppSetting/>
-				</div>
+		<link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+		<script src="{{ asset('scripts/index.js') }}"></script>
+		{% block stylesheets %}{% endblock %}
+		{% block head_javascripts %}{% endblock %}
+	</head>
+	<body>
+		<div x-data="appData" class="w-screen h-screen flex flex-col">
+			<div class="flex-1 w-full" :class="darkMode ? 'dark_theme' : 'light_theme'" x-ref="app"> {% block body %}{% endblock %}
+				<twig:AppSetting/>
 			</div>
-			{% block javascripts %}
-				{% block importmap %}
-					{{ importmap('app') }}
-				{% endblock %}
+		</div>
+		{% block javascripts %}
+			{% block importmap %}
+				{{ importmap('app') }}
 			{% endblock %}
-			<!-- Validate.js -->
-			<script src="//cdnjs.cloudflare.com/ajax/libs/validate.js/0.13.1/validate.min.js"></script>
-		</body>
-	</html>
+		{% endblock %}
+		<!-- Validate.js -->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/validate.js/0.13.1/validate.min.js"></script>
+	</body>
+</html>
