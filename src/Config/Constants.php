@@ -10,7 +10,6 @@ class Constants
     'public' => 'PUBLIC_ACCESS',
   ];
   public const COOKIES = [
-    'dark_mode' => 'dark_mode',
     'locale'    => 'locale',
   ];
   public const LOCALES = [

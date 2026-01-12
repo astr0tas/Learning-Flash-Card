@@ -16,9 +16,9 @@ const alpineAppData = {
   setDarkMode(value)
   {
     this.darkMode = value;
-    // Set the dark_mode cookie to expire in 1 year
+    // Set the dark_mode cookie to expire in 100 years
     const d = new Date();
-    d.setTime(d.getTime() + (365*24*60*60*1000));
+    d.setTime(d.getTime() + (365*24*60*60*1000*100));
     const expires = "expires="+ d.toUTCString();
     document.cookie = "dark_mode=" + value + ";" + expires + ";path=/";
   },
