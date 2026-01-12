@@ -25,7 +25,7 @@ class AuthenticationController extends BaseController
   public function LoginAction(Request $request)
   {
     if ($this->getUser()) {
-      return $this->redirectToRoute(Routes::HOME_ROUTE['NAME']);
+      return $this->redirectUserToHome();
     }
 
     if ($request->isMethod(Request::METHOD_GET)) {
@@ -80,7 +80,7 @@ class AuthenticationController extends BaseController
         $rememberMeBadge,
       ]);
 
-      return $this->redirectToRoute(Routes::HOME_ROUTE['NAME']);
+      return $this->redirectUserToHome();
     }
   }
 
@@ -88,7 +88,7 @@ class AuthenticationController extends BaseController
   public function LoginWithGoogleAction(Request $request)
   {
     if ($this->getUser()) {
-      return $this->redirectToRoute(Routes::HOME_ROUTE['NAME']);
+      return $this->redirectUserToHome();
     }
 
     // 1. Check Google's CSRF Cookie (Security Best Practice)
@@ -158,7 +158,7 @@ class AuthenticationController extends BaseController
         (new RememberMeBadge())->enable(),
       ]);
 
-      return $this->redirectToRoute(Routes::HOME_ROUTE['NAME']);
+      return $this->redirectUserToHome();
     }
 
     return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
@@ -174,7 +174,7 @@ class AuthenticationController extends BaseController
   public function RegisterAction(Request $request)
   {
     if ($this->getUser()) {
-      return $this->redirectToRoute(Routes::HOME_ROUTE['NAME']);
+      return $this->redirectUserToHome();
     }
 
     if ($request->isMethod(Request::METHOD_GET)) {
@@ -189,7 +189,7 @@ class AuthenticationController extends BaseController
   public function ForgotPasswordAction(Request $request)
   {
     if ($this->getUser()) {
-      return $this->redirectToRoute(Routes::HOME_ROUTE['NAME']);
+      return $this->redirectUserToHome();
     }
 
     if ($request->isMethod(Request::METHOD_GET)) {
@@ -204,7 +204,7 @@ class AuthenticationController extends BaseController
   public function ResetPasswordAction(Request $request)
   {
     if ($this->getUser()) {
-      return $this->redirectToRoute(Routes::HOME_ROUTE['NAME']);
+      return $this->redirectUserToHome();
     }
 
     if ($request->isMethod(Request::METHOD_GET)) {
@@ -219,7 +219,18 @@ class AuthenticationController extends BaseController
   public function EmailVerificationAction(Request $request)
   {
     if ($this->getUser()) {
-      return $this->redirectToRoute(Routes::HOME_ROUTE['NAME']);
+      return $this->redirectUserToHome();
     }
+  }
+
+  private function redirectUserToHome()
+  {
+    $user = $this->getUser();
+
+    if ($this->isGranted(Constants::ROLES['admin'], $user)) {
+      return $this->redirectToRoute(Routes::ADMIN_HOME_ROUTE['NAME']);
+    }
+
+    return $this->redirectToRoute(Routes::HOME_ROUTE['NAME']);
   }
 }

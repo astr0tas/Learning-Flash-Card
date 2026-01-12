@@ -33,6 +33,8 @@ verify_email:
 dashboard:
   title: "Trang chủ"
 
+feature_in_development: "Tính năng đang phát triển"
+
 validation:
   email:
     not_blank: "Email không được để trống."

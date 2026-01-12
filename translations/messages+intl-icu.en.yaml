@@ -33,6 +33,8 @@ verify_email:
 dashboard:
   title: "Dashboard"
 
+feature_in_development: "Feature in Development"
+
 validation:
   email:
     not_blank: "Email should not be blank."

@@ -44,4 +44,8 @@ class Routes
     'URL' => '/',
     'NAME' => 'home',
   ];
+  public const ADMIN_HOME_ROUTE = [
+    'URL' => '/admin',
+    'NAME' => 'admin_home',
+  ];
 }
