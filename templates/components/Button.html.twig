@@ -1,2 +1,5 @@
-<button {{ attributes.defaults({ class: "cursor-pointer active:opacity-70 w-full text-center #{element_class}"} ) }}> {% block content %}{% endblock %}
-	</button>
+<button
+	{{ attributes.defaults({ class: "cursor-pointer active:opacity-70 w-full text-center #{element_class}"} ) }}>
+	{# prettier-ignore #}
+	{% block content %}{% endblock %}
+</button>

@@ -1,4 +1,6 @@
 <form{{attributes}}>
-	<input type="hidden" name="csrf_token" value="{{ csrf_token('csrf_token') }}"/>
+	<input
+	type="hidden" name="csrf_token" value="{{ csrf_token('csrf_token') }}"/>
+	{# prettier-ignore #}
 	{% block content %}{% endblock %}
 </form>
