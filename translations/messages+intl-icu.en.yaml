@@ -35,6 +35,14 @@ dashboard:
 
 feature_in_development: "Feature in Development"
 
+app_setting:
+  setting: "Setting"
+  close: "Close setting"
+  set_dark_mode: "Set to dark mode"
+  set_light_mode: "Set to light mode"
+  set_english: "Set language to English"
+  set_vietnamese: "Set language to Vietnamese"
+
 validation:
   email:
     not_blank: "Email should not be blank."

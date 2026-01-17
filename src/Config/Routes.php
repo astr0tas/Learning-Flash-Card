@@ -38,6 +38,7 @@ class Routes
   public const SET_LOCALE_ROUTE = [
     'URL' => '/set-locale/{locale}',
     'NAME' => 'set_locale',
+    'ROUTE_PARAM' => 'locale',
   ];
 
   public const HOME_ROUTE = [

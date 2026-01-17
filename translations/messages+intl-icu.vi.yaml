@@ -35,6 +35,14 @@ dashboard:
 
 feature_in_development: "Tính năng đang phát triển"
 
+app_setting:
+  setting: "Thiết lập"
+  close: "Đóng thiết lập"
+  set_dark_mode: "Chuyển sang chế độ tối"
+  set_light_mode: "Chuyển sang chế độ sáng"
+  set_english: "Chuyển ngôn ngữ sang tiếng Anh"
+  set_vietnamese: "Chuyển ngôn ngữ sang tiếng Việt"
+
 validation:
   email:
     not_blank: "Email không được để trống."

@@ -3,7 +3,6 @@
 namespace App\EventSubscriber;
 
 use App\Config\Routes;
-use App\Controller\BaseController;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -62,7 +61,7 @@ class CsrfValidationSubscriber implements EventSubscriberInterface
   public static function getSubscribedEvents(): array
   {
     return [
-      KernelEvents::CONTROLLER => 'onKernelController',
+      KernelEvents::CONTROLLER => ['onKernelController', 31],
     ];
   }
 }

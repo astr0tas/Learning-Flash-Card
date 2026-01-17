@@ -40,27 +40,15 @@ class BaseController extends AbstractController
     $this->entityManager = $entityManager;
   }
 
-  #[Route(path: Routes::SET_LOCALE_ROUTE['URL'], name: Routes::SET_LOCALE_ROUTE['NAME'], methods: ['GET'])]
+  #[Route(path: Routes::SET_LOCALE_ROUTE['URL'], name: Routes::SET_LOCALE_ROUTE['NAME'], methods: ['POST'])]
   public function ChangeLocale(string $locale, Request $request)
   {
-    // 1. Store the locale in the cookie (or session)
-    // Create a new Cookie instance
-    $cookie = Cookie::create(
-      Constants::COOKIES['locale'],  // Name of the cookie
-      $locale, // Value of the cookie
-      time() + (3600 * 24 * 365 * 100), // Expiration time (e.g., 100 years from now)
-      '/',               // Path (e.g., available for the entire domain)
-      domain: '',    // Domain (e.g., for example.com and its subdomains)
-      secure: false,              // Secure (send only over HTTPS)
-      httpOnly: true,              // HttpOnly (not accessible via JavaScript)
-      raw: true,             // Raw (value is not URL-encoded)
-      sameSite: 'lax'              // SameSite attribute (e.g., 'lax', 'strict', 'none')
-    );
-
-    // 2. Redirect back to where the user came from with the cookie set
-    $referer = $request->headers->get(key: 'referer');
+    // The LocaleSubscriber will handle setting the cookie
+    // and updating the request locale.
+    // Here, we just redirect back to the referer or home page.
+    $referer = $request->headers->get('referer');
     $response = $this->redirect($referer ?? '/');
-    $response->headers->setCookie($cookie);
+
     return $response;
   }
 

@@ -1,16 +1,28 @@
 <div class="fixed bottom-5 right-5 z-50 flex flex-col gap-2" x-ref="appMenuRef">
 	<div x-show="appMenuExpanded" x-collapse.duration.100ms class="flex flex-col gap-2">
-		<div class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button"></div>
-		<div class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button" @click="setDarkMode(!darkMode)">
-			<div x-show="darkMode" class="w-6 h-6 cursor-pointer">
+		{% if get_locale() == constant('App\\Config\\Constants::LOCALES')['vi'] %}
+			<twig:Form class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button" method="POST" action="{{ constant('App\\Config\\Routes::SET_LOCALE_ROUTE')['URL']|replace({'{locale}': constant('App\\Config\\Constants::LOCALES')['en']}) }}" onclick="this.submit()" title="{{ 'app_setting.set_english'|trans }}">
+				<div class="w-6 h-6">
+					{{include('icons/en.svg')}}
+				</div>
+			</twig:Form>
+		{% elseif get_locale() == constant('App\\Config\\Constants::LOCALES')['en'] %}
+			<twig:Form class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button" method="POST" action="{{ constant('App\\Config\\Routes::SET_LOCALE_ROUTE')['URL']|replace({'{locale}': constant('App\\Config\\Constants::LOCALES')['vi']}) }}" onclick="this.submit()" title="{{ 'app_setting.set_vietnamese'|trans }}">
+				<div class="w-6 h-6">
+					{{include('icons/vi.svg')}}
+				</div>
+			</twig:Form>
+		{% endif %}
+		<div class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button" @click="setDarkMode(!darkMode)" x-bind:title="darkMode ? '{{ 'app_setting.set_light_mode'|trans }}' : '{{ 'app_setting.set_dark_mode'|trans }}'">
+			<div x-show="darkMode" class="w-6 h-6">
 				{{include('icons/light_mode.svg')}}
 			</div>
-			<div x-show="!darkMode" class="w-6 h-6 cursor-pointer">
+			<div x-show="!darkMode" class="w-6 h-6">
 				{{include('icons/dark_mode.svg')}}
 			</div>
 		</div>
 	</div>
-	<div class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button" @click="appMenuExpanded = !appMenuExpanded">
+	<div class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button" @click="appMenuExpanded = !appMenuExpanded" x-bind:title="appMenuExpanded ? '{{ 'app_setting.close'|trans }}' : '{{ 'app_setting.setting'|trans }}'">
 		<div x-show="!appMenuExpanded" class="w-6 h-6">
 			{{include('icons/setting.svg')}}
 		</div>

@@ -20,7 +20,6 @@ framework:
 
     http_client:
         default_options:
-            timeout: 5.0
             max_redirects: 5
 
     csrf_protection: true
