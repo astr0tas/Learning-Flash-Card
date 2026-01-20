@@ -31,13 +31,8 @@ class BaseController extends AbstractController
   #[Route(path: Routes::SET_LOCALE_ROUTE['URL'], name: Routes::SET_LOCALE_ROUTE['NAME'], methods: ['POST'])]
   public function ChangeLocale(string $locale, Request $request)
   {
-    // The LocaleSubscriber will handle setting the cookie
-    // and updating the request locale.
-    // Here, we just redirect back to the referer or home page.
-    $referer = $request->headers->get('referer');
-    $response = $this->redirect($referer ?? '/');
-
-    return $response;
+    // This is just an empty function with a route to prevent 404 error
+    // LocaleSubscriber will handle requests made to this route
   }
 
   public function validate($input, $fields, bool $allowExtraFields = true): array

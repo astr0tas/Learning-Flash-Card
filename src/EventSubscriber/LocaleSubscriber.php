@@ -9,12 +9,14 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class LocaleSubscriber implements EventSubscriberInterface
 {
   public function __construct(
     private string $defaultLocale = Constants::DEFAULT_LOCALE,
     private string $currentLocale = Constants::DEFAULT_LOCALE,
+    private string $redirectUrl = ""
   ) {}
 
   public static function getSubscribedEvents(): array
@@ -43,6 +45,8 @@ class LocaleSubscriber implements EventSubscriberInterface
       // Set the current locale from the route parameter
       $routeParams = $request->attributes->get('_route_params', []);
       $this->currentLocale = $routeParams[Routes::SET_LOCALE_ROUTE['ROUTE_PARAM']];
+      // Set the target redirect url
+      $this->redirectUrl = $request->headers->get('referer');
     } else {
       // Get the "locale" cookie from the request
       $cookieLocale = $request->cookies->get(Constants::COOKIES['locale']);
@@ -66,7 +70,6 @@ class LocaleSubscriber implements EventSubscriberInterface
 
   public function onKernelResponse(ResponseEvent $event): void
   {
-    $response = $event->getResponse();
 
     $cookie = new Cookie(
       name: Constants::COOKIES['locale'],
@@ -79,6 +82,14 @@ class LocaleSubscriber implements EventSubscriberInterface
       sameSite: Cookie::SAMESITE_LAX
     );
 
-    $response->headers->setCookie($cookie);
+
+    if (!empty($this->redirectUrl)) {
+      $response = new RedirectResponse($this->redirectUrl);
+      $response->headers->setCookie($cookie);
+      $event->setResponse($response);
+    } else {
+      $response = $event->getResponse();
+      $response->headers->setCookie($cookie);
+    }
   }
 }
