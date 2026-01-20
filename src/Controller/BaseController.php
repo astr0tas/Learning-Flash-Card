@@ -6,9 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Config\Routes;
 use Symfony\Component\HttpFoundation\Request;
-use App\Config\Constants;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -23,20 +21,10 @@ class BaseController extends AbstractController
   public EntityManagerInterface $entityManager;
 
   #[Required]
-  public function setTranslator(TranslatorInterface $translator): void
+  public function initProperties(TranslatorInterface $translator, RequestStack $requestStack, EntityManagerInterface $entityManager)
   {
     $this->translator = $translator;
-  }
-
-  #[Required]
-  public function setSession(RequestStack $requestStack): void
-  {
     $this->session = $requestStack->getSession();
-  }
-
-  #[Required]
-  public function setEntityManager(EntityManagerInterface $entityManager): void
-  {
     $this->entityManager = $entityManager;
   }
 
