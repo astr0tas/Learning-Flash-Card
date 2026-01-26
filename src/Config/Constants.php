@@ -18,7 +18,8 @@ class Constants
   ];
   public const DEFAULT_LOCALE = self::LOCALES['vi'];
   public const BCRYPT_COST = 12;
+  public const GOOGLE_OAUTH_PASSWORD = 'google_oauth_password'; // Do not touch this!!!
   public const SESSION = [
-    'google_oauth_password' => 'google_oauth_password',
+    'recovery_email_sent_flash_guard' => 'recovery_email_sent_flash_guard'
   ];
 }

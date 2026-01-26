@@ -19,8 +19,17 @@ register:
 
 forgot_password:
   title: "Forgot Password"
+  header: "Forgot Password"
   email: "Email"
   reset_password: "Reset Password"
+  back_to_login: "Back to login page"
+  user_not_found: User not found"
+  oauth_user: "This user is registered as an Google account. Please sign in with Google"
+
+recovery_email_sent:
+  title: "Forgot Password"
+  header: "Recovery Email Sent"
+  description: "A recovery email has been sent to your email address of <strong>{email}</strong>. Please check your mail box and click on the attached link to reset your password."
 
 reset_password:
   title: "Reset Password"
@@ -49,3 +58,6 @@ validation:
     invalid: "Invalid email format."
   password:
     not_blank: "Password should not be blank."
+
+navigation_error:
+  error_404: "Page not Found"

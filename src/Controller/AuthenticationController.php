@@ -145,7 +145,7 @@ class AuthenticationController extends BaseController
         $user->setEmail($email);
         $user->setFirstName($givenName);
         $user->setLastName($familyName);
-        $user->setPassword(Constants::SESSION['google_oauth_password'], false); // Random password
+        $user->setPassword(Constants::GOOGLE_OAUTH_PASSWORD, false); // Random password
         $user->setRoles([Constants::ROLES['user']]);
 
         $this->entityManager->persist($user);
@@ -196,8 +196,61 @@ class AuthenticationController extends BaseController
       // Display forgot password form
       return $this->render(view: '/views/authentication/forgot_password.html.twig');
     } else {
-      // Handle forgot password submission
+      // Handle post data
+      $postData = $request->request->all();
+
+      // Flash input back to the session to pre-fill the form
+      $this->addFlash('email', $postData['email'] ?? '');
+
+      // Validate post data
+      $fields = [
+        'email'    => [new Assert\NotBlank(
+          message: $this->translator->trans('validation.email.not_blank')
+        ), new Assert\Email(
+          message: $this->translator->trans('validation.email.invalid')
+        )],
+      ];
+      $errors = $this->validate($postData, $fields);
+
+      if (count($errors) > 0) {
+        $this->addFlash('error', $errors);
+        return $this->redirectToRoute(Routes::FORGOT_PASSWORD_ROUTE['NAME']);
+      }
+
+      $user = $this->entityManager
+        ->getRepository(UserEntity::class)
+        ->findOneBy(criteria: ['email' => $postData['email']]);
+
+      if (!$user) {
+        $this->addFlash('error', ['general' => [
+          $this->translator->trans('forgot_password.user_not_found')
+        ]]);
+        return $this->redirectToRoute(Routes::FORGOT_PASSWORD_ROUTE['NAME']);
+      }
+
+      if ($user->getPassword() === Constants::GOOGLE_OAUTH_PASSWORD) {
+        $this->addFlash('error', ['general' => [
+          $this->translator->trans('forgot_password.oauth_user')
+        ]]);
+        return $this->redirectToRoute(Routes::FORGOT_PASSWORD_ROUTE['NAME']);
+      }
+
+      $this->sendRecoveryEmail($user->getUserIdentifier());
+
+      $this->addFlash(Constants::SESSION['recovery_email_sent_flash_guard'], 1);
+      return $this->redirectToRoute(Routes::RECOVERY_EMAIL_SENT_ROUTE['NAME']);
     }
+  }
+
+  #[Route(path: Routes::RECOVERY_EMAIL_SENT_ROUTE['URL'], name: Routes::RECOVERY_EMAIL_SENT_ROUTE['NAME'], methods: ['GET'])]
+  public function RecoveryEmailSentAction()
+  {
+    $flashBag = $this->session->getFlashBag();
+
+    if (!$flashBag->get(Constants::SESSION['recovery_email_sent_flash_guard'])) {
+      throw $this->createNotFoundException($this->translator->trans('navigation_error.error_404'));
+    }
+    return $this->render(view: '/views/authentication/recovery_email_sent.html.twig');
   }
 
   #[Route(path: Routes::RESET_PASSWORD_ROUTE['URL'], name: Routes::RESET_PASSWORD_ROUTE['NAME'], methods: ['GET', 'POST'])]
@@ -233,4 +286,6 @@ class AuthenticationController extends BaseController
 
     return $this->redirectToRoute(Routes::HOME_ROUTE['NAME']);
   }
+
+  private function sendRecoveryEmail(string $email) {}
 }

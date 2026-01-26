@@ -25,6 +25,10 @@ class Routes
     'URL' => '/forgot-password',
     'NAME' => 'forgot_password',
   ];
+  public const RECOVERY_EMAIL_SENT_ROUTE = [
+    'URL' => '/recovery-email-sent',
+    'NAME' => 'recovery_email_sent'
+  ];
   public const RESET_PASSWORD_ROUTE = [
     'URL' => '/reset-password',
     'NAME' => 'reset_password',
