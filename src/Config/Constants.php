@@ -27,8 +27,8 @@ class Constants
     'recovery_email_sent_flash_guard' => 'recovery_email_sent_flash_guard'
   ];
   public const LOG_CHANNELS = [
-    'email_content'  => 'email_content',
-    'email_service'  => 'email_service',
+    'email_content'  => 'email_content.logger',
+    'email_service'  => 'email_service.logger',
   ];
   public const EMAIL_SUBJECTS = [
     'recovery' => 'Khôi phục mật khẩu | Account Recovery',
