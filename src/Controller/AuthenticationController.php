@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Config\Constants;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Config\Routes;
+use App\Config\TwigTemplate;
 use App\Entity\UserEntity;
 use Google\Client;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +31,7 @@ class AuthenticationController extends BaseController
 
     if ($request->isMethod(Request::METHOD_GET)) {
       // Display login form
-      return $this->render('/views/authentication/login.html.twig');
+      return $this->render(view: TwigTemplate::PAGES['login']);
     } else {
       // Handle login submission
       $postData = $request->request->all();
@@ -179,7 +180,7 @@ class AuthenticationController extends BaseController
 
     if ($request->isMethod(Request::METHOD_GET)) {
       // Display registration form
-      return $this->render(view: '/views/authentication/register.html.twig');
+      return $this->render(view: TwigTemplate::PAGES['register']);
     } else {
       // Handle registration submission
     }
@@ -194,7 +195,7 @@ class AuthenticationController extends BaseController
 
     if ($request->isMethod(Request::METHOD_GET)) {
       // Display forgot password form
-      return $this->render(view: '/views/authentication/forgot_password.html.twig');
+      return $this->render(view: TwigTemplate::PAGES['forgot_password']);
     } else {
       // Handle post data
       $postData = $request->request->all();
@@ -250,7 +251,7 @@ class AuthenticationController extends BaseController
     if (!$flashBag->get(Constants::SESSION['recovery_email_sent_flash_guard'])) {
       throw $this->createNotFoundException($this->translator->trans('navigation_error.error_404'));
     }
-    return $this->render(view: '/views/authentication/recovery_email_sent.html.twig');
+    return $this->render(view: TwigTemplate::PAGES['recovery_email_sent']);
   }
 
   #[Route(path: Routes::RESET_PASSWORD_ROUTE['URL'], name: Routes::RESET_PASSWORD_ROUTE['NAME'], methods: ['GET', 'POST'])]
@@ -262,7 +263,7 @@ class AuthenticationController extends BaseController
 
     if ($request->isMethod(Request::METHOD_GET)) {
       // Display reset password form
-      return $this->render(view: '/views/authentication/reset_password.html.twig');
+      return $this->render(view: TwigTemplate::PAGES['reset_password']);
     } else {
       // Handle reset password submission
     }
