@@ -15,4 +15,6 @@ class RecoveryTokenEntity extends BaseEntity
     public string $token;
     #[ORM\Column]
     public \DateTimeImmutable $expiresAt;
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    public bool $isConsumed = false;
 }
