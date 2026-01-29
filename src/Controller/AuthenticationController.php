@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Config\Constants;
+use App\Entity\RecoveryTokenEntity;
+use App\Service\EmailService;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Config\Routes;
 use App\Config\TwigTemplate;
 use App\Entity\UserEntity;
+use App\Utility\Utility;
 use Google\Client;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -236,7 +239,12 @@ class AuthenticationController extends BaseController
         return $this->redirectToRoute(Routes::FORGOT_PASSWORD_ROUTE['NAME']);
       }
 
-      $this->sendRecoveryEmail($user->getUserIdentifier());
+      if (!$this->sendRecoveryEmail($user)) {
+        $this->addFlash('error', ['general' => [
+          $this->translator->trans('forgot_password.system_error')
+        ]]);
+        return $this->redirectToRoute(Routes::FORGOT_PASSWORD_ROUTE['NAME']);
+      }
 
       $this->addFlash(Constants::SESSION['recovery_email_sent_flash_guard'], 1);
       return $this->redirectToRoute(Routes::RECOVERY_EMAIL_SENT_ROUTE['NAME']);
@@ -288,5 +296,54 @@ class AuthenticationController extends BaseController
     return $this->redirectToRoute(Routes::HOME_ROUTE['NAME']);
   }
 
-  private function sendRecoveryEmail(string $email) {}
+  private function sendRecoveryEmail(UserEntity $user)
+  {
+    $userFullName = $user->getUserFullName();
+    $userEmail = $user->getEmail();
+    $resetPasswordLink = '';
+
+    // Create recovery token entity
+    $token = Utility::generateRandomToken();
+    $recoveryTokenEntity = new RecoveryTokenEntity();
+    $recoveryTokenEntity->email = $userEmail;
+    $recoveryTokenEntity->token = Utility::hashString($token);
+    $recoveryTokenEntity->expiresAt = (new \DateTimeImmutable())->modify('+1 day');
+
+    // Get reset password link
+    $resetPasswordLink = $this->generateUrl(
+      route: Routes::RESET_PASSWORD_ROUTE['NAME'],
+      parameters: [
+        'token' => $token,
+        'email' => $userEmail
+      ],
+    );
+
+    // Send recovery email
+    $emailService = new EmailService();
+    $emailService->setTo($userEmail);
+    $emailService->setSubject(Constants::EMAIL_SUBJECTS['recovery']);
+    $emailService->setHtml($this->renderView(
+      view: TwigTemplate::EMAILS['recovery']['html'],
+      parameters: [
+        'name' => $userFullName,
+        'resetPasswordLink' => $resetPasswordLink
+      ]
+    ));
+    $emailService->setBody($this->renderView(
+      view: TwigTemplate::EMAILS['recovery']['text'],
+      parameters: [
+        'name' => $userFullName,
+        'resetPasswordLink' => $resetPasswordLink
+      ]
+    ));
+    $result = $emailService->sendEmail();
+
+    if ($result) {
+      // Save recovery token to database
+      $this->entityManager->persist($recoveryTokenEntity);
+      $this->entityManager->flush();
+    }
+
+    return $result;
+  }
 }

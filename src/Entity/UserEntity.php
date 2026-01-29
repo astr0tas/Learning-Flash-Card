@@ -127,4 +127,13 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
     // If you store any temporary, sensitive data on the user, clear it here
     // $this->plainPassword = null;
   }
+
+  public function getUserFullName(): string
+  {
+    if (!empty($this->middleName)) {
+      return trim($this->lastName . ' ' . $this->middleName . ' ' . $this->firstName);
+    }
+
+    return trim($this->lastName . ' ' . $this->firstName);
+  }
 }

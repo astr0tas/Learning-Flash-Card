@@ -25,6 +25,7 @@ forgot_password:
   back_to_login: "Back to login page"
   user_not_found: User not found"
   oauth_user: "This user is registered as an Google account. Please sign in with Google"
+  system_error: "A system error has occurred. Please try again later."
 
 recovery_email_sent:
   title: "Forgot Password"
@@ -61,3 +62,4 @@ validation:
 
 navigation_error:
   error_404: "Page not Found"
+  error_500: "Internal Server Error"

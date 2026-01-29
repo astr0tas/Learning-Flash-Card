@@ -4,6 +4,10 @@ namespace App\Config;
 
 class Constants
 {
+  public const APP_ENV = [
+    'development' => 'dev',
+    'production'  => 'pro',
+  ];
   public const ROLES = [
     'user' => 'ROLE_USER',
     'admin' => 'ROLE_ADMIN',
@@ -21,5 +25,12 @@ class Constants
   public const GOOGLE_OAUTH_PASSWORD = 'google_oauth_password'; // Do not touch this!!!
   public const SESSION = [
     'recovery_email_sent_flash_guard' => 'recovery_email_sent_flash_guard'
+  ];
+  public const LOG_CHANNELS = [
+    'email_content'  => 'email_content',
+    'email_service'  => 'email_service',
+  ];
+  public const EMAIL_SUBJECTS = [
+    'recovery' => 'Khôi phục mật khẩu | Account Recovery',
   ];
 }

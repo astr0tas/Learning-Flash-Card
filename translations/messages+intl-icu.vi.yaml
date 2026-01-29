@@ -25,6 +25,7 @@ forgot_password:
   back_to_login: "Quay lại trang đăng nhập"
   user_not_found: "Email người dùng không tồn tại"
   oauth_user: "Người dùng này đã đăng ký tài khoản bằng Google. Vui lòng đăng nhập bằng Google để truy cập hệ thống."
+  system_error: "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau."
 
 recovery_email_sent:
   title: "Quên mật khẩu"
@@ -61,3 +62,4 @@ validation:
 
 navigation_error:
   error_404: "Trang tìm kiếm không tồn tại"
+  error_500: "Lỗi hệ thống"
