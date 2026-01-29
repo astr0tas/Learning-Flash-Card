@@ -6,6 +6,7 @@ use App\Repository\RecoveryTokenRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RecoveryTokenRepository::class)]
+#[ORM\Table(name: 'recovery_token_tbl')]
 class RecoveryTokenEntity extends BaseEntity
 {
     #[ORM\Column(type: 'string', length: 255)]

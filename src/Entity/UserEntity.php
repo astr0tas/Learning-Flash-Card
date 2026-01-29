@@ -11,6 +11,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
+#[ORM\Table(name: 'user_tbl')]
 class UserEntity extends BaseEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
   #[ORM\Column(type: 'string', length: 255)]
