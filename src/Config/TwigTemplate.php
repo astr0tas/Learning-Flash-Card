@@ -18,8 +18,8 @@ class TwigTemplate
   ];
   public const EMAILS = [
     'recovery' => [
-      'html' => '/templates/emails/recovery/index.html.twig',
-      'text' => '/templates/emails/recovery/text.txt.twig'
+      'html' => '/emails/recovery/index.html.twig',
+      'text' => '/emails/recovery/text.txt.twig'
     ]
   ];
 }
