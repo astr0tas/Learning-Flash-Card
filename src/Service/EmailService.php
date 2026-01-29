@@ -18,24 +18,16 @@ class EmailService
   private string $subject;
   private string $body;
   private string $html;
-  private MailerInterface $mailer;
-  #[Target(Constants::LOG_CHANNELS['email_content'])]
-  private LoggerInterface $mailContentLogger;
-  #[Target(Constants::LOG_CHANNELS['email_service'])]
-  private LoggerInterface $mailServiceLogger;
-  #[Autowire('%kernel.environment%')]
-  private string $environment;
 
-  #[Required]
-  public function initService(
-    MailerInterface $mailer,
-    LoggerInterface $mailContentLogger,
-    LoggerInterface $mailServiceLogger
-  ): void {
-    $this->mailer = $mailer;
-    $this->mailContentLogger = $mailContentLogger;
-    $this->mailServiceLogger = $mailServiceLogger;
-  }
+  public function __construct(
+    private MailerInterface $mailer,
+    #[Target(Constants::LOG_CHANNELS['email_content'])]
+    private LoggerInterface $mailContentLogger,
+    #[Target(Constants::LOG_CHANNELS['email_service'])]
+    private LoggerInterface $mailServiceLogger,
+    #[Autowire('%kernel.environment%')]
+    private string $environment
+  ) {}
 
   public function setTo(string $to): self
   {

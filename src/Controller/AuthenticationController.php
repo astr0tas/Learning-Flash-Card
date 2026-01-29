@@ -190,7 +190,7 @@ class AuthenticationController extends BaseController
   }
 
   #[Route(path: Routes::FORGOT_PASSWORD_ROUTE['URL'], name: Routes::FORGOT_PASSWORD_ROUTE['NAME'], methods: ['GET', 'POST'])]
-  public function ForgotPasswordAction(Request $request)
+  public function ForgotPasswordAction(Request $request, EmailService $emailService)
   {
     if ($this->getUser()) {
       return $this->redirectUserToHome();
@@ -239,7 +239,7 @@ class AuthenticationController extends BaseController
         return $this->redirectToRoute(Routes::FORGOT_PASSWORD_ROUTE['NAME']);
       }
 
-      if (!$this->sendRecoveryEmail($user)) {
+      if (!$this->sendRecoveryEmail($user, $emailService)) {
         $this->addFlash('error', ['general' => [
           $this->translator->trans('forgot_password.system_error')
         ]]);
@@ -296,7 +296,7 @@ class AuthenticationController extends BaseController
     return $this->redirectToRoute(Routes::HOME_ROUTE['NAME']);
   }
 
-  private function sendRecoveryEmail(UserEntity $user)
+  private function sendRecoveryEmail(UserEntity $user, EmailService $emailService)
   {
     $userFullName = $user->getUserFullName();
     $userEmail = $user->getEmail();
@@ -319,7 +319,6 @@ class AuthenticationController extends BaseController
     );
 
     // Send recovery email
-    $emailService = new EmailService();
     $emailService->setTo($userEmail);
     $emailService->setSubject(Constants::EMAIL_SUBJECTS['recovery']);
     $emailService->setHtml($this->renderView(
