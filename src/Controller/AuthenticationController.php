@@ -239,6 +239,14 @@ class AuthenticationController extends BaseController
         return $this->redirectToRoute(Routes::FORGOT_PASSWORD_ROUTE['NAME']);
       }
 
+      // Check for request spam
+      if ($this->checkRequestSpam(entityClass: RecoveryTokenEntity::class, alias: 't', conditions: ["t.email = '{$user->getEmail()}'"])) {
+        $this->addFlash('error', ['general' => [
+          $this->translator->trans('general_error.too_many_requests')
+        ]]);
+        return $this->redirectToRoute(Routes::FORGOT_PASSWORD_ROUTE['NAME']);
+      }
+
       if (!$this->sendRecoveryEmail($user, $emailService)) {
         $this->addFlash('error', ['general' => [
           $this->translator->trans('forgot_password.system_error')

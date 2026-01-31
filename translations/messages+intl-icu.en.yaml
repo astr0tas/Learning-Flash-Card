@@ -60,6 +60,9 @@ validation:
   password:
     not_blank: "Password should not be blank."
 
+general_error:
+  too_many_requests: "You have sent too many requests. Please try again later."
+
 navigation_error:
   error_404: "Page not Found"
   error_500: "Internal Server Error"

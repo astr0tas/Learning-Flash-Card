@@ -60,6 +60,9 @@ validation:
   password:
     not_blank: "Mật khẩu không được để trống."
 
+general_error:
+  too_many_requests: "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau."
+
 navigation_error:
   error_404: "Trang tìm kiếm không tồn tại"
   error_500: "Lỗi hệ thống"
