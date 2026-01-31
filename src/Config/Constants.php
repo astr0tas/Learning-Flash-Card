@@ -33,4 +33,8 @@ class Constants
   public const EMAIL_SUBJECTS = [
     'recovery' => 'Khôi phục mật khẩu | Account Recovery',
   ];
+  public const TABLES = [
+    'user' => 'user_tbl',
+    'recovery_token' => 'recovery_token_tbl',
+  ];
 }
