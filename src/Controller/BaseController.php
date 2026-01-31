@@ -35,6 +35,13 @@ class BaseController extends AbstractController
     // LocaleSubscriber will handle requests made to this route
   }
 
+  /**
+   * Validate input data against specified constraints
+   * @param mixed $input The input data to validate
+   * @param array $fields An associative array of field names to their constraints
+   * @param bool $allowExtraFields Whether to allow extra fields not specified in $fields
+   * @return array An array of validation errors, empty if none found
+   */
   public function validate($input, $fields, bool $allowExtraFields = true): array
   {
     $validator = Validation::createValidator();
