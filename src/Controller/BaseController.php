@@ -8,8 +8,8 @@ use Symfony\Component\Routing\Attribute\Route;
 use App\Config\Routes;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\TextUI\Configuration\Constant;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Contracts\Service\Attribute\Required;
@@ -21,6 +21,7 @@ class BaseController extends AbstractController
   public TranslatorInterface $translator;
   public SessionInterface $session;
   public EntityManagerInterface $entityManager;
+  public Response $unprocessableEntityResponse;
 
   #[Required]
   public function initProperties(TranslatorInterface $translator, RequestStack $requestStack, EntityManagerInterface $entityManager)
@@ -28,9 +29,10 @@ class BaseController extends AbstractController
     $this->translator = $translator;
     $this->session = $requestStack->getSession();
     $this->entityManager = $entityManager;
+    $this->unprocessableEntityResponse = new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
   }
 
-  #[Route(path: Routes::SET_LOCALE_ROUTE['URL'], name: Routes::SET_LOCALE_ROUTE['NAME'], methods: ['POST'])]
+  #[Route(path: Routes::SET_LOCALE_ROUTE['URL'], name: Routes::SET_LOCALE_ROUTE['NAME'], methods: [Request::METHOD_GET])]
   public function ChangeLocale(string $locale, Request $request)
   {
     // This is just an empty function with a route to prevent 404 error

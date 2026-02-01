@@ -4,14 +4,8 @@
 	{{ 'login.title'|trans }}
 {% endblock %}
 
-{% set errors = app.flashes('error') %}
-{% set errors = errors[0] | default({}) %}
-
-{% set email = app.flashes('email') %}
-{% set email = email[0] | default('') %}
-
-{% set remember_me = app.flashes('remember_me') %}
-{% set remember_me = remember_me[0] | default('') %}
+{% set email = email | default('') %}
+{% set remember_me = remember_me | default('') %}
 
 {% block auth_body %}
 	<div>
@@ -37,14 +31,14 @@
 			<p class="text-center mx-5 pb-1">{{ 'login.or'|trans }}</p>
 			<div class="border-t flex-1 border-gray-400"></div>
 		</div>
-		{% if errors.general is defined %}
-			<div class="py-5 px-10 text-center border border-dashed border-(--red) rounded-lg bg-[#f8d7da] text-[#721c24] break-words">{{ errors.general[0] }}</div>
+		{% if error.general is defined %}
+			<div class="py-5 px-10 text-center border border-dashed border-(--red) rounded-lg bg-[#f8d7da] text-[#721c24] break-words">{{ error.general[0] }}</div>
 		{% endif %}
-		<twig:Form action="{{ constant('App\\Config\\Routes::LOGIN_ROUTE')['URL'] }}" method="POST" class="mt-5">
+		<twig:Form action="{{ constant('App\\Config\\Routes::LOGIN_SUBMIT_ROUTE')['URL'] }}" method="POST" class="mt-5">
 			<div>
-				<twig:Input name="email" label="{{ 'login.email'|trans }}" aria-label="{{ 'login.email'|trans }}" type="text" autocomplete="email" value="{{ email }}" error="{{ errors.email is defined ? errors.email[0] : '' }}"/></div>
+				<twig:Input name="email" label="{{ 'login.email'|trans }}" aria-label="{{ 'login.email'|trans }}" type="text" autocomplete="email" value="{{ email }}" error="{{ error.email is defined ? error.email[0] : '' }}"/></div>
 			<div class="my-3">
-				<twig:Input name="password" label="{{ 'login.password'|trans }}" aria-label="{{ 'login.password'|trans }}" type="password" autocomplete="current-password" error="{{ errors.password is defined ? errors.password[0] : '' }}"/>
+				<twig:Input name="password" label="{{ 'login.password'|trans }}" aria-label="{{ 'login.password'|trans }}" type="password" autocomplete="current-password" error="{{ error.password is defined ? error.password[0] : '' }}"/>
 			</div>
 			<div class="flex justify-between items-center">
 				<twig:ClickInput name="remember_me" label="{{ 'login.remember_me'|trans }}" type="checkbox" checked="{{ remember_me|default('') == 'checked' }}"/>

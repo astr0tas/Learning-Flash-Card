@@ -9,6 +9,10 @@ class Routes
     'URL' => '/login',
     'NAME' => 'login',
   ];
+  public const LOGIN_SUBMIT_ROUTE = [
+    'URL' => '/login',
+    'NAME' => 'login_submit',
+  ];
   public const LOGIN_WITH_GOOGLE_ROUTE = [
     'URL' => '/login/google',
     'NAME' => 'login_with_google',
@@ -24,6 +28,10 @@ class Routes
   public const FORGOT_PASSWORD_ROUTE = [
     'URL' => '/forgot-password',
     'NAME' => 'forgot_password',
+  ];
+  public const FORGOT_PASSWORD_SUBMIT_ROUTE = [
+    'URL' => '/forgot-password',
+    'NAME' => 'forgot_password_submit',
   ];
   public const RECOVERY_EMAIL_SENT_ROUTE = [
     'URL' => '/recovery-email-sent',

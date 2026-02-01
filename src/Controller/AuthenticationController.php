@@ -25,70 +25,76 @@ class AuthenticationController extends BaseController
     private Security $security
   ) {}
 
-  #[Route(path: Routes::LOGIN_ROUTE['URL'], name: Routes::LOGIN_ROUTE['NAME'], methods: ['GET', 'POST'])]
-  public function LoginAction(Request $request)
+  #[Route(path: Routes::LOGIN_ROUTE['URL'], name: Routes::LOGIN_ROUTE['NAME'], methods: [Request::METHOD_GET])]
+  public function LoginAction()
   {
     if ($this->getUser()) {
       return $this->redirectUserToHome();
     }
 
-    if ($request->isMethod(Request::METHOD_GET)) {
-      // Display login form
-      return $this->render(view: TwigTemplate::PAGES['login']);
-    } else {
-      // Handle login submission
-      $postData = $request->request->all();
-
-      // Flash input back to the session to pre-fill the form
-      $this->addFlash('email', $postData['email'] ?? '');
-      $this->addFlash('remember_me', isset($postData['remember_me']) ? 'checked' : '');
-
-      // Validate post data
-      $fields = [
-        'email'    => [new Assert\NotBlank(
-          message: $this->translator->trans('validation.email.not_blank')
-        ), new Assert\Email(
-          message: $this->translator->trans('validation.email.invalid')
-        )],
-        'password' => [new Assert\NotBlank(
-          message: $this->translator->trans('validation.password.not_blank')
-        )],
-      ];
-      $errors = $this->validate($postData, $fields);
-
-      if (count($errors) > 0) {
-        $this->addFlash('error', $errors);
-        return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
-      }
-
-      $user = $this->entityManager
-        ->getRepository(UserEntity::class)
-        ->findOneBy(criteria: ['email' => $postData['email']]);
-
-      if (!$user || !$user->comparePassword($postData['password'])) {
-        $this->addFlash('error', ['general' => [
-          $this->translator->trans('login.incorrect_credentials')
-        ]]);
-        return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
-      }
-
-      $rememberMeBadge = new RememberMeBadge();
-
-      if (isset($postData['remember_me'])) {
-        $rememberMeBadge->enable();
-      } else {
-        $rememberMeBadge->disable();
-      }
-
-      $this->security->login($user, 'form_login', null, [
-        $rememberMeBadge,
-      ]);
-
-      return $this->redirectUserToHome();
-    }
+    return $this->render(view: TwigTemplate::PAGES['login']);
   }
 
-  #[Route(path: Routes::LOGIN_WITH_GOOGLE_ROUTE['URL'], name: Routes::LOGIN_WITH_GOOGLE_ROUTE['NAME'], methods: ['POST'])]
+  #[Route(path: Routes::LOGIN_SUBMIT_ROUTE['URL'], name: Routes::LOGIN_SUBMIT_ROUTE['NAME'], methods: [Request::METHOD_POST])]
+  public function LoginSubmitAction(Request $request)
+  {
+    if ($this->getUser()) {
+      return $this->redirectUserToHome();
+    }
+
+    // Store post data and errors for flash messages
+    $data = [];
+
+    // Handle login submission
+    $postData = $request->request->all();
+
+    // Echo back input values except password
+    $data['email'] = $postData['email'] ?? '';
+    $data['remember_me'] = isset($postData['remember_me']) ? 'checked' : '';
+
+    // Validate post data
+    $fields = [
+      'email'    => [new Assert\NotBlank(
+        message: $this->translator->trans('validation.email.not_blank')
+      ), new Assert\Email(
+        message: $this->translator->trans('validation.email.invalid')
+      )],
+      'password' => [new Assert\NotBlank(
+        message: $this->translator->trans('validation.password.not_blank')
+      )],
+    ];
+    $errors = $this->validate($postData, $fields);
+
+    if (count($errors) > 0) {
+      $data['error'] = $errors;
+      return $this->render(view: TwigTemplate::PAGES['login'], parameters: $data, response: $this->unprocessableEntityResponse);
+    }
+
+    $user = $this->entityManager
+      ->getRepository(UserEntity::class)
+      ->findOneBy(criteria: ['email' => $postData['email']]);
+
+    if (!$user || !$user->comparePassword($postData['password'])) {
+      $data['error'] = ['general' => [$this->translator->trans('login.incorrect_credentials')]];
+      return $this->render(view: TwigTemplate::PAGES['login'], parameters: $data, response: $this->unprocessableEntityResponse);
+    }
+
+    $rememberMeBadge = new RememberMeBadge();
+
+    if (isset($postData['remember_me'])) {
+      $rememberMeBadge->enable();
+    } else {
+      $rememberMeBadge->disable();
+    }
+
+    $this->security->login($user, 'form_login', null, [
+      $rememberMeBadge,
+    ]);
+
+    return $this->redirectUserToHome();
+  }
+
+  #[Route(path: Routes::LOGIN_WITH_GOOGLE_ROUTE['URL'], name: Routes::LOGIN_WITH_GOOGLE_ROUTE['NAME'], methods: [Request::METHOD_POST])]
   public function LoginWithGoogleAction(Request $request)
   {
     if ($this->getUser()) {
@@ -100,24 +106,14 @@ class AuthenticationController extends BaseController
     $postCsrf   = $request->request->get('g_csrf_token');
 
     if (!$cookieCsrf || !$postCsrf || $cookieCsrf !== $postCsrf) {
-      $this->addFlash('error', [
-        'general' => [
-          'Google CSRF validation failed.'
-        ]
-      ]);
-      return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
+      return $this->render(view: TwigTemplate::PAGES['login'], parameters: ['error' => ['general' => [$this->translator->trans('google_login.csrf_error')]]], response: $this->unprocessableEntityResponse);
     }
 
     // 2. Get the JWT Token
     $token = $request->request->get('credential');
 
     if (!$token) {
-      $this->addFlash('error', [
-        'general' => [
-          'No token received from Google.'
-        ]
-      ]);
-      return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
+      return $this->render(view: TwigTemplate::PAGES['login'], parameters: ['error' => ['general' => [$this->translator->trans('google_login.no_jwt')]]], response: $this->unprocessableEntityResponse);
     }
 
     // 3. Verify Token with Google Client Library
@@ -126,12 +122,7 @@ class AuthenticationController extends BaseController
     try {
       $payload = $client->verifyIdToken($token);
     } catch (\Exception $e) {
-      $this->addFlash('error', [
-        'general' => [
-          'Invalid Google Token.'
-        ]
-      ]);
-      return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
+      return $this->render(view: TwigTemplate::PAGES['login'], parameters: ['error' => ['general' => [$this->translator->trans('google_login.invalid_jwt')]]], response: $this->unprocessableEntityResponse);
     }
 
     if ($payload) {
@@ -168,98 +159,93 @@ class AuthenticationController extends BaseController
     return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
   }
 
-  #[Route(path: Routes::LOGOUT_ROUTE['URL'], name: Routes::LOGOUT_ROUTE['NAME'], methods: ['POST'])]
+  #[Route(path: Routes::LOGOUT_ROUTE['URL'], name: Routes::LOGOUT_ROUTE['NAME'], methods: [Request::METHOD_POST])]
   public function LogoutAction()
   {
     return $this->security->logout();
   }
 
-  #[Route(path: Routes::REGISTER_ROUTE['URL'], name: Routes::REGISTER_ROUTE['NAME'], methods: ['GET', 'POST'])]
-  public function RegisterAction(Request $request)
+  #[Route(path: Routes::REGISTER_ROUTE['URL'], name: Routes::REGISTER_ROUTE['NAME'], methods: [Request::METHOD_GET])]
+  public function RegisterAction()
   {
     if ($this->getUser()) {
       return $this->redirectUserToHome();
     }
 
-    if ($request->isMethod(Request::METHOD_GET)) {
-      // Display registration form
-      return $this->render(view: TwigTemplate::PAGES['register']);
-    } else {
-      // Handle registration submission
-    }
+    return $this->render(view: TwigTemplate::PAGES['register']);
   }
 
-  #[Route(path: Routes::FORGOT_PASSWORD_ROUTE['URL'], name: Routes::FORGOT_PASSWORD_ROUTE['NAME'], methods: ['GET', 'POST'])]
-  public function ForgotPasswordAction(Request $request, EmailService $emailService)
+  #[Route(path: Routes::FORGOT_PASSWORD_ROUTE['URL'], name: Routes::FORGOT_PASSWORD_ROUTE['NAME'], methods: [Request::METHOD_GET])]
+  public function ForgotPasswordAction()
   {
     if ($this->getUser()) {
       return $this->redirectUserToHome();
     }
 
-    if ($request->isMethod(Request::METHOD_GET)) {
-      // Display forgot password form
-      return $this->render(view: TwigTemplate::PAGES['forgot_password']);
-    } else {
-      // Handle post data
-      $postData = $request->request->all();
-
-      // Flash input back to the session to pre-fill the form
-      $this->addFlash('email', $postData['email'] ?? '');
-
-      // Validate post data
-      $fields = [
-        'email'    => [new Assert\NotBlank(
-          message: $this->translator->trans('validation.email.not_blank')
-        ), new Assert\Email(
-          message: $this->translator->trans('validation.email.invalid')
-        )],
-      ];
-      $errors = $this->validate($postData, $fields);
-
-      if (count($errors) > 0) {
-        $this->addFlash('error', $errors);
-        return $this->redirectToRoute(Routes::FORGOT_PASSWORD_ROUTE['NAME']);
-      }
-
-      $user = $this->entityManager
-        ->getRepository(UserEntity::class)
-        ->findOneBy(criteria: ['email' => $postData['email']]);
-
-      if (!$user) {
-        $this->addFlash('error', ['general' => [
-          $this->translator->trans('forgot_password.user_not_found')
-        ]]);
-        return $this->redirectToRoute(Routes::FORGOT_PASSWORD_ROUTE['NAME']);
-      }
-
-      if ($user->getPassword() === Constants::GOOGLE_OAUTH_PASSWORD) {
-        $this->addFlash('error', ['general' => [
-          $this->translator->trans('forgot_password.oauth_user')
-        ]]);
-        return $this->redirectToRoute(Routes::FORGOT_PASSWORD_ROUTE['NAME']);
-      }
-
-      // Check for request spam
-      if ($this->checkRequestSpam(entityClass: RecoveryTokenEntity::class, alias: 't', conditions: ["t.email = '{$user->getEmail()}'"])) {
-        $this->addFlash('error', ['general' => [
-          $this->translator->trans('general_error.too_many_requests')
-        ]]);
-        return $this->redirectToRoute(Routes::FORGOT_PASSWORD_ROUTE['NAME']);
-      }
-
-      if (!$this->sendRecoveryEmail($user, $emailService)) {
-        $this->addFlash('error', ['general' => [
-          $this->translator->trans('forgot_password.system_error')
-        ]]);
-        return $this->redirectToRoute(Routes::FORGOT_PASSWORD_ROUTE['NAME']);
-      }
-
-      $this->addFlash(Constants::SESSION['recovery_email_sent_flash_guard'], 1);
-      return $this->redirectToRoute(Routes::RECOVERY_EMAIL_SENT_ROUTE['NAME']);
-    }
+    return $this->render(view: TwigTemplate::PAGES['forgot_password']);
   }
 
-  #[Route(path: Routes::RECOVERY_EMAIL_SENT_ROUTE['URL'], name: Routes::RECOVERY_EMAIL_SENT_ROUTE['NAME'], methods: ['GET'])]
+  #[Route(path: Routes::FORGOT_PASSWORD_SUBMIT_ROUTE['URL'], name: Routes::FORGOT_PASSWORD_SUBMIT_ROUTE['NAME'], methods: [Request::METHOD_POST])]
+  public function ForgotPasswordSubmitAction(Request $request, EmailService $emailService)
+  {
+    if ($this->getUser()) {
+      return $this->redirectUserToHome();
+    }
+
+    // Store post data and errors for flash messages
+    $data = [];
+
+    // Handle post data
+    $postData = $request->request->all();
+
+    // Echo back input values
+    $data['email'] = $postData['email'] ?? '';
+
+    // Validate post data
+    $fields = [
+      'email'    => [new Assert\NotBlank(
+        message: $this->translator->trans('validation.email.not_blank')
+      ), new Assert\Email(
+        message: $this->translator->trans('validation.email.invalid')
+      )],
+    ];
+    $errors = $this->validate($postData, $fields);
+
+    if (count($errors) > 0) {
+      $data['error'] = $errors;
+      return $this->render(view: TwigTemplate::PAGES['forgot_password'], parameters: $data, response: $this->unprocessableEntityResponse);
+    }
+
+    $user = $this->entityManager
+      ->getRepository(UserEntity::class)
+      ->findOneBy(criteria: ['email' => $postData['email']]);
+
+    if (!$user) {
+      $data['error'] = ['general' => [$this->translator->trans('forgot_password.user_not_found')]];
+      return $this->render(view: TwigTemplate::PAGES['forgot_password'], parameters: $data, response: $this->unprocessableEntityResponse);
+    }
+
+    if ($user->getPassword() === Constants::GOOGLE_OAUTH_PASSWORD) {
+      $data['error'] = ['general' => [$this->translator->trans('forgot_password.oauth_user')]];
+      return $this->render(view: TwigTemplate::PAGES['forgot_password'], parameters: $data, response: $this->unprocessableEntityResponse);
+    }
+
+    // Check for request spam
+    if ($this->checkRequestSpam(entityClass: RecoveryTokenEntity::class, alias: 't', conditions: ["t.email = '{$user->getEmail()}'"])) {
+      $data['error'] = ['general' => [$this->translator->trans('general_error.too_many_requests')]];
+      return $this->render(view: TwigTemplate::PAGES['forgot_password'], parameters: $data, response: $this->unprocessableEntityResponse);
+    }
+
+    if (!$this->sendRecoveryEmail($user, $emailService)) {
+      $data['error'] = ['general' => [$this->translator->trans('forgot_password.system_error')]];
+      return $this->render(view: TwigTemplate::PAGES['forgot_password'], parameters: $data, response: $this->unprocessableEntityResponse);
+    }
+
+    $this->addFlash(Constants::SESSION['recovery_email_sent_flash_guard'], 1);
+    return $this->redirectToRoute(Routes::RECOVERY_EMAIL_SENT_ROUTE['NAME']);
+  }
+
+  #[Route(path: Routes::RECOVERY_EMAIL_SENT_ROUTE['URL'], name: Routes::RECOVERY_EMAIL_SENT_ROUTE['NAME'], methods: [Request::METHOD_GET])]
   public function RecoveryEmailSentAction()
   {
     $flashBag = $this->session->getFlashBag();
@@ -270,22 +256,17 @@ class AuthenticationController extends BaseController
     return $this->render(view: TwigTemplate::PAGES['recovery_email_sent']);
   }
 
-  #[Route(path: Routes::RESET_PASSWORD_ROUTE['URL'], name: Routes::RESET_PASSWORD_ROUTE['NAME'], methods: ['GET', 'POST'])]
-  public function ResetPasswordAction(Request $request)
+  #[Route(path: Routes::RESET_PASSWORD_ROUTE['URL'], name: Routes::RESET_PASSWORD_ROUTE['NAME'], methods: [Request::METHOD_GET])]
+  public function ResetPasswordAction()
   {
     if ($this->getUser()) {
       return $this->redirectUserToHome();
     }
 
-    if ($request->isMethod(Request::METHOD_GET)) {
-      // Display reset password form
-      return $this->render(view: TwigTemplate::PAGES['reset_password']);
-    } else {
-      // Handle reset password submission
-    }
+    return $this->render(view: TwigTemplate::PAGES['reset_password']);
   }
 
-  #[Route(path: Routes::EMAIL_VERIFICATION_ROUTE['URL'], name: Routes::EMAIL_VERIFICATION_ROUTE['NAME'], methods: ['GET'])]
+  #[Route(path: Routes::EMAIL_VERIFICATION_ROUTE['URL'], name: Routes::EMAIL_VERIFICATION_ROUTE['NAME'], methods: [Request::METHOD_GET])]
   public function EmailVerificationAction(Request $request)
   {
     if ($this->getUser()) {
