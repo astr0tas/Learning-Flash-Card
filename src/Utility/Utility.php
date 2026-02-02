@@ -17,15 +17,25 @@ class Utility
   }
 
   /**
-   * Hash a given string using Bcrypt algorithm
+   * Hash a given string using a specified algorithm
    * @param string $input The input string to hash
-   * @return string The Bcrypt hashed string
+   * @param string $algorithm The hashing algorithm to use (default is SHA256)
+   * @param array $options Options for the hashing algorithm
+   * @return string The hashed string
    */
-  public static function hashString(string $input): string
+  public static function hashString(string $input, string $algorithm = 'sha256', array $options = []): string
   {
-    return password_hash($input, PASSWORD_BCRYPT, [
-      'cost' => Constants::BCRYPT_COST,
-    ]);
+    return hash($algorithm, $input, false, $options);
   }
 
+  /**
+   * Compare a given string with a hash
+   * @param string $input The input string to compare
+   * @param string $hash The hash to compare against
+   * @return bool True if the input matches the hash, false otherwise
+   */
+  public static function compareHash(string $input, string $hash): bool
+  {
+    return hash_equals($hash, $input);
+  }
 }
