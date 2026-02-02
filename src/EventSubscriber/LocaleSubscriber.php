@@ -49,26 +49,16 @@ class LocaleSubscriber implements EventSubscriberInterface
       // Set the target redirect url
       $this->redirectUrl = $request->headers->get('referer');
     } else {
-      // For Google GSI redirects, check locale in the "state" parameter
-      $state = $request->request->get('state', '');
-      if (!empty($state)) {
-        $stateParams = Utility::parseGSIState($state);
-        if (isset($stateParams[Constants::PARAMETERS['locale']])) {
-          $this->currentLocale = $stateParams[Constants::PARAMETERS['locale']];
-        }
-      }
-      // Otherwise, use the cookie or default locale
-      else {
-        // Get the "locale" cookie from the request
-        $cookieLocale = $request->cookies->get(Constants::COOKIES['locale']);
+      // Get the "locale" cookie from the request
+      $cookieLocale = $request->cookies->get(Constants::COOKIES['locale']);
 
-        // Check if the cookie exists
-        if ($cookieLocale) {
-          $this->currentLocale = $cookieLocale;
-        } else {
-          $this->currentLocale = $this->defaultLocale;
-        }
+      // Check if the cookie exists
+      if ($cookieLocale) {
+        $this->currentLocale = $cookieLocale;
+      } else {
+        $this->currentLocale = $this->defaultLocale;
       }
+      // }
     }
 
     // Validate the locale (Security check)
@@ -89,9 +79,9 @@ class LocaleSubscriber implements EventSubscriberInterface
       expire: new \DateTime('+5 years'),
       path: '/',
       domain: null,
-      secure: null, // Auto-detect
+      secure: true, // Auto-detect
       httpOnly: false,
-      sameSite: Cookie::SAMESITE_LAX
+      sameSite: Cookie::SAMESITE_NONE
     );
 
 

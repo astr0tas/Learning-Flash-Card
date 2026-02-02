@@ -17,7 +17,6 @@ class Constants
     'locale'    => 'locale',
   ];
   public const PARAMETERS = [
-    'locale'    => 'locale',
     'csrf_token' => 'csrf_token',
   ];
   public const LOCALES = [

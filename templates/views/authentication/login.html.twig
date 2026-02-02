@@ -19,7 +19,7 @@
 				<div class="opacity-[0.001] z-50 py-1">
 					<div class="g_id_signin scale-[2] overflow-hidden" data-type="standard" data-theme="filled_blue" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left" data-width="1000"></div>
 				</div>
-				<div id="g_id_onload" data-client_id="{{ google_oauth_client_id }}" data-context="signin" data-ux_mode="redirect" data-auto_prompt="false" data-login_uri="{{ url(constant('App\\Config\\Routes::LOGIN_WITH_GOOGLE_ROUTE')['NAME']) }}" data-state="{{ constant('App\\Config\\Constants::PARAMETERS')['locale'] }}={{ get_locale() }}"></div>
+				<div id="g_id_onload" data-client_id="{{ google_oauth_client_id }}" data-context="signin" data-ux_mode="redirect" data-auto_prompt="false" data-login_uri="{{ url(constant('App\\Config\\Routes::LOGIN_WITH_GOOGLE_ROUTE')['NAME']) }}"></div>
 			</div>
 			{# <div class="flex-1 flex items-center justify-center gap-3 border border-gray-400 rounded-md py-2 hover:cursor-pointer hover:opacity-80 active:opacity-70 select-none">
 				<img class="w-9 h-9 ms-3" src="/svg/facebook.svg"/>

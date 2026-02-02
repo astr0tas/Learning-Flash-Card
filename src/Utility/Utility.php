@@ -28,19 +28,4 @@ class Utility
     ]);
   }
 
-  /**
-   * Parse the "state" parameter from Google Sign-In redirect
-   * @param string $state The state string to parse
-   * @return array Associative array of parsed state parameters
-   */
-  public static function parseGSIState(string $state): array
-  {
-    $result = [];
-    $pairs = explode('&', $state);
-    foreach ($pairs as $pair) {
-      [$key, $value] = explode('=', $pair, 2);
-      $result[$key] = $value;
-    }
-    return $result;
-  }
 }
