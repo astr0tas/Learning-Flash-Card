@@ -2,8 +2,10 @@
 
 namespace App\EventSubscriber;
 
+use App\Config\Constants;
 use App\Config\Routes;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -19,7 +21,7 @@ class CsrfValidationSubscriber implements EventSubscriberInterface
   ];
 
   public function __construct(
-    private CsrfTokenManagerInterface $csrfTokenManager
+    private CsrfTokenManagerInterface $csrfTokenManager,
   ) {}
 
   public function onKernelController(ControllerEvent $event): void
@@ -31,7 +33,7 @@ class CsrfValidationSubscriber implements EventSubscriberInterface
 
     // 2. Only check on POST methods
     $request = $event->getRequest();
-    if (!$request->isMethod('POST')) {
+    if (!$request->isMethod(Request::METHOD_POST)) {
       return;
     }
 
@@ -44,18 +46,18 @@ class CsrfValidationSubscriber implements EventSubscriberInterface
 
     // 4. Perform the Validation
     // 'csrf_token' is the form field name you are sending
-    $tokenValue = $request->request->get('csrf_token');
+    $tokenValue = $request->request->get(Constants::PARAMETERS['csrf_token']);
 
     // 'csrf_token' is the ID/Key you used to generate it (e.g. {{ csrf_token('authenticate') }})
     // Adjust this ID if you use different IDs for different forms
-    $tokenId = 'csrf_token';
+    $tokenId = Constants::PARAMETERS['csrf_token'];
 
     if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($tokenId, $tokenValue))) {
       throw new AccessDeniedHttpException('Invalid CSRF token.');
     }
 
     // 5. If valid, remove csrf_token from request data to prevent form validation issues
-    $request->request->remove('csrf_token');
+    $request->request->remove(Constants::PARAMETERS['csrf_token']);
   }
 
   public static function getSubscribedEvents(): array

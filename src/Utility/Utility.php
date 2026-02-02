@@ -17,4 +17,15 @@ class Utility
       'cost' => Constants::BCRYPT_COST,
     ]);
   }
+
+  public static function parseGSIState(string $state): array
+  {
+    $result = [];
+    $pairs = explode('&', $state);
+    foreach ($pairs as $pair) {
+      [$key, $value] = explode('=', $pair, 2);
+      $result[$key] = $value;
+    }
+    return $result;
+  }
 }

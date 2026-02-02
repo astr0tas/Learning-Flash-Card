@@ -4,6 +4,7 @@ namespace App\EventSubscriber;
 
 use App\Config\Constants;
 use App\Config\Routes;
+use App\Utility\Utility;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -31,17 +32,6 @@ class LocaleSubscriber implements EventSubscriberInterface
     ];
   }
 
-  private function parseGSIState(string $state): array
-  {
-    $result = [];
-    $pairs = explode('&', $state);
-    foreach ($pairs as $pair) {
-      [$key, $value] = explode('=', $pair, 2);
-      $result[$key] = $value;
-    }
-    return $result;
-  }
-
   public function onKernelRequest(RequestEvent $event): void
   {
     // Check if it's the main request (important for avoiding sub-requests)
@@ -62,7 +52,7 @@ class LocaleSubscriber implements EventSubscriberInterface
       // For Google GSI redirects, check locale in the "state" parameter
       $state = $request->request->get('state', '');
       if (!empty($state)) {
-        $stateParams = $this->parseGSIState($state);
+        $stateParams = Utility::parseGSIState($state);
         if (isset($stateParams[Constants::PARAMETERS['locale']])) {
           $this->currentLocale = $stateParams[Constants::PARAMETERS['locale']];
         }
