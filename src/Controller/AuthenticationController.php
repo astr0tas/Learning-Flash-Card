@@ -241,18 +241,6 @@ class AuthenticationController extends BaseController
       return $this->render(view: TwigTemplate::PAGES['forgot_password'], parameters: $data, response: $this->unprocessableEntityResponse);
     }
 
-    $this->addFlash(Constants::SESSION['recovery_email_sent_flash_guard'], 1);
-    return $this->redirectToRoute(Routes::RECOVERY_EMAIL_SENT_ROUTE['NAME']);
-  }
-
-  #[Route(path: Routes::RECOVERY_EMAIL_SENT_ROUTE['URL'], name: Routes::RECOVERY_EMAIL_SENT_ROUTE['NAME'], methods: [Request::METHOD_GET])]
-  public function RecoveryEmailSentAction()
-  {
-    $flashBag = $this->session->getFlashBag();
-
-    if (!$flashBag->get(Constants::SESSION['recovery_email_sent_flash_guard'])) {
-      throw $this->createNotFoundException($this->translator->trans('navigation_error.error_404'));
-    }
     return $this->render(view: TwigTemplate::PAGES['recovery_email_sent']);
   }
 

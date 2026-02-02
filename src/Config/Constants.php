@@ -25,7 +25,6 @@ class Constants
   public const GOOGLE_OAUTH_PASSWORD = 'google_oauth_password'; // Do not touch this!!!
   public const REQUEST_LIMIT = 5;
   public const SESSION = [
-    'recovery_email_sent_flash_guard' => 'recovery_email_sent_flash_guard'
   ];
   public const LOG_CHANNELS = [
     'email_content'  => 'email_content.logger',
