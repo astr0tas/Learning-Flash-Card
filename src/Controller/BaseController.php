@@ -31,12 +31,12 @@ class BaseController extends AbstractController
 
   /**
    * Validate input data against specified constraints
-   * @param mixed $input The input data to validate
+   * @param array $input The input data to validate
    * @param array $fields An associative array of field names to their constraints
    * @param bool $allowExtraFields Whether to allow extra fields not specified in $fields
    * @return array An array of validation errors, empty if none found
    */
-  public function validate($input, $fields, bool $allowExtraFields = true): array
+  public function validate(array $input, array $fields, bool $allowExtraFields = true): array
   {
     $validator = Validation::createValidator();
     $violations = $validator->validate($input, new Assert\Collection([
@@ -69,7 +69,7 @@ class BaseController extends AbstractController
    * @param array $conditions Additional conditions to apply (e.g., ["t.email = <value>"])
    * @return bool True if the request limit is reached, false otherwise
    */
-  public function checkRequestSpam(string $entityClass, string $alias = 't', $conditions)
+  public function checkRequestSpam(string $entityClass, string $alias = 't', array $conditions)
   {
     $oneHourAgo = new \DateTime('-1 hour');
 
