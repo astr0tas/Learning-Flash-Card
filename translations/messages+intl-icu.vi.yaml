@@ -12,11 +12,6 @@ login:
   or: "hoặc"
   incorrect_credentials: "Email hoặc mật khẩu không đúng."
 
-google_login:
-  csrf_error: "Đăng nhập bằng Google thất bại do không khớp token CSRF. Vui lòng thử lại."
-  no_jwt: "Đăng nhập bằng Google thất bại do không nhận được JWT. Vui lòng thử lại."
-  invalid_jwt: "Đăng nhập bằng Google thất bại do JWT không hợp lệ. Vui lòng thử lại."
-
 logout: "Đăng xuất"
 
 register:

@@ -53,7 +53,7 @@ class CsrfValidationSubscriber implements EventSubscriberInterface
     $tokenId = Constants::PARAMETERS['csrf_token'];
 
     if (!$this->csrfTokenManager->isTokenValid(new CsrfToken($tokenId, $tokenValue))) {
-      throw new AccessDeniedHttpException('Invalid CSRF token.');
+      throw new AccessDeniedHttpException(Constants::MESSAGES['invalid_csrf']);
     }
 
     // 5. If valid, remove csrf_token from request data to prevent form validation issues

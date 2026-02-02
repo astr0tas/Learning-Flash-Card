@@ -26,6 +26,7 @@ class Constants
   public const DEFAULT_LOCALE = self::LOCALES['vi'];
   public const BCRYPT_COST = 12;
   public const GOOGLE_OAUTH_PASSWORD = 'google_oauth_password'; // Do not touch this!!!
+  public const AUTHENTICATOR_NAME = 'form_login'; // Do not touch this!!!
   public const REQUEST_LIMIT = 5;
   public const SESSION = [];
   public const LOG_CHANNELS = [
@@ -38,5 +39,12 @@ class Constants
   public const TABLES = [
     'user' => 'user_tbl',
     'recovery_token' => 'recovery_token_tbl',
+  ];
+  // This constant is used for technical messages only
+  public const MESSAGES = [
+    'invalid_csrf' => 'Invalid CSRF token.',
+    'google_csrf_error' => 'Google CSRF token mismatch.',
+    'google_no_jwt'  => 'Google JWT is missing.',
+    'google_invalid_jwt' => 'Google JWT is invalid.',
   ];
 }

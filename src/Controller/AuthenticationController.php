@@ -93,7 +93,7 @@ class AuthenticationController extends BaseController
       $rememberMeBadge->disable();
     }
 
-    $this->security->login($user, 'form_login', null, [
+    $this->security->login($user, Constants::AUTHENTICATOR_NAME, null, [
       $rememberMeBadge,
     ]);
 
@@ -112,7 +112,7 @@ class AuthenticationController extends BaseController
     $postCsrf   = $request->request->get('g_csrf_token');
 
     if (!$cookieCsrf || !$postCsrf || $cookieCsrf !== $postCsrf) {
-      $this->addFlash('error', ['general' => [$this->translator->trans('google_login.csrf_error')]]);
+      $this->addFlash('error', ['general' => [Constants::MESSAGES['google_csrf_error']]]);
       return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
     }
 
@@ -120,7 +120,7 @@ class AuthenticationController extends BaseController
     $token = $request->request->get('credential');
 
     if (!$token) {
-      $this->addFlash('error', ['general' => [$this->translator->trans('google_login.no_jwt')]]);
+      $this->addFlash('error', ['general' => [Constants::MESSAGES['google_no_jwt']]]);
       return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
     }
 
@@ -130,7 +130,7 @@ class AuthenticationController extends BaseController
     try {
       $payload = $client->verifyIdToken($token);
     } catch (\Exception $e) {
-      $this->addFlash('error', ['general' => [$this->translator->trans('google_login.invalid_jwt')]]);
+      $this->addFlash('error', ['general' => [Constants::MESSAGES['google_invalid_jwt']]]);
       return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
     }
 
@@ -158,7 +158,7 @@ class AuthenticationController extends BaseController
 
       $request->request->set('remember_me', 'on');
 
-      $this->security->login($user, 'form_login', null, [
+      $this->security->login($user, Constants::AUTHENTICATOR_NAME, null, [
         (new RememberMeBadge())->enable(),
       ]);
 

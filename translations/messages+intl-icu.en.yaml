@@ -12,11 +12,6 @@ login:
   or: "or"
   incorrect_credentials: "Incorrect email or password."
 
-google_login:
-  csrf_error: "Google sign-in failed due to CSRF token mismatch. Please try again."
-  no_jwt: "Google sign-in failed due to missing JWT. Please try again."
-  invalid_jwt: "Google sign-in failed due to invalid JWT. Please try again."
-
 logout: "Sign Out"
 
 register:
