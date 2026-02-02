@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
 
 class AuthenticationController extends BaseController
@@ -28,11 +29,16 @@ class AuthenticationController extends BaseController
   #[Route(path: Routes::LOGIN_ROUTE['URL'], name: Routes::LOGIN_ROUTE['NAME'], methods: [Request::METHOD_GET])]
   public function LoginAction()
   {
+    if ($this->session instanceof FlashBagAwareSessionInterface) {
+      $error = $this->session->getFlashBag()->get('error', []);
+      $error = count($error) > 0 ? $error[0] : [];
+    }
+
     if ($this->getUser()) {
       return $this->redirectUserToHome();
     }
 
-    return $this->render(view: TwigTemplate::PAGES['login']);
+    return $this->render(view: TwigTemplate::PAGES['login'], parameters: ['error' => $error]);
   }
 
   #[Route(path: Routes::LOGIN_SUBMIT_ROUTE['URL'], name: Routes::LOGIN_SUBMIT_ROUTE['NAME'], methods: [Request::METHOD_POST])]
@@ -106,14 +112,16 @@ class AuthenticationController extends BaseController
     $postCsrf   = $request->request->get('g_csrf_token');
 
     if (!$cookieCsrf || !$postCsrf || $cookieCsrf !== $postCsrf) {
-      return $this->render(view: TwigTemplate::PAGES['login'], parameters: ['error' => ['general' => [$this->translator->trans('google_login.csrf_error')]]], response: $this->unprocessableEntityResponse);
+      $this->addFlash('error', ['general' => [$this->translator->trans('google_login.csrf_error')]]);
+      return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
     }
 
     // 2. Get the JWT Token
     $token = $request->request->get('credential');
 
     if (!$token) {
-      return $this->render(view: TwigTemplate::PAGES['login'], parameters: ['error' => ['general' => [$this->translator->trans('google_login.no_jwt')]]], response: $this->unprocessableEntityResponse);
+      $this->addFlash('error', ['general' => [$this->translator->trans('google_login.no_jwt')]]);
+      return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
     }
 
     // 3. Verify Token with Google Client Library
@@ -122,7 +130,8 @@ class AuthenticationController extends BaseController
     try {
       $payload = $client->verifyIdToken($token);
     } catch (\Exception $e) {
-      return $this->render(view: TwigTemplate::PAGES['login'], parameters: ['error' => ['general' => [$this->translator->trans('google_login.invalid_jwt')]]], response: $this->unprocessableEntityResponse);
+      $this->addFlash('error', ['general' => [$this->translator->trans('google_login.invalid_jwt')]]);
+      return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
     }
 
     if ($payload) {
