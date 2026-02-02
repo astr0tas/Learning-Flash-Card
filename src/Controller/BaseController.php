@@ -4,9 +4,6 @@ namespace App\Controller;
 
 use App\Config\Constants;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Attribute\Route;
-use App\Config\Routes;
-use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,13 +27,6 @@ class BaseController extends AbstractController
     $this->session = $requestStack->getSession();
     $this->entityManager = $entityManager;
     $this->unprocessableEntityResponse = new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
-  }
-
-  #[Route(path: Routes::SET_LOCALE_ROUTE['URL'], name: Routes::SET_LOCALE_ROUTE['NAME'], methods: [Request::METHOD_GET])]
-  public function ChangeLocale(string $locale, Request $request)
-  {
-    // This is just an empty function with a route to prevent 404 error
-    // LocaleSubscriber will handle requests made to this route
   }
 
   /**
