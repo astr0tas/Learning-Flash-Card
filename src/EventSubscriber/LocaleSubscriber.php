@@ -31,6 +31,17 @@ class LocaleSubscriber implements EventSubscriberInterface
     ];
   }
 
+  private function parseGSIState(string $state): array
+  {
+    $result = [];
+    $pairs = explode('&', $state);
+    foreach ($pairs as $pair) {
+      [$key, $value] = explode('=', $pair, 2);
+      $result[$key] = $value;
+    }
+    return $result;
+  }
+
   public function onKernelRequest(RequestEvent $event): void
   {
     // Check if it's the main request (important for avoiding sub-requests)
@@ -48,14 +59,25 @@ class LocaleSubscriber implements EventSubscriberInterface
       // Set the target redirect url
       $this->redirectUrl = $request->headers->get('referer');
     } else {
-      // Get the "locale" cookie from the request
-      $cookieLocale = $request->cookies->get(Constants::COOKIES['locale']);
+      // For Google GSI redirects, check locale in the "state" parameter
+      $state = $request->request->get('state', '');
+      if (!empty($state)) {
+        $stateParams = $this->parseGSIState($state);
+        if (isset($stateParams[Constants::PARAMETERS['locale']])) {
+          $this->currentLocale = $stateParams[Constants::PARAMETERS['locale']];
+        }
+      }
+      // Otherwise, use the cookie or default locale
+      else {
+        // Get the "locale" cookie from the request
+        $cookieLocale = $request->cookies->get(Constants::COOKIES['locale']);
 
-      // Check if the cookie exists
-      if ($cookieLocale) {
-        $this->currentLocale = $cookieLocale;
-      } else {
-        $this->currentLocale = $this->defaultLocale;
+        // Check if the cookie exists
+        if ($cookieLocale) {
+          $this->currentLocale = $cookieLocale;
+        } else {
+          $this->currentLocale = $this->defaultLocale;
+        }
       }
     }
 

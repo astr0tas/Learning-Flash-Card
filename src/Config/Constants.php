@@ -16,6 +16,9 @@ class Constants
   public const COOKIES = [
     'locale'    => 'locale',
   ];
+  public const PARAMETERS = [
+    'locale'    => 'locale',
+  ];
   public const LOCALES = [
     'vi' => 'vi',
     'en' => 'en',
@@ -24,8 +27,7 @@ class Constants
   public const BCRYPT_COST = 12;
   public const GOOGLE_OAUTH_PASSWORD = 'google_oauth_password'; // Do not touch this!!!
   public const REQUEST_LIMIT = 5;
-  public const SESSION = [
-  ];
+  public const SESSION = [];
   public const LOG_CHANNELS = [
     'email_content'  => 'email_content.logger',
     'email_service'  => 'email_service.logger',
