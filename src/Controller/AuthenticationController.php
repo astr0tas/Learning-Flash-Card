@@ -100,6 +100,12 @@ class AuthenticationController extends BaseController
     return $this->redirectUserToHome();
   }
 
+  #[Route(path: Routes::LOGIN_WITH_GOOGLE_GET_REQUEST_ROUTE['URL'], name: Routes::LOGIN_WITH_GOOGLE_GET_REQUEST_ROUTE['NAME'], methods: [Request::METHOD_GET])]
+  public function LoginWithGoogleGetAction()
+  {
+    return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
+  }
+
   #[Route(path: Routes::LOGIN_WITH_GOOGLE_ROUTE['URL'], name: Routes::LOGIN_WITH_GOOGLE_ROUTE['NAME'], methods: [Request::METHOD_POST])]
   public function LoginWithGoogleAction(Request $request)
   {

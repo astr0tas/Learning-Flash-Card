@@ -17,6 +17,10 @@ class Routes
     'URL' => '/login/google',
     'NAME' => 'login_with_google',
   ];
+  public const LOGIN_WITH_GOOGLE_GET_REQUEST_ROUTE = [
+    'URL' => '/login/google',
+    'NAME' => 'login_with_google_get_request',
+  ];
   public const LOGOUT_ROUTE = [
     'URL' => '/logout',
     'NAME' => 'logout',
