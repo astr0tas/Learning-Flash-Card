@@ -36,11 +36,11 @@ class AuthenticationController extends BaseController
     $this->googleOAuthProvider = new Google([
       'clientId'     => $this->googleOAuthClientId,
       'clientSecret' => $this->googleOAuthClientSecret,
-      'redirectUri' => $this->router->generate(Routes::LOGIN_WITH_GOOGLE_ROUTE['NAME'], parameters: [], referenceType: UrlGeneratorInterface::ABSOLUTE_URL),
+      'redirectUri' => $this->router->generate(Routes::LOGIN_WITH_GOOGLE_ROUTE_NAME, parameters: [], referenceType: UrlGeneratorInterface::ABSOLUTE_URL),
     ]);
   }
 
-  #[Route(path: Routes::LOGIN_ROUTE['URL'], name: Routes::LOGIN_ROUTE['NAME'], methods: [Request::METHOD_GET])]
+  #[Route(path: Routes::LOGIN_ROUTE_URL, name: Routes::LOGIN_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function LoginAction()
   {
     if ($this->session instanceof FlashBagAwareSessionInterface) {
@@ -55,7 +55,7 @@ class AuthenticationController extends BaseController
     return $this->renderLogin(data: ['error' => $error]);
   }
 
-  #[Route(path: Routes::LOGIN_SUBMIT_ROUTE['URL'], name: Routes::LOGIN_SUBMIT_ROUTE['NAME'], methods: [Request::METHOD_POST])]
+  #[Route(path: Routes::LOGIN_SUBMIT_ROUTE_URL, name: Routes::LOGIN_SUBMIT_ROUTE_NAME, methods: [Request::METHOD_POST])]
   public function LoginSubmitAction(Request $request)
   {
     if ($this->getUser()) {
@@ -114,7 +114,7 @@ class AuthenticationController extends BaseController
     return $this->redirectUserToHome();
   }
 
-  #[Route(path: Routes::LOGIN_WITH_GOOGLE_ROUTE['URL'], name: Routes::LOGIN_WITH_GOOGLE_ROUTE['NAME'], methods: [Request::METHOD_GET])]
+  #[Route(path: Routes::LOGIN_WITH_GOOGLE_ROUTE_URL, name: Routes::LOGIN_WITH_GOOGLE_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function LoginWithGoogleAction(Request $request)
   {
     if ($this->getUser()) {
@@ -124,16 +124,16 @@ class AuthenticationController extends BaseController
     $state = $request->get('state');
     $oauth2state = null;
     if ($this->session instanceof FlashBagAwareSessionInterface) {
-      $oauth2state = $this->session->get(Constants::SESSION['oauth2state']);
-      $this->session->remove(Constants::SESSION['oauth2state']);
+      $oauth2state = $this->session->get(Constants::SESSION_OAUTH2STATE);
+      $this->session->remove(Constants::SESSION_OAUTH2STATE);
     }
 
     if (empty($state)) {
-      return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
+      return $this->redirectToRoute(Routes::LOGIN_ROUTE_NAME);
     }
 
     if ($state !== $oauth2state) {
-      throw new AccessDeniedHttpException(Constants::MESSAGES['invalid_csrf']);
+      throw new AccessDeniedHttpException(Constants::MESSAGE_INVALID_CSRF);
     }
 
     $token = $this->googleOAuthProvider->getAccessToken('authorization_code', [
@@ -144,7 +144,7 @@ class AuthenticationController extends BaseController
       $payload = $this->googleOAuthProvider->getResourceOwner($token);
     } catch (\Exception $e) {
       $this->addFlash('error', ['general' => [$this->translator->trans('login_with_google.error')]]);
-      return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
+      return $this->redirectToRoute(Routes::LOGIN_ROUTE_NAME);
     }
 
     $payloadData = $payload->toArray();
@@ -163,7 +163,7 @@ class AuthenticationController extends BaseController
       $user->setFirstName($firstName);
       $user->setLastName($lastName);
       $user->setPassword(Constants::GOOGLE_OAUTH_PASSWORD, false); // Random password
-      $user->setRoles([Constants::ROLES['user']]);
+      $user->setRoles([Constants::ROLE_USER]);
 
       $this->entityManager->persist($user);
       $this->entityManager->flush();
@@ -178,33 +178,33 @@ class AuthenticationController extends BaseController
     return $this->redirectUserToHome();
   }
 
-  #[Route(path: Routes::LOGOUT_ROUTE['URL'], name: Routes::LOGOUT_ROUTE['NAME'], methods: [Request::METHOD_POST])]
+  #[Route(path: Routes::LOGOUT_ROUTE_URL, name: Routes::LOGOUT_ROUTE_NAME, methods: [Request::METHOD_POST])]
   public function LogoutAction()
   {
     return $this->security->logout();
   }
 
-  #[Route(path: Routes::REGISTER_ROUTE['URL'], name: Routes::REGISTER_ROUTE['NAME'], methods: [Request::METHOD_GET])]
+  #[Route(path: Routes::REGISTER_ROUTE_URL, name: Routes::REGISTER_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function RegisterAction()
   {
     if ($this->getUser()) {
       return $this->redirectUserToHome();
     }
 
-    return $this->render(view: TwigTemplate::PAGES['register']);
+    return $this->render(view: TwigTemplate::PAGE_REGISTER);
   }
 
-  #[Route(path: Routes::FORGOT_PASSWORD_ROUTE['URL'], name: Routes::FORGOT_PASSWORD_ROUTE['NAME'], methods: [Request::METHOD_GET])]
+  #[Route(path: Routes::FORGOT_PASSWORD_ROUTE_URL, name: Routes::FORGOT_PASSWORD_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function ForgotPasswordAction()
   {
     if ($this->getUser()) {
       return $this->redirectUserToHome();
     }
 
-    return $this->render(view: TwigTemplate::PAGES['forgot_password']);
+    return $this->render(view: TwigTemplate::PAGE_FORGOT_PASSWORD);
   }
 
-  #[Route(path: Routes::FORGOT_PASSWORD_SUBMIT_ROUTE['URL'], name: Routes::FORGOT_PASSWORD_SUBMIT_ROUTE['NAME'], methods: [Request::METHOD_POST])]
+  #[Route(path: Routes::FORGOT_PASSWORD_SUBMIT_ROUTE_URL, name: Routes::FORGOT_PASSWORD_SUBMIT_ROUTE_NAME, methods: [Request::METHOD_POST])]
   public function ForgotPasswordSubmitAction(Request $request, EmailService $emailService)
   {
     if ($this->getUser()) {
@@ -232,7 +232,7 @@ class AuthenticationController extends BaseController
 
     if (count($errors) > 0) {
       $data['error'] = $errors;
-      return $this->render(view: TwigTemplate::PAGES['forgot_password'], parameters: $data, response: $this->unprocessableEntityResponse);
+      return $this->render(view: TwigTemplate::PAGE_FORGOT_PASSWORD, parameters: $data, response: $this->unprocessableEntityResponse);
     }
 
     $user = $this->entityManager
@@ -241,39 +241,39 @@ class AuthenticationController extends BaseController
 
     if (!$user) {
       $data['error'] = ['general' => [$this->translator->trans('forgot_password.user_not_found')]];
-      return $this->render(view: TwigTemplate::PAGES['forgot_password'], parameters: $data, response: $this->unprocessableEntityResponse);
+      return $this->render(view: TwigTemplate::PAGE_FORGOT_PASSWORD, parameters: $data, response: $this->unprocessableEntityResponse);
     }
 
     if ($user->getPassword() === Constants::GOOGLE_OAUTH_PASSWORD) {
       $data['error'] = ['general' => [$this->translator->trans('forgot_password.oauth_user')]];
-      return $this->render(view: TwigTemplate::PAGES['forgot_password'], parameters: $data, response: $this->unprocessableEntityResponse);
+      return $this->render(view: TwigTemplate::PAGE_FORGOT_PASSWORD, parameters: $data, response: $this->unprocessableEntityResponse);
     }
 
     // Check for request spam
     if ($this->checkRequestSpam(entityClass: RecoveryTokenEntity::class, alias: 't', conditions: ["t.email = '{$user->getEmail()}'"])) {
       $data['error'] = ['general' => [$this->translator->trans('general_error.too_many_requests')]];
-      return $this->render(view: TwigTemplate::PAGES['forgot_password'], parameters: $data, response: $this->unprocessableEntityResponse);
+      return $this->render(view: TwigTemplate::PAGE_FORGOT_PASSWORD, parameters: $data, response: $this->unprocessableEntityResponse);
     }
 
     if (!$this->sendRecoveryEmail($user, $emailService)) {
       $data['error'] = ['general' => [$this->translator->trans('forgot_password.system_error')]];
-      return $this->render(view: TwigTemplate::PAGES['forgot_password'], parameters: $data, response: $this->unprocessableEntityResponse);
+      return $this->render(view: TwigTemplate::PAGE_FORGOT_PASSWORD, parameters: $data, response: $this->unprocessableEntityResponse);
     }
 
-    return $this->render(view: TwigTemplate::PAGES['recovery_email_sent']);
+    return $this->render(view: TwigTemplate::PAGE_RECOVERY_EMAIL_SENT);
   }
 
-  #[Route(path: Routes::RESET_PASSWORD_ROUTE['URL'], name: Routes::RESET_PASSWORD_ROUTE['NAME'], methods: [Request::METHOD_GET])]
+  #[Route(path: Routes::RESET_PASSWORD_ROUTE_URL, name: Routes::RESET_PASSWORD_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function ResetPasswordAction()
   {
     if ($this->getUser()) {
       return $this->redirectUserToHome();
     }
 
-    return $this->render(view: TwigTemplate::PAGES['reset_password']);
+    return $this->render(view: TwigTemplate::PAGE_RESET_PASSWORD);
   }
 
-  #[Route(path: Routes::EMAIL_VERIFICATION_ROUTE['URL'], name: Routes::EMAIL_VERIFICATION_ROUTE['NAME'], methods: [Request::METHOD_GET])]
+  #[Route(path: Routes::EMAIL_VERIFICATION_ROUTE_URL, name: Routes::EMAIL_VERIFICATION_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function EmailVerificationAction(Request $request)
   {
     if ($this->getUser()) {
@@ -285,11 +285,11 @@ class AuthenticationController extends BaseController
   {
     $user = $this->getUser();
 
-    if ($this->isGranted(Constants::ROLES['admin'], $user)) {
-      return $this->redirectToRoute(Routes::ADMIN_HOME_ROUTE['NAME']);
+    if ($this->isGranted(Constants::ROLE_ADMIN, $user)) {
+      return $this->redirectToRoute(Routes::ADMIN_HOME_ROUTE_NAME);
     }
 
-    return $this->redirectToRoute(Routes::HOME_ROUTE['NAME']);
+    return $this->redirectToRoute(Routes::HOME_ROUTE_NAME);
   }
 
   private function sendRecoveryEmail(UserEntity $user, EmailService $emailService)
@@ -307,7 +307,7 @@ class AuthenticationController extends BaseController
 
     // Get reset password link
     $resetPasswordLink = $this->generateUrl(
-      route: Routes::RESET_PASSWORD_ROUTE['NAME'],
+      route: Routes::RESET_PASSWORD_ROUTE_NAME,
       parameters: [
         'token' => $token,
         'email' => $userEmail
@@ -316,16 +316,16 @@ class AuthenticationController extends BaseController
 
     // Send recovery email
     $emailService->setTo($userEmail);
-    $emailService->setSubject(Constants::EMAIL_SUBJECTS['recovery']);
+    $emailService->setSubject(Constants::EMAIL_SUBJECT_PASSWORD_RECOVERY);
     $emailService->setHtml($this->renderView(
-      view: TwigTemplate::EMAILS['recovery']['html'],
+      view: TwigTemplate::EMAIL_RECOVERY_HTML,
       parameters: [
         'name' => $userFullName,
         'resetPasswordLink' => $resetPasswordLink
       ]
     ));
     $emailService->setBody($this->renderView(
-      view: TwigTemplate::EMAILS['recovery']['text'],
+      view: TwigTemplate::EMAIL_RECOVERY_TEXT,
       parameters: [
         'name' => $userFullName,
         'resetPasswordLink' => $resetPasswordLink
@@ -346,8 +346,8 @@ class AuthenticationController extends BaseController
   {
     $authUrl = $this->googleOAuthProvider->getAuthorizationUrl();
     $data['google_oauth_url'] = $authUrl;
-    $this->session->set(Constants::SESSION['oauth2state'], $this->googleOAuthProvider->getState());
+    $this->session->set(Constants::SESSION_OAUTH2STATE, $this->googleOAuthProvider->getState());
 
-    return $this->render(view: TwigTemplate::PAGES['login'], parameters: $data, response: $response);
+    return $this->render(view: TwigTemplate::PAGE_LOGIN, parameters: $data, response: $response);
   }
 }

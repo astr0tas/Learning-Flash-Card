@@ -11,7 +11,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
-#[ORM\Table(name: Constants::TABLES['user'])]
+#[ORM\Table(name: Constants::TABLE_USER)]
 class UserEntity extends BaseEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
   #[ORM\Column(type: 'string', length: 255)]
@@ -80,8 +80,8 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
   public function getRoles(): array
   {
     $roles = $this->roles;
-    // guarantee every user at least has ROLE_USER
-    $roles[] = Constants::ROLES['user'];
+    // Guarantee every user at least has ROLE_USER
+    $roles[] = Constants::ROLE_USER;
 
     return array_unique($roles);
   }

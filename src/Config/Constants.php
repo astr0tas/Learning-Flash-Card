@@ -4,46 +4,48 @@ namespace App\Config;
 
 class Constants
 {
-  public const APP_ENV = [
-    'development' => 'dev',
-    'production'  => 'pro',
-  ];
-  public const ROLES = [
-    'user' => 'ROLE_USER',
-    'admin' => 'ROLE_ADMIN',
-    'public' => 'PUBLIC_ACCESS',
-  ];
-  public const COOKIES = [
-    'locale'    => 'locale',
-  ];
-  public const PARAMETERS = [
-    'csrf_token' => 'csrf_token',
-  ];
-  public const LOCALES = [
-    'vi' => 'vi',
-    'en' => 'en',
-  ];
-  public const DEFAULT_LOCALE = self::LOCALES['vi'];
+  // Application settings (do not modify)
+  public const APP_ENV_DEVELOPMENT = 'dev';
+  public const APP_ENV_PRODUCTION = 'prod';
+  public const GOOGLE_OAUTH_PASSWORD = 'google_oauth_password';
+  public const AUTHENTICATOR_NAME = 'form_login';
   public const BCRYPT_COST = 12;
-  public const GOOGLE_OAUTH_PASSWORD = 'google_oauth_password'; // Do not touch this!!!
-  public const AUTHENTICATOR_NAME = 'form_login'; // Do not touch this!!!
   public const REQUEST_LIMIT = 5;
-  public const SESSION = [
-    'oauth2state' => 'oauth2state',
+
+  // User roles
+  public const ROLE_USER = 'ROLE_USER';
+  public const ROLE_ADMIN = 'ROLE_ADMIN';
+  public const ROLE_PUBLIC = 'PUBLIC_ACCESS';
+
+  // Cookies
+  public const COOKIE_LOCALE = 'locale';
+
+  // Parameters
+  public const PARAMETER_CSRF_TOKEN = 'csrf_token';
+
+  // Locales
+  public const LOCALE_VI = 'vi';
+  public const LOCALE_EN = 'en';
+  public const DEFAULT_LOCALE = self::LOCALE_VI;
+  public const LOCALES = [
+    self::LOCALE_VI => self::LOCALE_VI,
+    self::LOCALE_EN => self::LOCALE_EN
   ];
-  public const LOG_CHANNELS = [
-    'email_content'  => 'email_content.logger',
-    'email_service'  => 'email_service.logger',
-  ];
-  public const EMAIL_SUBJECTS = [
-    'recovery' => 'Khôi phục mật khẩu | Account Recovery',
-  ];
-  public const TABLES = [
-    'user' => 'user_tbl',
-    'recovery_token' => 'recovery_token_tbl',
-  ];
-  // This constant is used for technical messages only
-  public const MESSAGES = [
-    'invalid_csrf' => 'Invalid CSRF token.',
-  ];
+
+  // Session keys
+  public const SESSION_OAUTH2STATE = 'oauth2state';
+
+  // Log channels
+  public const LOG_CHANNEL_EMAIL_CONTENT = 'email_content.logger';
+  public const LOG_CHANNEL_EMAIL_SERVICE = 'email_service.logger';
+
+  // Email subjects
+  public const EMAIL_SUBJECT_PASSWORD_RECOVERY = 'Khôi phục mật khẩu | Password Recovery';
+
+  // Entity table names
+  public const TABLE_USER = 'user_tbl';
+  public const TABLE_RECOVERY_TOKEN = 'recovery_token_tbl';
+
+  // Technical messages
+  public const MESSAGE_INVALID_CSRF = 'Invalid CSRF token.';
 }

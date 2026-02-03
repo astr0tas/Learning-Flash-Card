@@ -21,9 +21,9 @@ class EmailService
 
   public function __construct(
     private MailerInterface $mailer,
-    #[Target(Constants::LOG_CHANNELS['email_content'])]
+    #[Target(Constants::LOG_CHANNEL_EMAIL_CONTENT)]
     private LoggerInterface $mailContentLogger,
-    #[Target(Constants::LOG_CHANNELS['email_service'])]
+    #[Target(Constants::LOG_CHANNEL_EMAIL_SERVICE)]
     private LoggerInterface $mailServiceLogger,
     #[Autowire('%kernel.environment%')]
     private string $environment
@@ -88,7 +88,7 @@ class EmailService
         'error' => $e->getMessage(),
       ]);
 
-      if ($this->environment ===  Constants::APP_ENV['production']) {
+      if ($this->environment ===  Constants::APP_ENV_DEVELOPMENT) {
         return false;
       }
     }

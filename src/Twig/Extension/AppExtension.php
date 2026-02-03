@@ -29,10 +29,10 @@ class AppExtension extends AbstractExtension
 
     public function getLocaleFromCookie(): string
     {
-        if (empty($_COOKIE[Constants::COOKIES['locale']])) {
+        if (empty($_COOKIE[Constants::COOKIE_LOCALE])) {
             return Constants::DEFAULT_LOCALE;
         }
 
-        return \strval($_COOKIE[Constants::COOKIES['locale']]) ?? Constants::DEFAULT_LOCALE;
+        return \strval($_COOKIE[Constants::COOKIE_LOCALE]) ?? Constants::DEFAULT_LOCALE;
     }
 }

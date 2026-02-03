@@ -41,15 +41,15 @@ class LocaleSubscriber implements EventSubscriberInterface
     $request = $event->getRequest();
 
     // Check if this is a POST request to change the locale.
-    if ($request->attributes->get('_route') === Routes::SET_LOCALE_ROUTE['NAME'] && $request->isMethod('POST')) {
+    if ($request->attributes->get('_route') === Routes::SET_LOCALE_ROUTE_NAME && $request->isMethod('POST')) {
       // Set the current locale from the route parameter
       $routeParams = $request->attributes->get('_route_params', []);
-      $this->currentLocale = $routeParams[Routes::SET_LOCALE_ROUTE['ROUTE_PARAM']];
+      $this->currentLocale = $routeParams[Routes::SET_LOCALE_ROUTE_PARAM];
       // Set the target redirect url
       $this->redirectUrl = $request->headers->get('referer');
     } else {
       // Get the "locale" cookie from the request
-      $cookieLocale = $request->cookies->get(Constants::COOKIES['locale']);
+      $cookieLocale = $request->cookies->get(Constants::COOKIE_LOCALE);
 
       // Check if the cookie exists
       if ($cookieLocale) {
@@ -73,7 +73,7 @@ class LocaleSubscriber implements EventSubscriberInterface
   {
 
     $cookie = new Cookie(
-      name: Constants::COOKIES['locale'],
+      name: Constants::COOKIE_LOCALE,
       value: $this->currentLocale,
       expire: new \DateTime('+5 years'),
       path: '/',

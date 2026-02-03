@@ -30,7 +30,7 @@
 		{% if error.general is defined %}
 			<div class="py-5 px-10 text-center border border-dashed border-(--red) rounded-lg bg-[#f8d7da] text-[#721c24] break-words">{{ error.general[0] }}</div>
 		{% endif %}
-		<twig:Form action="{{ constant('App\\Config\\Routes::LOGIN_SUBMIT_ROUTE')['URL'] }}" method="POST" class="mt-5">
+		<twig:Form action="{{ constant('App\\Config\\Routes::LOGIN_SUBMIT_ROUTE_URL') }}" method="POST" class="mt-5">
 			<div>
 				<twig:Input name="email" label="{{ 'login.email'|trans }}" aria-label="{{ 'login.email'|trans }}" type="text" autocomplete="email" value="{{ email }}" error="{{ error.email is defined ? error.email[0] : '' }}"/></div>
 			<div class="my-3">
@@ -38,11 +38,11 @@
 			</div>
 			<div class="flex justify-between items-center">
 				<twig:ClickInput name="remember_me" label="{{ 'login.remember_me'|trans }}" type="checkbox" checked="{{ remember_me|default('') == 'checked' }}"/>
-				<a class="text-(--blue) hover:cursor-pointer hover:opacity-80 active:opacity-70" href="{{ constant('App\\Config\\Routes::FORGOT_PASSWORD_ROUTE')['URL'] }}">{{ 'login.forgot_password'|trans }}</a>
+				<a class="text-(--blue) hover:cursor-pointer hover:opacity-80 active:opacity-70" href="{{ constant('App\\Config\\Routes::FORGOT_PASSWORD_ROUTE_URL') }}">{{ 'login.forgot_password'|trans }}</a>
 			</div>
 			<twig:Button type="submit" variant="primary" class="my-5">{{'login.submit_button'|trans }}</twig:Button>
 			<p class="text-center">{{ 'login.dont_have_account'|trans }}
-				<a href="{{ constant('App\\Config\\Routes::REGISTER_ROUTE')['URL'] }}" class="text-(--blue) hover:cursor-pointer hover:opacity-80 active:opacity-70">{{ 'login.register'|trans }}</a>
+				<a href="{{ constant('App\\Config\\Routes::REGISTER_ROUTE_URL') }}" class="text-(--blue) hover:cursor-pointer hover:opacity-80 active:opacity-70">{{ 'login.register'|trans }}</a>
 			</p>
 		</twig:Form>
 	</div>

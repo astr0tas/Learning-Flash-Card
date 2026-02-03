@@ -9,15 +9,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 class HomeController extends BaseController
 {
-  #[Route(path: Routes::HOME_ROUTE['URL'], name: Routes::HOME_ROUTE['NAME'], methods: [Request::METHOD_GET])]
+  #[Route(path: Routes::HOME_ROUTE_URL, name: Routes::HOME_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function UserHome()
   {
-    return $this->render(view: TwigTemplate::PAGES['user_home']);
+    return $this->render(view: TwigTemplate::PAGE_USER_HOME);
   }
 
-  #[Route(path: Routes::ADMIN_HOME_ROUTE['URL'], name: Routes::ADMIN_HOME_ROUTE['NAME'], methods: [Request::METHOD_GET])]
+  #[Route(path: Routes::ADMIN_HOME_ROUTE_URL, name: Routes::ADMIN_HOME_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function AdminHome()
   {
-    return $this->render(view: TwigTemplate::PAGES['admin_home']);
+    return $this->render(view: TwigTemplate::PAGE_ADMIN_HOME);
   }
 }

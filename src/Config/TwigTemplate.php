@@ -4,22 +4,17 @@ namespace App\Config;
 
 class TwigTemplate
 {
-  public const PAGES = [
-    # Authentication pages
-    'login' => '/views/authentication/login.html.twig',
-    'register' => '/views/authentication/register.html.twig',
-    'forgot_password' => '/views/authentication/forgot_password.html.twig',
-    'recovery_email_sent' => '/views/authentication/recovery_email_sent.html.twig',
-    'reset_password' => '/views/authentication/reset_password.html.twig',
-    # User pages
-    'user_home' => '/views/user/index.html.twig',
-    # Admin pages
-    'admin_home' => '/views/admin/index.html.twig',
-  ];
-  public const EMAILS = [
-    'recovery' => [
-      'html' => '/emails/recovery/index.html.twig',
-      'text' => '/emails/recovery/text.txt.twig'
-    ]
-  ];
+  // View templates
+  public const PAGE_LOGIN = '/views/authentication/login.html.twig';
+  public const PAGE_REGISTER = '/views/authentication/register.html.twig';
+  public const PAGE_FORGOT_PASSWORD = '/views/authentication/forgot_password.html.twig';
+  public const PAGE_RECOVERY_EMAIL_SENT = '/views/authentication/recovery_email_sent.html.twig';
+  public const PAGE_RESET_PASSWORD = '/views/authentication/reset_password.html.twig';
+  public const PAGE_USER_HOME = '/views/user/index.html.twig';
+  public const PAGE_ADMIN_HOME = '/views/admin/index.html.twig';
+
+
+  // Email templates
+  public const EMAIL_RECOVERY_HTML = '/emails/recovery/index.html.twig';
+  public const EMAIL_RECOVERY_TEXT = '/emails/recovery/text.txt.twig';
 }

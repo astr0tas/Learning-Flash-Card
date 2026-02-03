@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class LocaleController extends BaseController
 {
-  #[Route(path: Routes::SET_LOCALE_ROUTE['URL'], name: Routes::SET_LOCALE_ROUTE['NAME'], methods: [Request::METHOD_POST])]
+  #[Route(path: Routes::SET_LOCALE_ROUTE_URL, name: Routes::SET_LOCALE_ROUTE_NAME, methods: [Request::METHOD_POST])]
   public function ChangeLocale(string $locale, Request $request)
   {
     // This is just an empty function with a route to prevent 404 error
