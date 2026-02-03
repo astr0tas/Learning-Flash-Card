@@ -4,7 +4,6 @@ namespace App\EventSubscriber;
 
 use App\Config\Constants;
 use App\Config\Routes;
-use App\Utility\Utility;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
