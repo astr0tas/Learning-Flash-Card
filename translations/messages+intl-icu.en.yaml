@@ -12,6 +12,9 @@ login:
   or: "or"
   incorrect_credentials: "Incorrect email or password."
 
+login_with_google:
+  error: "Sign in with Google failed. Please try again."
+
 logout: "Sign Out"
 
 register:

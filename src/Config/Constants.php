@@ -28,7 +28,9 @@ class Constants
   public const GOOGLE_OAUTH_PASSWORD = 'google_oauth_password'; // Do not touch this!!!
   public const AUTHENTICATOR_NAME = 'form_login'; // Do not touch this!!!
   public const REQUEST_LIMIT = 5;
-  public const SESSION = [];
+  public const SESSION = [
+    'oauth2state' => 'oauth2state',
+  ];
   public const LOG_CHANNELS = [
     'email_content'  => 'email_content.logger',
     'email_service'  => 'email_service.logger',
@@ -43,8 +45,5 @@ class Constants
   // This constant is used for technical messages only
   public const MESSAGES = [
     'invalid_csrf' => 'Invalid CSRF token.',
-    'google_csrf_error' => 'Google CSRF token mismatch.',
-    'google_no_jwt'  => 'Google JWT is missing.',
-    'google_invalid_jwt' => 'Google JWT is invalid.',
   ];
 }

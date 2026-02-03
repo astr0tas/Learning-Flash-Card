@@ -10,21 +10,35 @@ use App\Config\Routes;
 use App\Config\TwigTemplate;
 use App\Entity\UserEntity;
 use App\Utility\Utility;
-use Google\Client;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
+use League\OAuth2\Client\Provider\Google;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 class AuthenticationController extends BaseController
 {
+  private ?Google $googleOAuthProvider = null;
+
   // Inject the value directly into the constructor
   public function __construct(
     #[Autowire(env: 'GOOGLE_CLIENT_ID')] private string $googleOAuthClientId,
-    private Security $security
-  ) {}
+    #[Autowire(env: 'GOOGLE_CLIENT_SECRET')] private string $googleOAuthClientSecret,
+    private Security $security,
+    private RouterInterface $router,
+  ) {
+    $this->googleOAuthProvider = new Google([
+      'clientId'     => $this->googleOAuthClientId,
+      'clientSecret' => $this->googleOAuthClientSecret,
+      'redirectUri' => $this->router->generate(Routes::LOGIN_WITH_GOOGLE_ROUTE['NAME'], parameters: [], referenceType: UrlGeneratorInterface::ABSOLUTE_URL),
+    ]);
+  }
 
   #[Route(path: Routes::LOGIN_ROUTE['URL'], name: Routes::LOGIN_ROUTE['NAME'], methods: [Request::METHOD_GET])]
   public function LoginAction()
@@ -38,7 +52,7 @@ class AuthenticationController extends BaseController
       return $this->redirectUserToHome();
     }
 
-    return $this->render(view: TwigTemplate::PAGES['login'], parameters: ['error' => $error]);
+    return $this->renderLogin(data: ['error' => $error]);
   }
 
   #[Route(path: Routes::LOGIN_SUBMIT_ROUTE['URL'], name: Routes::LOGIN_SUBMIT_ROUTE['NAME'], methods: [Request::METHOD_POST])]
@@ -73,7 +87,7 @@ class AuthenticationController extends BaseController
 
     if (count($errors) > 0) {
       $data['error'] = $errors;
-      return $this->render(view: TwigTemplate::PAGES['login'], parameters: $data, response: $this->unprocessableEntityResponse);
+      return $this->renderLogin(data: $data, response: $this->unprocessableEntityResponse);
     }
 
     $user = $this->entityManager
@@ -82,7 +96,7 @@ class AuthenticationController extends BaseController
 
     if (!$user || !$user->comparePassword($postData['password'])) {
       $data['error'] = ['general' => [$this->translator->trans('login.incorrect_credentials')]];
-      return $this->render(view: TwigTemplate::PAGES['login'], parameters: $data, response: $this->unprocessableEntityResponse);
+      return $this->renderLogin(data: $data, response: $this->unprocessableEntityResponse);
     }
 
     $rememberMeBadge = new RememberMeBadge();
@@ -100,78 +114,68 @@ class AuthenticationController extends BaseController
     return $this->redirectUserToHome();
   }
 
-  #[Route(path: Routes::LOGIN_WITH_GOOGLE_ROUTE['URL'], name: Routes::LOGIN_WITH_GOOGLE_ROUTE['NAME'] . '_' . Request::METHOD_GET, methods: [Request::METHOD_GET])]
-  public function LoginWithGoogleGetAction()
-  {
-    return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
-  }
-
-  #[Route(path: Routes::LOGIN_WITH_GOOGLE_ROUTE['URL'], name: Routes::LOGIN_WITH_GOOGLE_ROUTE['NAME'], methods: [Request::METHOD_POST])]
+  #[Route(path: Routes::LOGIN_WITH_GOOGLE_ROUTE['URL'], name: Routes::LOGIN_WITH_GOOGLE_ROUTE['NAME'], methods: [Request::METHOD_GET])]
   public function LoginWithGoogleAction(Request $request)
   {
     if ($this->getUser()) {
       return $this->redirectUserToHome();
     }
 
-    // 1. Check Google's CSRF Cookie (Security Best Practice)
-    $cookieCsrf = $request->cookies->get('g_csrf_token');
-    $postCsrf   = $request->request->get('g_csrf_token');
+    $state = $request->get('state');
+    $oauth2state = null;
+    if ($this->session instanceof FlashBagAwareSessionInterface) {
+      $oauth2state = $this->session->get(Constants::SESSION['oauth2state']);
+      $this->session->remove(Constants::SESSION['oauth2state']);
+    }
 
-    if (!$cookieCsrf || !$postCsrf || $cookieCsrf !== $postCsrf) {
-      $this->addFlash('error', ['general' => [Constants::MESSAGES['google_csrf_error']]]);
+    if (empty($state)) {
       return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
     }
 
-    // 2. Get the JWT Token
-    $token = $request->request->get('credential');
-
-    if (!$token) {
-      $this->addFlash('error', ['general' => [Constants::MESSAGES['google_no_jwt']]]);
-      return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
+    if ($state !== $oauth2state) {
+      throw new AccessDeniedHttpException(Constants::MESSAGES['invalid_csrf']);
     }
 
-    // 3. Verify Token with Google Client Library
-    $client = new Client(['client_id' => $this->googleOAuthClientId]);
+    $token = $this->googleOAuthProvider->getAccessToken('authorization_code', [
+      'code' => $request->get('code')
+    ]);
 
     try {
-      $payload = $client->verifyIdToken($token);
+      $payload = $this->googleOAuthProvider->getResourceOwner($token);
     } catch (\Exception $e) {
-      $this->addFlash('error', ['general' => [Constants::MESSAGES['google_invalid_jwt']]]);
+      $this->addFlash('error', ['general' => [$this->translator->trans('login_with_google.error')]]);
       return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
     }
 
-    if ($payload) {
-      $email = $payload['email'];
-      $givenName = $payload['given_name'];
-      $familyName = $payload['family_name'];
+    $payloadData = $payload->toArray();
+    $email = $payloadData['email'] ?? '';
+    $firstName = $payloadData['given_name'] ?? '';
+    $lastName = $payloadData['family_name'] ?? '';
 
-      $user = $this->entityManager
-        ->getRepository(UserEntity::class)
-        ->findOneBy(criteria: ['email' => $email]);
+    $user = $this->entityManager
+      ->getRepository(UserEntity::class)
+      ->findOneBy(criteria: ['email' => $email]);
 
-      if (!$user) {
-        // Create new user
-        $user = new UserEntity();
-        $user->setEmail($email);
-        $user->setFirstName($givenName);
-        $user->setLastName($familyName);
-        $user->setPassword(Constants::GOOGLE_OAUTH_PASSWORD, false); // Random password
-        $user->setRoles([Constants::ROLES['user']]);
+    if (!$user) {
+      // Create new user
+      $user = new UserEntity();
+      $user->setEmail($email);
+      $user->setFirstName($firstName);
+      $user->setLastName($lastName);
+      $user->setPassword(Constants::GOOGLE_OAUTH_PASSWORD, false); // Random password
+      $user->setRoles([Constants::ROLES['user']]);
 
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-      }
-
-      $request->request->set('remember_me', 'on');
-
-      $this->security->login($user, Constants::AUTHENTICATOR_NAME, null, [
-        (new RememberMeBadge())->enable(),
-      ]);
-
-      return $this->redirectUserToHome();
+      $this->entityManager->persist($user);
+      $this->entityManager->flush();
     }
 
-    return $this->redirectToRoute(Routes::LOGIN_ROUTE['NAME']);
+    $request->request->set('remember_me', 'on');
+
+    $this->security->login($user, Constants::AUTHENTICATOR_NAME, null, [
+      (new RememberMeBadge())->enable(),
+    ]);
+
+    return $this->redirectUserToHome();
   }
 
   #[Route(path: Routes::LOGOUT_ROUTE['URL'], name: Routes::LOGOUT_ROUTE['NAME'], methods: [Request::METHOD_POST])]
@@ -336,5 +340,14 @@ class AuthenticationController extends BaseController
     }
 
     return $result;
+  }
+
+  private function renderLogin(array $data = [], ?Response $response = null)
+  {
+    $authUrl = $this->googleOAuthProvider->getAuthorizationUrl();
+    $data['google_oauth_url'] = $authUrl;
+    $this->session->set(Constants::SESSION['oauth2state'], $this->googleOAuthProvider->getState());
+
+    return $this->render(view: TwigTemplate::PAGES['login'], parameters: $data, response: $response);
   }
 }

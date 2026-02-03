@@ -12,14 +12,10 @@
 		<h1 class="font-bold text-2xl text-center">{{ 'login.header'|trans }}</h1>
 		<div class="my-5 flex flex-col gap-3">
 			<div class="relative hover:cursor-pointer hover:opacity-80 active:opacity-70 overflow-hidden h-[50px]">
-				<div class="absolute flex items-center justify-center gap-3 border border-gray-400 rounded-md py-2 px-4 w-full select-none h-[50px]">
+				<a href="{{ google_oauth_url }}" class="absolute flex items-center justify-center gap-3 border border-gray-400 rounded-md py-2 px-4 w-full select-none h-[50px]">
 					<img class="w-8 h-8" src="/svg/google.svg"/>
 					{{ 'login.login_with'|trans({'service_name': 'Google'}) }}
-				</div>
-				<div class="opacity-[0.001] z-50 py-1">
-					<div class="g_id_signin scale-[2] overflow-hidden" data-type="standard" data-theme="filled_blue" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left" data-width="1000"></div>
-				</div>
-				<div id="g_id_onload" data-client_id="{{ google_oauth_client_id }}" data-context="signin" data-ux_mode="redirect" data-auto_prompt="false" data-login_uri="{{ url(constant('App\\Config\\Routes::LOGIN_WITH_GOOGLE_ROUTE')['NAME']) }}"></div>
+				</a>
 			</div>
 			{# <div class="flex-1 flex items-center justify-center gap-3 border border-gray-400 rounded-md py-2 hover:cursor-pointer hover:opacity-80 active:opacity-70 select-none">
 				<img class="w-9 h-9 ms-3" src="/svg/facebook.svg"/>

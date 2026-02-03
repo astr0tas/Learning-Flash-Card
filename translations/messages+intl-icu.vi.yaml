@@ -12,6 +12,9 @@ login:
   or: "hoặc"
   incorrect_credentials: "Email hoặc mật khẩu không đúng."
 
+login_with_google:
+  error: "Đăng nhập bằng Google không thành công. Vui lòng thử lại."
+
 logout: "Đăng xuất"
 
 register:
