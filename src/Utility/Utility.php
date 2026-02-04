@@ -59,6 +59,11 @@ class Utility
     return $string;
   }
 
+  /**
+   * Map data from an associative array to a DTO instance
+   * @param array $data Associative array containing the data
+   * @param object $instance DTO instance to be mapped
+   */
   public static function mapArrayToDTO(array $data, object $instance)
   {
     foreach ($data as $key => $value) {
@@ -67,5 +72,39 @@ class Utility
         $instance->{$camelCaseKey} = $value;
       }
     }
+  }
+
+  /**
+   * Map data from a DTO instance to an associative array
+   * @param object $instance DTO instance containing the data
+   * @param array $existingData Associative array that might or might not have existing data beforehand
+   * @return array Returned array containing old data from $existingData (if any) and new data from $instance (duplicated key-value pairs will be overwritten by $instance)
+   */
+  public static function mapDTOtoArray(object $instance, array $existingData = []): array
+  {
+    // Get instance's public properties and their values in the form of an associative array
+    $dtoData = get_object_vars($instance);
+
+    // Merge: DTO data overwrites existing data if keys match
+    return array_merge($existingData, $dtoData);
+  }
+
+  /**
+   * Extract name from an instance's property base on it's value
+   * @param object $instance Instance containing values
+   * @param mixed $propertyValue Property's value
+   * @return string Target property's name
+   */
+  public static function getInstancePropertyName(object $instance, mixed $propertyValue): string
+  {
+    $array = get_object_vars($instance);
+
+    foreach ($array as $key => $value) {
+      if ($value === $propertyValue) {
+        return $key;
+      }
+    }
+
+    return '';
   }
 }
