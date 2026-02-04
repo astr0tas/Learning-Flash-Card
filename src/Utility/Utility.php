@@ -2,8 +2,6 @@
 
 namespace App\Utility;
 
-use App\Config\Constants;
-
 class Utility
 {
   /**
@@ -37,5 +35,37 @@ class Utility
   public static function compareHash(string $input, string $hash): bool
   {
     return hash_equals($hash, $input);
+  }
+
+  /**
+   * Convert an input string to camel case format (input string can be in kebab case, camel case, snake case or even spaced string)
+   * @param string $string The input string to be converted to camel case
+   * @return string Camel case conversion result of the input string
+   */
+  public static function toCamelCase(string $string)
+  {
+    // Replace hyphens and underscores with spaces, and convert to lowercase
+    $string = str_replace(['-', '_'], ' ', strtolower($string));
+
+    // Capitalize the first letter of each word (except for the very first letter of the string, handled later)
+    $string = ucwords($string);
+
+    // Remove all spaces
+    $string = str_replace(' ', '', $string);
+
+    // Make the first character of the entire string lowercase to achieve lower camel case
+    $string = lcfirst($string);
+
+    return $string;
+  }
+
+  public static function mapArrayToDTO(array $data, object $instance)
+  {
+    foreach ($data as $key => $value) {
+      $camelCaseKey = self::toCamelCase($key);
+      if (property_exists($instance, $camelCaseKey)) {
+        $instance->{$camelCaseKey} = $value;
+      }
+    }
   }
 }
