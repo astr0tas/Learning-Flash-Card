@@ -2,12 +2,218 @@
 
 namespace App\Service;
 
+use App\Config\Constants;
+use App\Config\Routes;
+use App\Config\TwigTemplate;
+use App\DTO\ForgotPasswordDTO;
+use App\DTO\LoginDTO;
+use App\DTO\LoginWithGoogleDTO;
+use App\Entity\RecoveryTokenEntity;
+use App\Entity\UserEntity;
+use App\Repository\RecoveryTokenRepository;
 use App\Repository\UserRepository;
+use App\Utility\Utility;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
+use League\OAuth2\Client\Provider\Google;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Twig\Environment;
 
-class AuthenticationService
+class AuthenticationService extends BaseService
 {
+  private ?Google $googleOAuthProvider = null;
+
   public function __construct(
+    #[Autowire(env: 'GOOGLE_CLIENT_ID')] private string $googleOAuthClientId,
+    #[Autowire(env: 'GOOGLE_CLIENT_SECRET')] private string $googleOAuthClientSecret,
     private EmailService $emailService,
-    private UserRepository $userRepository
-  ) {}
+    private UserRepository $userRepository,
+    private RecoveryTokenRepository $recoveryTokenRepository,
+    private Security $security,
+    private RouterInterface $router,
+    private Environment $twig,
+  ) {
+    $this->googleOAuthProvider = new Google([
+      'clientId'     => $this->googleOAuthClientId,
+      'clientSecret' => $this->googleOAuthClientSecret,
+      'redirectUri' => $this->router->generate(Routes::LOGIN_WITH_GOOGLE_ROUTE_NAME, parameters: [], referenceType: UrlGeneratorInterface::ABSOLUTE_URL),
+    ]);
+  }
+
+  public function login(LoginDTO $dto, array $data)
+  {
+    $user = $this->userRepository
+      ->findOneBy(criteria: ['email' => $dto->email]);
+
+    if (!$user || !$user->comparePassword(plainPassword: $dto->password)) {
+      $data['error'] = ['general' => [$this->translator->trans(id: 'login.incorrect_credentials')]];
+      return $data;
+    }
+
+    $rememberMeBadge = new RememberMeBadge();
+
+    if (!empty($dto->rememberMe)) {
+      $rememberMeBadge->enable();
+    } else {
+      $rememberMeBadge->disable();
+    }
+
+    $this->security->login($user, Constants::AUTHENTICATOR_NAME, null, [
+      $rememberMeBadge,
+    ]);
+
+    return $data;
+  }
+
+  public function loginWithGoogle(LoginWithGoogleDTO $dto)
+  {
+    $state = $dto->state;
+    $oauth2state = null;
+
+    $oauth2state = $this->session->get(Constants::SESSION_OAUTH2STATE);
+    $this->session->remove(Constants::SESSION_OAUTH2STATE);
+
+
+    if (empty($state)) {
+      return false;
+    }
+
+    if ($state !== $oauth2state) {
+      throw new AccessDeniedHttpException(Constants::MESSAGE_INVALID_CSRF);
+    }
+
+    $token = $this->googleOAuthProvider->getAccessToken('authorization_code', [
+      'code' => $dto->code
+    ]);
+
+    try {
+      $payload = $this->googleOAuthProvider->getResourceOwner($token);
+    } catch (\Exception $e) {
+      if ($this->session instanceof FlashBagAwareSessionInterface) {
+        $this->session->getFlashBag()->add('error', ['general' => [$this->translator->trans('login_with_google.error')]]);
+      }
+      return false;
+    }
+
+    $payloadData = $payload->toArray();
+    $email = $payloadData['email'] ?? '';
+    $firstName = $payloadData['given_name'] ?? '';
+    $lastName = $payloadData['family_name'] ?? '';
+
+    $user = $this->userRepository
+      ->findOneBy(criteria: ['email' => $email]);
+
+    if (!$user) {
+      // Create new user
+      $user = new UserEntity();
+      $user->setEmail($email);
+      $user->setFirstName($firstName);
+      $user->setLastName($lastName);
+      $user->setPassword(Constants::GOOGLE_OAUTH_PASSWORD, false); // Random password
+      $user->setRoles([Constants::ROLE_USER]);
+
+      $this->userRepository->getEntityManager()->persist($user);
+      $this->userRepository->getEntityManager()->flush();
+    }
+
+    $this->security->login($user, Constants::AUTHENTICATOR_NAME, null, [
+      (new RememberMeBadge())->enable(),
+    ]);
+
+    return true;
+  }
+
+  public function forgotPassword(ForgotPasswordDTO $dto, array $data)
+  {
+    $user = $this->userRepository
+      ->findOneBy(criteria: ['email' => $dto->email]);
+
+    if (!$user) {
+      $data['error'] = ['general' => [$this->translator->trans('forgot_password.user_not_found')]];
+      return $data;
+    }
+
+    // if ($user->getPassword() === Constants::GOOGLE_OAUTH_PASSWORD) {
+    //   $data['error'] = ['general' => [$this->translator->trans('forgot_password.oauth_user')]];
+    //   return $data;
+    // }
+
+    // Check for request spam
+    if ($this->checkRequestSpam(entityClass: RecoveryTokenEntity::class, alias: 't', conditions: ["t.email = '{$user->getEmail()}'"])) {
+      $data['error'] = ['general' => [$this->translator->trans('general_error.too_many_requests')]];
+      return $data;
+    }
+
+    if (!$this->sendRecoveryEmail($user)) {
+      $data['error'] = ['general' => [$this->translator->trans('forgot_password.system_error')]];
+      return $data;
+    }
+
+    return $data;
+  }
+
+  private function sendRecoveryEmail(UserEntity $user)
+  {
+    $userFullName = $user->getUserFullName();
+    $userEmail = $user->getEmail();
+    $resetPasswordLink = '';
+
+    // Create recovery token entity
+    $token = Utility::generateRandomToken();
+    $recoveryTokenEntity = new RecoveryTokenEntity();
+    $recoveryTokenEntity->email = $userEmail;
+    $recoveryTokenEntity->token = Utility::hashString($token);
+    $recoveryTokenEntity->expiresAt = (new \DateTimeImmutable())->modify('+1 day');
+
+    // Get reset password link
+    $resetPasswordLink = $this->router->generate(
+      name: Routes::RESET_PASSWORD_ROUTE_NAME,
+      parameters: [
+        'token' => $token,
+        'email' => $userEmail
+      ],
+      referenceType: UrlGeneratorInterface::ABSOLUTE_URL
+    );
+
+    // Send recovery email
+    $this->emailService->setTo($userEmail);
+    $this->emailService->setSubject(Constants::EMAIL_SUBJECT_PASSWORD_RECOVERY);
+    $this->emailService->setHtml($this->twig->render(
+      name: TwigTemplate::EMAIL_RECOVERY_HTML,
+      context: [
+        'name' => $userFullName,
+        'resetPasswordLink' => $resetPasswordLink
+      ]
+    ));
+    $this->emailService->setBody($this->twig->render(
+      name: TwigTemplate::EMAIL_RECOVERY_TEXT,
+      context: [
+        'name' => $userFullName,
+        'resetPasswordLink' => $resetPasswordLink
+      ]
+    ));
+    $result = $this->emailService->sendEmail();
+
+    if ($result) {
+      // Save recovery token to database
+      $this->recoveryTokenRepository->getEntityManager()->persist($recoveryTokenEntity);
+      $this->recoveryTokenRepository->getEntityManager()->flush();
+    }
+
+    return $result;
+  }
+
+  public function getGoogleOauthAuthorizationUrl()
+  {
+    return $this->googleOAuthProvider->getAuthorizationUrl();
+  }
+
+  public function getGoogleOauthState()
+  {
+    return $this->googleOAuthProvider->getState();
+  }
 }

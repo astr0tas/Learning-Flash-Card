@@ -10,9 +10,8 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
-use Symfony\Contracts\Service\Attribute\Required;
 
-class EmailService
+class EmailService extends BaseService
 {
   private string $to;
   private string $subject;

@@ -4,9 +4,6 @@
 	{{ 'recovery_email_sent.title'|trans }}
 {% endblock %}
 
-{% set email = app.flashes('email') %}
-{% set email = email[0] | default('') %}
-
 {% block auth_body %}
 	<div class="flex flex-col items-center" data-turbo="false">
 		<div class="w-[50px] h-[50px]">
