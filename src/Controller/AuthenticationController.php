@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Config\Constants;
+use App\DTO\ForgotPasswordDTO;
+use App\DTO\LoginDTO;
+use App\DTO\LoginWithGoogleDTO;
 use App\Entity\RecoveryTokenEntity;
 use App\Service\EmailService;
 use Symfony\Component\Routing\Attribute\Route;
@@ -68,9 +71,13 @@ class AuthenticationController extends BaseController
     // Handle login submission
     $postData = $request->request->all();
 
+    // Pass the form data to a DTO
+    $dto = new LoginDTO();
+    Utility::mapArrayToDTO($postData, $dto);
+
     // Echo back input values except password
-    $data['email'] = $postData['email'] ?? '';
-    $data['remember_me'] = isset($postData['remember_me']) ? 'checked' : '';
+    $data['email'] = $dto->email ?? '';
+    $data['remember_me'] = !empty($dto->rememberMe) ? 'checked' : '';
 
     // Validate post data
     $fields = [
@@ -83,7 +90,7 @@ class AuthenticationController extends BaseController
         message: $this->translator->trans('validation.password.not_blank')
       )],
     ];
-    $errors = $this->validate($postData, $fields);
+    $errors = Utility::validateInputDTO($dto, $fields);
 
     if (count($errors) > 0) {
       $data['error'] = $errors;
@@ -121,7 +128,11 @@ class AuthenticationController extends BaseController
       return $this->redirectUserToHome();
     }
 
-    $state = $request->get('state');
+    $requestParams = $request->query->all();
+    $dto = new LoginWithGoogleDTO();
+    Utility::mapArrayToDTO($requestParams, $dto);
+
+    $state = $dto->state;
     $oauth2state = null;
     if ($this->session instanceof FlashBagAwareSessionInterface) {
       $oauth2state = $this->session->get(Constants::SESSION_OAUTH2STATE);
@@ -137,7 +148,7 @@ class AuthenticationController extends BaseController
     }
 
     $token = $this->googleOAuthProvider->getAccessToken('authorization_code', [
-      'code' => $request->get('code')
+      'code' => $dto->code
     ]);
 
     try {
@@ -217,8 +228,12 @@ class AuthenticationController extends BaseController
     // Handle post data
     $postData = $request->request->all();
 
+    // Map post data to DTO
+    $dto = new ForgotPasswordDTO();
+    Utility::mapArrayToDTO($postData, $dto);
+
     // Echo back input values
-    $data['email'] = $postData['email'] ?? '';
+    $data['email'] = $dto->email ?? '';
 
     // Validate post data
     $fields = [
@@ -228,7 +243,7 @@ class AuthenticationController extends BaseController
         message: $this->translator->trans('validation.email.invalid')
       )],
     ];
-    $errors = $this->validate($postData, $fields);
+    $errors = Utility::validateInputDTO($dto, $fields);
 
     if (count($errors) > 0) {
       $data['error'] = $errors;

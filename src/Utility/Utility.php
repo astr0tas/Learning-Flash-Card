@@ -2,6 +2,9 @@
 
 namespace App\Utility;
 
+use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Constraints as Assert;
+
 class Utility
 {
   /**
@@ -90,21 +93,74 @@ class Utility
   }
 
   /**
-   * Extract name from an instance's property base on it's value
-   * @param object $instance Instance containing values
-   * @param mixed $propertyValue Property's value
-   * @return string Target property's name
+   * Validate input associative array data against specified constraints
+   * @param array $input The input associative array data to validate
+   * @param array $fields An associative array of field names to their constraints
+   * @param bool $allowExtraFields Whether to allow extra fields not specified in $fields
+   * @return array An array of validation errors, empty if none found
    */
-  public static function getInstancePropertyName(object $instance, mixed $propertyValue): string
+  public static function validateInputArray(array $input, array $fields, bool $allowExtraFields = true): array
   {
-    $array = get_object_vars($instance);
+    if (!self::checkSubArrayInArray(array_keys($input), array_keys($fields))) {
+      throw new \Exception(sprintf(
+        "Input validation failed. Input contains invalid or unknown fields. Allowed fields are: %s",
+        implode(', ', array_keys($fields))
+      ));
+    }
 
-    foreach ($array as $key => $value) {
-      if ($value === $propertyValue) {
-        return $key;
+    $validator = Validation::createValidator();
+    $violations = $validator->validate($input, new Assert\Collection([
+      'fields'           => $fields,
+      'allowExtraFields' => $allowExtraFields,
+    ]));
+
+    $formattedViolations = [];
+    if (count($violations) > 0) {
+      foreach ($violations as $violation) {
+        // 1. Get the field name (e.g., "username")
+        $field = $violation->getPropertyPath();
+        $field = str_replace(['[', ']'], '', $field); // Clean up the field name
+
+        // 2. Get the message (e.g., "This value is too short.")
+        $message = $violation->getMessage();
+
+        // 3. Store it. Use an array [] in case one field has multiple errors
+        $formattedViolations[$field][] = $message;
       }
     }
 
-    return '';
+    return $formattedViolations;
+  }
+
+  /**
+   * Validate input DTO data against specified constraints.
+   * Important: the keys in $fields must match with public properties of the DTO
+   * @param object $instance The input DTO data to validate
+   * @param array $fields An associative array of field names to their constraints
+   * @param bool $allowExtraFields Whether to allow extra fields not specified in $fields
+   * @return array An array of validation errors, empty if none found
+   */
+  public static function validateInputDTO(object $instance, array $fields, bool $allowExtraFields = true): array
+  {
+    $arrayData = self::mapDTOtoArray($instance);
+
+    return self::validateInputArray($arrayData, $fields, $allowExtraFields);
+  }
+
+  /**
+   * Check if all the values in one array are present in another array
+   * @param array $array Array to be checked against
+   * @param array $subArray Array to check
+   * @return bool True if all the values in $subArray are also present in $array, otherwise false
+   */
+  public static function checkSubArrayInArray(array $array, array $subArray): bool
+  {
+    foreach ($subArray as $elem) {
+      if (!in_array($elem, $array)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }

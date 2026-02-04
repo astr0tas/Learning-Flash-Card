@@ -10,8 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Contracts\Service\Attribute\Required;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Validation;
 
 class BaseController extends AbstractController
 {
@@ -27,39 +25,6 @@ class BaseController extends AbstractController
     $this->session = $requestStack->getSession();
     $this->entityManager = $entityManager;
     $this->unprocessableEntityResponse = new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
-  }
-
-  /**
-   * Validate input data against specified constraints
-   * @param array $input The input data to validate
-   * @param array $fields An associative array of field names to their constraints
-   * @param bool $allowExtraFields Whether to allow extra fields not specified in $fields
-   * @return array An array of validation errors, empty if none found
-   */
-  public function validate(array $input, array $fields, bool $allowExtraFields = true): array
-  {
-    $validator = Validation::createValidator();
-    $violations = $validator->validate($input, new Assert\Collection([
-      'fields'           => $fields,
-      'allowExtraFields' => $allowExtraFields,
-    ]));
-
-    $formattedViolations = [];
-    if (count($violations) > 0) {
-      foreach ($violations as $violation) {
-        // 1. Get the field name (e.g., "username")
-        $field = $violation->getPropertyPath();
-        $field = str_replace(['[', ']'], '', $field); // Clean up the field name
-
-        // 2. Get the message (e.g., "This value is too short.")
-        $message = $violation->getMessage();
-
-        // 3. Store it. Use an array [] in case one field has multiple errors
-        $formattedViolations[$field][] = $message;
-      }
-    }
-
-    return $formattedViolations;
   }
 
   /**
