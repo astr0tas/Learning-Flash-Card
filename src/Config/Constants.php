@@ -7,7 +7,6 @@ class Constants
   // Application settings (do not modify)
   public const APP_ENV_DEVELOPMENT = 'dev';
   public const APP_ENV_PRODUCTION = 'prod';
-  public const GOOGLE_OAUTH_PASSWORD = 'google_oauth_password';
   public const AUTHENTICATOR_NAME = 'form_login';
   public const BCRYPT_COST = 12;
   public const REQUEST_LIMIT = 5;

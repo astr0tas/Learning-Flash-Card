@@ -100,6 +100,7 @@ class AuthenticationService extends BaseService
     }
 
     $payloadData = $payload->toArray();
+    $googleId = $payloadData['sub'];
     $email = $payloadData['email'] ?? '';
     $firstName = $payloadData['given_name'] ?? '';
     $lastName = $payloadData['family_name'] ?? '';
@@ -113,10 +114,13 @@ class AuthenticationService extends BaseService
       $user->setEmail($email);
       $user->setFirstName($firstName);
       $user->setLastName($lastName);
-      $user->setPassword(Constants::GOOGLE_OAUTH_PASSWORD, false); // Random password
       $user->setRoles([Constants::ROLE_USER]);
+      $user->setGoogleId($googleId);
 
       $this->userRepository->getEntityManager()->persist($user);
+      $this->userRepository->getEntityManager()->flush();
+    } else if (empty($user->getGoogleId())) {
+      $user->setGoogleId($googleId);
       $this->userRepository->getEntityManager()->flush();
     }
 
@@ -136,11 +140,6 @@ class AuthenticationService extends BaseService
       $data['error'] = ['general' => [$this->translator->trans('forgot_password.user_not_found')]];
       return $data;
     }
-
-    // if ($user->getPassword() === Constants::GOOGLE_OAUTH_PASSWORD) {
-    //   $data['error'] = ['general' => [$this->translator->trans('forgot_password.oauth_user')]];
-    //   return $data;
-    // }
 
     // Check for request spam
     if ($this->checkRequestSpam(entityClass: RecoveryTokenEntity::class, alias: 't', conditions: ["t.email = '{$user->getEmail()}'"])) {

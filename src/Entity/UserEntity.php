@@ -21,7 +21,7 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
   private array $roles = [];
 
   #[ORM\Column(type: 'string', nullable: true)]
-  private string $password;
+  private ?string $password  = null;
 
   #[ORM\Column(type: 'string', length: 255)]
   protected string $firstName;
@@ -33,7 +33,9 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
   protected ?string $middleName = null;
 
   #[ORM\Column(type: 'string', length: 12, nullable: true)]
-  protected string $phone;
+  protected ?string $phone  = null;
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
+  protected ?string $googleId  = null;
 
   #[ORM\Column(type: 'datetime', nullable: true)]
   private ?\DateTimeInterface $deletedAt = null;
@@ -57,12 +59,59 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
     return $this;
   }
 
+  public function getFirstName()
+  {
+    return $this->firstName;
+  }
+
   public function setLastName(string $lastName): self
   {
     $this->lastName = $lastName;
 
     return $this;
   }
+
+  public function getLastName()
+  {
+    return $this->lastName;
+  }
+
+  public function setMiddleName(string $middleName): self
+  {
+    $this->middleName = empty($middleName) ? null : $middleName;
+
+    return $this;
+  }
+
+  public function getMiddleName()
+  {
+    return $this->middleName;
+  }
+
+  public function getPhone()
+  {
+    return $this->phone;
+  }
+
+  public function setPhone(string $phone): self
+  {
+    $this->phone = empty($phone) ? null : $phone;
+
+    return $this;
+  }
+
+  public function getGoogleId()
+  {
+    return $this->googleId;
+  }
+
+  public function setGoogleId(string $googleId): self
+  {
+    $this->googleId = empty($googleId) ? null : $googleId;
+
+    return $this;
+  }
+
 
   /**
    * The public representation of the user (e.g. a username, an email address, etc.)
@@ -96,21 +145,16 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
   /**
    * @see PasswordAuthenticatedUserInterface
    */
-  public function getPassword(): string
+  public function getPassword(): ?string
   {
     return $this->password;
   }
 
-  public function setPassword(string $password, bool $hash = true): self
+  public function setPassword(string $password): self
   {
-    if ($hash) {
-      $hasedPassword = password_hash($password, PASSWORD_BCRYPT, [
-        'cost' => Constants::BCRYPT_COST,
-      ]);
-      $this->password = $hasedPassword;
-    } else {
-      $this->password = $password;
-    }
+    $this->password = password_hash($password, PASSWORD_BCRYPT, [
+      'cost' => Constants::BCRYPT_COST,
+    ]);
 
     return $this;
   }
