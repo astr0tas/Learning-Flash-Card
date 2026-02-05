@@ -117,11 +117,11 @@ class AuthenticationService extends BaseService
       $user->setRoles([Constants::ROLE_USER]);
       $user->setGoogleId($googleId);
 
-      $this->userRepository->getEntityManager()->persist($user);
-      $this->userRepository->getEntityManager()->flush();
+      $this->entityManager->persist($user);
+      $this->entityManager->flush();
     } else if (empty($user->getGoogleId())) {
       $user->setGoogleId($googleId);
-      $this->userRepository->getEntityManager()->flush();
+      $this->entityManager->flush();
     }
 
     $this->security->login($user, Constants::AUTHENTICATOR_NAME, null, [
@@ -199,8 +199,8 @@ class AuthenticationService extends BaseService
 
     if ($result) {
       // Save recovery token to database
-      $this->recoveryTokenRepository->getEntityManager()->persist($recoveryTokenEntity);
-      $this->recoveryTokenRepository->getEntityManager()->flush();
+      $this->entityManager->persist($recoveryTokenEntity);
+      $this->entityManager->flush();
     }
 
     return $result;

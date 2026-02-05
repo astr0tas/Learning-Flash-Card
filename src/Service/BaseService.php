@@ -13,7 +13,7 @@ class BaseService
 {
   public TranslatorInterface $translator;
   public SessionInterface $session;
-  private EntityManagerInterface $entityManager;
+  public EntityManagerInterface $entityManager;
 
   #[Required]
   public function initProperties(TranslatorInterface $translator, RequestStack $requestStack, EntityManagerInterface $entityManager)
