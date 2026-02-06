@@ -62,14 +62,11 @@ class AuthenticationController extends BaseController
 
     // Validate post data
     $fields = [
-      'email'    => [new Assert\NotBlank(
-        message: $this->translator->trans('validation.email.not_blank')
-      ), new Assert\Email(
-        message: $this->translator->trans('validation.email.invalid')
-      )],
-      'password' => [new Assert\NotBlank(
-        message: $this->translator->trans('validation.password.not_blank')
-      )],
+      'email'    => [
+        new Assert\NotBlank(message: $this->translator->trans('validation.email.not_blank')),
+        new Assert\Email(message: $this->translator->trans('validation.email.invalid'))
+      ],
+      'password' => [new Assert\NotBlank(message: $this->translator->trans('validation.password.not_blank'))],
     ];
     $errors = Utility::validateInputDTO($dto, $fields);
 
@@ -155,11 +152,10 @@ class AuthenticationController extends BaseController
 
     // Validate post data
     $fields = [
-      'email'    => [new Assert\NotBlank(
-        message: $this->translator->trans('validation.email.not_blank')
-      ), new Assert\Email(
-        message: $this->translator->trans('validation.email.invalid')
-      )],
+      'email'    => [
+        new Assert\NotBlank(message: $this->translator->trans('validation.email.not_blank')),
+        new Assert\Email(message: $this->translator->trans('validation.email.invalid'))
+      ],
     ];
     $errors = Utility::validateInputDTO($dto, $fields);
 
