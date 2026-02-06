@@ -174,7 +174,8 @@ class AuthenticationController extends BaseController
       return $this->render(view: TwigTemplate::PAGE_FORGOT_PASSWORD, parameters: $data, response: $this->unprocessableEntityResponse);
     }
 
-    return $this->render(view: TwigTemplate::PAGE_RECOVERY_EMAIL_SENT, parameters: $data);
+    $data['success'] = true;
+    return $this->render(view: TwigTemplate::PAGE_FORGOT_PASSWORD, parameters: $data);
   }
 
   #[Route(path: Routes::RESET_PASSWORD_ROUTE_URL, name: Routes::RESET_PASSWORD_ROUTE_NAME, methods: [Request::METHOD_GET])]

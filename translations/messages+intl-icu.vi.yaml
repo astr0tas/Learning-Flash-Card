@@ -29,11 +29,8 @@ forgot_password:
   user_not_found: "Email người dùng không tồn tại"
   # oauth_user: "Người dùng này đã đăng ký tài khoản bằng Google. Vui lòng đăng nhập bằng Google để truy cập hệ thống."
   system_error: "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau."
-
-recovery_email_sent:
-  title: "Quên mật khẩu"
-  header: "Đã gửi email khôi phục mật khẩu"
-  description: "Email khôi phục mật khẩu đã được gửi đến hòm thư của <strong>{email}</strong>. Vui lòng kiểm tra email và bấm vào liên kết đính kèm để khôi phục mật khẩu."
+  email_sent_header: "Đã gửi email khôi phục mật khẩu"
+  email_sent_description: "Email khôi phục mật khẩu đã được gửi đến hòm thư của <strong>{email}</strong>. Vui lòng kiểm tra email và bấm vào liên kết đính kèm để khôi phục mật khẩu."
 
 reset_password:
   title: "Đặt lại mật khẩu"

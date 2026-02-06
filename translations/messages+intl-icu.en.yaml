@@ -29,11 +29,8 @@ forgot_password:
   user_not_found: User not found"
   # oauth_user: "This user is registered as an Google account. Please sign in with Google"
   system_error: "A system error has occurred. Please try again later."
-
-recovery_email_sent:
-  title: "Forgot Password"
-  header: "Recovery Email Sent"
-  description: "A recovery email has been sent to your email address of <strong>{email}</strong>. Please check your mail box and click on the attached link to reset your password."
+  email_sent_header: "Recovery Email Sent"
+  email_sent_description: "A recovery email has been sent to your email address of <strong>{email}</strong>. Please check your mail box and click on the attached link to reset your password."
 
 reset_password:
   title: "Reset Password"
