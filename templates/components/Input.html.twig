@@ -22,7 +22,7 @@
 		</div>
 	{% endif %}
 	{% if type == 'password' %}
-		<div class="absolute cursor-pointer w-5 h-5 opacity-80 right-3 top-3.75" @click="showPassword = !showPassword">
+		<div class="absolute cursor-pointer w-5 h-5 opacity-80 hover:opacity-60 active:opacity-40 right-3 top-3.75" @click="showPassword = !showPassword">
 			<div x-show="showPassword">
 				{{include('icons/show.svg')}}
 			</div>
