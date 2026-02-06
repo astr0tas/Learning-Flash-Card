@@ -71,10 +71,10 @@ class AuthenticationController extends BaseController
       ],
       'password' => [new Assert\NotBlank(message: $this->translator->trans('validation.password.not_blank'))],
     ];
-    $errors = Utility::validateInputDTO($dto, $fields);
+    $error = Utility::validateInputDTO($dto, $fields);
 
-    if (count($errors) > 0) {
-      $data['error'] = $errors;
+    if (count($error) > 0) {
+      $data['error'] = $error;
       return $this->renderLogin(data: $data, response: $this->unprocessableEntityResponse);
     }
 
@@ -176,18 +176,16 @@ class AuthenticationController extends BaseController
         }
       })
     ];
-    $errors = Utility::validateInputDTO($dto, $fields, $globals);
+    $error = Utility::validateInputDTO($dto, $fields, $globals);
 
-    if (count($errors) > 0) {
-      $errors = Utility::setArrayKeyToSnakeCase($errors);
-      $data['error'] = $errors;
+    if (count($error) > 0) {
+      $data['error'] = $error;
       return $this->render(view: TwigTemplate::PAGE_REGISTER, parameters: $data, response: $this->unprocessableEntityResponse);
     }
 
     $data = $this->service->register($dto, $data);
 
     if (!empty($data['error'])) {
-      $data['error'] = Utility::setArrayKeyToSnakeCase($data['error']);
       return $this->render(view: TwigTemplate::PAGE_REGISTER, parameters: $data, response: $this->unprocessableEntityResponse);
     }
 
@@ -232,10 +230,10 @@ class AuthenticationController extends BaseController
         new Assert\Email(message: $this->translator->trans('validation.email.invalid'))
       ],
     ];
-    $errors = Utility::validateInputDTO($dto, $fields);
+    $error = Utility::validateInputDTO($dto, $fields);
 
-    if (count($errors) > 0) {
-      $data['error'] = $errors;
+    if (count($error) > 0) {
+      $data['error'] = $error;
       return $this->render(view: TwigTemplate::PAGE_FORGOT_PASSWORD, parameters: $data, response: $this->unprocessableEntityResponse);
     }
 

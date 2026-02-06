@@ -22,13 +22,13 @@
 			{% endif %}
 			<twig:Form action="{{ constant('App\\Config\\Routes::REGISTER_SUBMIT_ROUTE_URL') }}" method="POST" class="mt-5">
 				<div>
-					<twig:Input name="first_name" label="{{ 'register.first_name'|trans }}" aria-label="{{ 'register.first_name'|trans }}" type="text" autocomplete="first_name" value="{{ first_name }}" required error="{{ error.first_name is defined ? error.first_name[0] : '' }}"/>
+					<twig:Input name="first_name" label="{{ 'register.first_name'|trans }}" aria-label="{{ 'register.first_name'|trans }}" type="text" value="{{ first_name }}" required error="{{ error.first_name is defined ? error.first_name[0] : '' }}"/>
 				</div>
 				<div class="mt-3">
-					<twig:Input name="last_name" label="{{ 'register.last_name'|trans }}" aria-label="{{ 'register.last_name'|trans }}" type="text" autocomplete="last_name" value="{{ last_name }}" required error="{{ error.last_name is defined ? error.last_name[0] : '' }}"/>
+					<twig:Input name="last_name" label="{{ 'register.last_name'|trans }}" aria-label="{{ 'register.last_name'|trans }}" type="text" value="{{ last_name }}" required error="{{ error.last_name is defined ? error.last_name[0] : '' }}"/>
 				</div>
 				<div class="mt-3">
-					<twig:Input name="middle_name" label="{{ 'register.middle_name'|trans }}" aria-label="{{ 'register.middle_name'|trans }}" type="text" autocomplete="middle_name" value="{{ middle_name }}" error="{{ error.middle_name is defined ? error.middle_name[0] : '' }}"/>
+					<twig:Input name="middle_name" label="{{ 'register.middle_name'|trans }}" aria-label="{{ 'register.middle_name'|trans }}" type="text" value="{{ middle_name }}" error="{{ error.middle_name is defined ? error.middle_name[0] : '' }}"/>
 				</div>
 				<div class="mt-3">
 					<twig:Input name="email" label="{{ 'register.email'|trans }}" aria-label="{{ 'register.email'|trans }}" type="text" autocomplete="email" value="{{ email }}" required error="{{ error.email is defined ? error.email[0] : '' }}"/>
