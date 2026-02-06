@@ -1,5 +1,13 @@
-<div class="w-full relative component-input">
-	<input {% if name|default(id) is not empty %} name="{{ name|default(id) }}" {% endif %} {% if id|default(name) is not empty %} id="{{ id|default(name) }}" {% endif %} {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: (error is empty ? "border border-gray-400 w-full rounded-lg px-3.5 py-3 text-#{size} focus:ring-blue-200 outline-none focus:ring-2 focus:ring-offset-0 focus:ring-offset-white focus:border-blue-500 transition-all peer" : "border border-[var(--red)] w-full rounded-lg px-3.5 py-3 text-#{size} text-red-900 placeholder-red-700 focus:ring-red-300 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer" ) } ) }} placeholder="">
+{% set base_class = "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer" %}
+{% set size_class = "text-" ~ size|default('base') %}
+{% set error_class = error is empty
+    ? "border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500"
+    : "border border-[var(--red)] text-red-900 placeholder-red-700 focus:ring-red-300"
+%}
+{% set password_padding = (type == 'password') ? '!pe-9' : '' %}
+
+<div class="w-full relative component-input" {% if type == 'password' %} x-data="{ showPassword: false }" {% endif %}>
+	<input {% if type == 'password' %} x-bind:type="showPassword ? 'text' : 'password'" {% else %} type="{{ type }}" {% endif %} name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: base_class ~ ' ' ~ size_class ~ ' ' ~ error_class ~ ' ' ~ password_padding } ) }} placeholder="">
 	{% if label is not empty %}
 		<label {% if name|default(id) is not empty %} for="{{ name|default(id) }}" {% endif %} {% if error is not empty %} class="pointer-events-none absolute left-2.5 -top-2.5 max-w-[calc(100%-18px)] truncate px-1 text-xs text-(--red) transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-{{size}} peer-focus:-top-2.5 peer-focus:text-xs text-(--red) peer-focus:text-(--red)" {% else %} class="pointer-events-none absolute left-2.5 -top-2.5 max-w-[calc(100%-18px)] truncate px-1 text-xs text-zinc-400 transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-{{size}} peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-blue-400" {% endif %}>
 			{{ label }}
@@ -11,6 +19,16 @@
 	{% if error is not empty %}
 		<div class="mt-1 text-{{ size is same as('sm') ? 'xs' : 'sm'}} text-(--red)">
 			{{ error }}
+		</div>
+	{% endif %}
+	{% if type == 'password' %}
+		<div class="absolute cursor-pointer w-5 h-5 opacity-80 right-3 top-3.75" @click="showPassword = !showPassword">
+			<div x-show="showPassword">
+				{{include('icons/show.svg')}}
+			</div>
+			<div x-show="!showPassword">
+				{{include('icons/hide.svg')}}
+			</div>
 		</div>
 	{% endif %}
 </div>

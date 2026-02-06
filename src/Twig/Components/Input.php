@@ -13,4 +13,5 @@ final class Input
   public string $size = "base";
   public ?string $error = null;
   public bool $required = false;
+  public string $type = "text";
 }
