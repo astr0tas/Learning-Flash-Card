@@ -18,7 +18,16 @@ login_with_google:
 logout: "Sign Out"
 
 register:
-  title: "Register"
+  title: "Create an account"
+  header: "Create an account"
+  email: "Email"
+  first_name: "First name"
+  last_name: "Last name"
+  middle_name: "Middle name"
+  password: "Password"
+  confirm_password: "Confirm password"
+  submit: "Register"
+  back_to_login: "Back to login page"
 
 forgot_password:
   title: "Forgot Password"
@@ -55,10 +64,19 @@ app_setting:
 
 validation:
   email:
-    not_blank: "Email should not be blank."
+    not_blank: "Email must not be blank."
     invalid: "Invalid email format."
+    email_exist: "This email is already existed."
   password:
-    not_blank: "Password should not be blank."
+    not_blank: "Password must not be blank."
+    invalid: "Password must have at least 8 characters and contain at least 1 lower case, 1 upper case, 1 number and 1 special character."
+  first_name:
+    not_blank: "First name must not be blank."
+  last_name:
+    not_blank: "Last name must not be blank."
+  confirm_password:
+    not_blank: "Confirm password must not be blank."
+    mismatch: "Confirm password does not match."
 
 general_error:
   too_many_requests: "You have sent too many requests. Please try again later."

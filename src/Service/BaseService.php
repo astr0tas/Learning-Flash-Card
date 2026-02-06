@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 use App\Config\Constants;
+use App\Entity\UserEntity;
 
 class BaseService
 {
@@ -50,5 +51,24 @@ class BaseService
     $result = $query->getSingleScalarResult();
 
     return $result >= Constants::REQUEST_LIMIT;
+  }
+
+  /**
+   * Check if an email exist in user table
+   * @param string $email Input email
+   * @return bool True if the email exist in the user table, otherwise false
+   */
+  public function checkEmailExist(string $email)
+  {
+    $sql = $this->entityManager->createQueryBuilder()
+      ->select('u')
+      ->from(UserEntity::class, 'u')
+      ->where('u.email = :email')
+      ->setParameter("email", $email);
+
+    $query = $sql->getQuery();
+    $result = $query->execute();
+
+    return count($result) > 0;
   }
 }

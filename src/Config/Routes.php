@@ -20,6 +20,9 @@ class Routes
   public const REGISTER_ROUTE_URL = '/register';
   public const REGISTER_ROUTE_NAME = 'register';
 
+  public const REGISTER_SUBMIT_ROUTE_URL = '/register';
+  public const REGISTER_SUBMIT_ROUTE_NAME = 'register_submit';
+
   public const FORGOT_PASSWORD_ROUTE_URL = '/forgot-password';
   public const FORGOT_PASSWORD_ROUTE_NAME = 'forgot-password';
 

@@ -8,6 +8,7 @@ use App\Config\TwigTemplate;
 use App\DTO\ForgotPasswordDTO;
 use App\DTO\LoginDTO;
 use App\DTO\LoginWithGoogleDTO;
+use App\DTO\RegisterDTO;
 use App\Entity\RecoveryTokenEntity;
 use App\Entity\UserEntity;
 use App\Repository\RecoveryTokenRepository;
@@ -214,5 +215,10 @@ class AuthenticationService extends BaseService
   public function getGoogleOauthState()
   {
     return $this->googleOAuthProvider->getState();
+  }
+
+  public function register(RegisterDTO $dto, array $data)
+  {
+    return $data;
   }
 }

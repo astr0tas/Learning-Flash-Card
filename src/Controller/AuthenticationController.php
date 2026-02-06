@@ -10,12 +10,14 @@ use App\Service\EmailService;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Config\Routes;
 use App\Config\TwigTemplate;
+use App\DTO\RegisterDTO;
 use App\Service\AuthenticationService;
 use App\Utility\Utility;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 class AuthenticationController extends BaseController
 {
@@ -117,6 +119,69 @@ class AuthenticationController extends BaseController
       return $this->redirectUserToHome();
     }
 
+    return $this->render(view: TwigTemplate::PAGE_REGISTER);
+  }
+
+  #[Route(path: Routes::REGISTER_SUBMIT_ROUTE_URL, name: Routes::REGISTER_SUBMIT_ROUTE_NAME, methods: [Request::METHOD_POST])]
+  public function RegisterSubmitAction(Request $request)
+  {
+    if ($this->getUser()) {
+      return $this->redirectUserToHome();
+    }
+
+    // Store post data and errors for flash messages
+    $data = [];
+
+    // Handle post data
+    $postData = $request->request->all();
+
+    // Map post data to DTO
+    $dto = new RegisterDTO();
+    Utility::mapArrayToDTO($postData, $dto);
+
+    // Echo back input values
+    $data['first_name'] = $dto->firstName ?? '';
+    $data['last_name'] = $dto->lastName ?? '';
+    $data['middle_name'] = $dto->middleName ?? '';
+    $data['email'] = $dto->email ?? '';
+
+    // Validate post data
+    $fields = [
+      'firstName'    => [new Assert\NotBlank(message: $this->translator->trans('validation.first_name.not_blank'))],
+      'lastName'    => [new Assert\NotBlank(message: $this->translator->trans('validation.last_name.not_blank'))],
+      'email'    => [
+        new Assert\NotBlank(message: $this->translator->trans('validation.email.not_blank')),
+        new Assert\Email(message: $this->translator->trans('validation.email.invalid')),
+      ],
+      'password'    => [
+        new Assert\NotBlank(message: $this->translator->trans('validation.password.not_blank')),
+        new Assert\PasswordStrength(minScore: PasswordStrength::STRENGTH_VERY_STRONG, message: $this->translator->trans('validation.password.invalid'))
+      ],
+      'confirmPassword'    => [
+        new Assert\NotBlank(message: $this->translator->trans('validation.confirm_password.not_blank')),
+        // new Assert\Expression(['expression' => "this.password == value", 'message' => 'validation.confirm_password.mismatch'])
+      ],
+    ];
+    $errors = Utility::validateInputDTO($dto, $fields);
+
+    if ($this->service->checkEmailExist($dto->email)) {
+      $errors['email'][] = $this->translator->trans('validation.email.email_exist');
+    }
+
+    if (count($errors) > 0) {
+      $errors = Utility::setArrayKeyToSnakeCase($errors);
+      $data['error'] = $errors;
+      return $this->render(view: TwigTemplate::PAGE_REGISTER, parameters: $data, response: $this->unprocessableEntityResponse);
+    }
+
+    $data = $this->service->register($dto, $data);
+
+    if (!empty($data['error'])) {
+      $data['error'] = Utility::setArrayKeyToSnakeCase($data['error']);
+      return $this->render(view: TwigTemplate::PAGE_REGISTER, parameters: $data, response: $this->unprocessableEntityResponse);
+    }
+
+    $data['success'] = true;
     return $this->render(view: TwigTemplate::PAGE_REGISTER);
   }
 

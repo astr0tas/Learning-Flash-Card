@@ -19,3 +19,13 @@ class ForgotPasswordDTO
 {
   public string $email;
 }
+
+class RegisterDTO
+{
+  public string $firstName;
+  public string $middleName;
+  public string $lastName;
+  public string $email;
+  public string $password;
+  public string $confirmPassword;
+}

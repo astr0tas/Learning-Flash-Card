@@ -142,4 +142,20 @@ class Utility
 
     return true;
   }
+
+  /**
+   * Convert the keys in an associative array into snake case format
+   * @param array $array Input associative array, can be camel case, snake case, kebab case or space case (words)
+   * @return array Returned array with snake case keys
+   */
+  public static function setArrayKeyToSnakeCase(array $array): array
+  {
+    $result = [];
+
+    foreach ($array as $key => $value) {
+      $result[u($key)->snake()->toString()] = $value;
+    }
+
+    return $result;
+  }
 }
