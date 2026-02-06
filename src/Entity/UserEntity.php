@@ -33,8 +33,8 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
   protected ?string $middleName = null;
 
   #[ORM\Column(type: 'string', length: 12, nullable: true)]
-  protected ?string $phone  = null;
-  #[ORM\Column(type: 'string', length: 255, nullable: true)]
+  // protected ?string $phone  = null;
+  // #[ORM\Column(type: 'string', length: 255, nullable: true)]
   protected ?string $googleId  = null;
 
   #[ORM\Column(type: 'datetime', nullable: true)]
@@ -88,17 +88,17 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
     return $this->middleName;
   }
 
-  public function getPhone()
-  {
-    return $this->phone;
-  }
+  // public function getPhone()
+  // {
+  //   return $this->phone;
+  // }
 
-  public function setPhone(string $phone): self
-  {
-    $this->phone = empty($phone) ? null : $phone;
+  // public function setPhone(string $phone): self
+  // {
+  //   $this->phone = empty($phone) ? null : $phone;
 
-    return $this;
-  }
+  //   return $this;
+  // }
 
   public function getGoogleId()
   {
