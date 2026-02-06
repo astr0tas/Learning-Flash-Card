@@ -8,6 +8,9 @@ use function Symfony\Component\String\u;
 
 class Utility
 {
+  // This will prevent the client using the "new" keyword since this class is static
+  private function __construct() {}
+
   /**
    * Generate a random token string
    * @param int $length Length of the random bytes before hex encoding
@@ -74,11 +77,12 @@ class Utility
   /**
    * Validate input associative array data against specified constraints
    * @param array $input The input associative array data to validate
-   * @param array $fields An associative array of field names to their constraints
+   * @param array  $fields An associative array mapping field names to their constraints (Assert\Collection).
+   * @param array  $globals  An array of global constraints (e.g., Assert\Callback) to apply to the entire object.
    * @param bool $allowExtraFields Whether to allow extra fields not specified in $fields
    * @return array An array of validation errors, empty if none found
    */
-  public static function validateInputArray(array $input, array $fields, bool $allowExtraFields = true): array
+  public static function validateInputArray(array $input, array $fields, array $globals = [], bool $allowExtraFields = true): array
   {
     if (!self::checkSubArrayInArray(array_keys($input), array_keys($fields))) {
       throw new \Exception(sprintf(
@@ -88,10 +92,13 @@ class Utility
     }
 
     $validator = Validation::createValidator();
-    $violations = $validator->validate($input, new Assert\Collection([
-      'fields'           => $fields,
-      'allowExtraFields' => $allowExtraFields,
-    ]));
+    $violations = $validator->validate($input, [
+      new Assert\Collection([
+        'fields'           => $fields,
+        'allowExtraFields' => $allowExtraFields,
+      ]),
+      ...$globals,
+    ]);
 
     $formattedViolations = [];
     if (count($violations) > 0) {
@@ -115,15 +122,16 @@ class Utility
    * Validate input DTO data against specified constraints.
    * Important: the keys in $fields must match with public properties of the DTO
    * @param object $instance The input DTO data to validate
-   * @param array $fields An associative array of field names to their constraints
+   * @param array  $fields An associative array mapping field names to their constraints (Assert\Collection).
+   * @param array  $globals  An array of global constraints (e.g., Assert\Callback) to apply to the entire object.
    * @param bool $allowExtraFields Whether to allow extra fields not specified in $fields
    * @return array An array of validation errors, empty if none found
    */
-  public static function validateInputDTO(object $instance, array $fields, bool $allowExtraFields = true): array
+  public static function validateInputDTO(object $instance, array $fields, array $globals = [], bool $allowExtraFields = true): array
   {
     $arrayData = self::mapDTOtoArray($instance);
 
-    return self::validateInputArray($arrayData, $fields, $allowExtraFields);
+    return self::validateInputArray($arrayData, $fields, $globals, $allowExtraFields);
   }
 
   /**

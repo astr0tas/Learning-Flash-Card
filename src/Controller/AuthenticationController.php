@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\PasswordStrength;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class AuthenticationController extends BaseController
 {
@@ -152,6 +153,11 @@ class AuthenticationController extends BaseController
       'email'    => [
         new Assert\NotBlank(message: $this->translator->trans('validation.email.not_blank')),
         new Assert\Email(message: $this->translator->trans('validation.email.invalid')),
+        new Assert\Callback(callback: function (string $data, ExecutionContextInterface $context) {
+          if ($this->service->checkEmailExist(email: $data)) {
+            $context->buildViolation($this->translator->trans('validation.email.email_exist'))->addViolation();
+          }
+        })
       ],
       'password'    => [
         new Assert\NotBlank(message: $this->translator->trans('validation.password.not_blank')),
@@ -159,14 +165,18 @@ class AuthenticationController extends BaseController
       ],
       'confirmPassword'    => [
         new Assert\NotBlank(message: $this->translator->trans('validation.confirm_password.not_blank')),
-        // new Assert\Expression(['expression' => "this.password == value", 'message' => 'validation.confirm_password.mismatch'])
       ],
     ];
-    $errors = Utility::validateInputDTO($dto, $fields);
-
-    if ($this->service->checkEmailExist($dto->email)) {
-      $errors['email'][] = $this->translator->trans('validation.email.email_exist');
-    }
+    $globals = [
+      new Assert\Callback(callback: function (array $data, ExecutionContextInterface $context) {
+        if ($data['password'] !== $data['confirmPassword']) {
+          $context->buildViolation($this->translator->trans('validation.confirm_password.mismatch'))
+            ->atPath('[confirmPassword]')
+            ->addViolation();
+        }
+      })
+    ];
+    $errors = Utility::validateInputDTO($dto, $fields, $globals);
 
     if (count($errors) > 0) {
       $errors = Utility::setArrayKeyToSnakeCase($errors);
