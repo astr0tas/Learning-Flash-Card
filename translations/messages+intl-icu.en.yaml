@@ -37,7 +37,6 @@ forgot_password:
   back_to_login: "Back to login page"
   user_not_found: User not found"
   # oauth_user: "This user is registered as an Google account. Please sign in with Google"
-  system_error: "A system error has occurred. Please try again later."
   email_sent_header: "Recovery Email Sent"
   email_sent_description: "A recovery email has been sent to your email address of <strong>{email}</strong>. Please check your mail box and click on the attached link to reset your password."
 
@@ -79,6 +78,7 @@ validation:
     mismatch: "Confirm password does not match."
 
 general_error:
+  system_error: "A system error has occurred. Please try again later."
   too_many_requests: "You have sent too many requests. Please try again later."
 
 navigation_error:

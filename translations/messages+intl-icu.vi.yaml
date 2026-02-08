@@ -37,7 +37,6 @@ forgot_password:
   back_to_login: "Quay lại trang đăng nhập"
   user_not_found: "Email người dùng không tồn tại"
   # oauth_user: "Người dùng này đã đăng ký tài khoản bằng Google. Vui lòng đăng nhập bằng Google để truy cập hệ thống."
-  system_error: "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau."
   email_sent_header: "Đã gửi email khôi phục mật khẩu"
   email_sent_description: "Email khôi phục mật khẩu đã được gửi đến hòm thư của <strong>{email}</strong>. Vui lòng kiểm tra email và bấm vào liên kết đính kèm để khôi phục mật khẩu."
 
@@ -79,6 +78,7 @@ validation:
     mismatch: "Mật khẩu xác nhận không trùng khớp."
 
 general_error:
+  system_error: "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau."
   too_many_requests: "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau."
 
 navigation_error:

@@ -149,7 +149,7 @@ class AuthenticationService extends BaseService
     }
 
     if (!$this->sendRecoveryEmail($user)) {
-      $data['error'] = ['general' => [$this->translator->trans('forgot_password.system_error')]];
+      $data['error'] = ['general' => [$this->translator->trans('general_error.system_error')]];
       return $data;
     }
 
