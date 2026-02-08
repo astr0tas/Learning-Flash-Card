@@ -24,18 +24,19 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
   private ?string $password  = null;
 
   #[ORM\Column(type: 'string', length: 255)]
-  protected string $firstName;
+  private string $firstName;
 
   #[ORM\Column(type: 'string', length: 255)]
-  protected string $lastName;
+  private string $lastName;
 
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  protected ?string $middleName = null;
+  private ?string $middleName = null;
 
-  #[ORM\Column(type: 'string', length: 12, nullable: true)]
-  // protected ?string $phone  = null;
-  // #[ORM\Column(type: 'string', length: 255, nullable: true)]
-  protected ?string $googleId  = null;
+  // #[ORM\Column(type: 'string', length: 12, nullable: true)]
+  // private ?string $phone  = null;
+
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
+  private ?string $googleId  = null;
 
   #[ORM\Column(type: 'datetime', nullable: true)]
   private ?\DateTimeInterface $deletedAt = null;
