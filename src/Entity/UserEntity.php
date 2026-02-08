@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 use App\Config\Constants;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -37,6 +38,9 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
 
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private ?string $googleId  = null;
+
+  #[ORM\Column(type: 'datetime', nullable: true)]
+  private ?DateTimeImmutable $emailVerifiedAt = null;
 
   #[ORM\Column(type: 'datetime', nullable: true)]
   private ?\DateTimeInterface $deletedAt = null;
@@ -111,6 +115,11 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
     $this->googleId = empty($googleId) ? null : $googleId;
 
     return $this;
+  }
+
+  public function setEmailVerifiedAt(DateTimeImmutable $emailVerifiedAt)
+  {
+    $this->emailVerifiedAt = $emailVerifiedAt;
   }
 
 

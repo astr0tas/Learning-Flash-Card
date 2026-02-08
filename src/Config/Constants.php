@@ -40,10 +40,12 @@ class Constants
 
   // Email subjects
   public const EMAIL_SUBJECT_PASSWORD_RECOVERY = 'Khôi phục mật khẩu | Password Recovery';
+  public const EMAIL_SUBJECT_EMAIL_VERIFICATION = 'Xác thực tài khoản | Verify Account';
 
   // Entity table names
   public const TABLE_USER = 'user_tbl';
   public const TABLE_RECOVERY_TOKEN = 'recovery_token_tbl';
+  public const TABLE_EMAIL_VERIFICATION_TOKEN = 'email_verification_token_tbl';
 
   // Technical messages
   public const MESSAGE_INVALID_CSRF = 'Invalid CSRF token.';

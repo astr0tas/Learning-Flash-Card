@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Constraints\PasswordStrength;
+// use Symfony\Component\Validator\Constraints\PasswordStrength;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class AuthenticationController extends BaseController
@@ -161,7 +161,19 @@ class AuthenticationController extends BaseController
       ],
       'password'    => [
         new Assert\NotBlank(message: $this->translator->trans('validation.password.not_blank')),
-        new Assert\PasswordStrength(minScore: PasswordStrength::STRENGTH_VERY_STRONG, message: $this->translator->trans('validation.password.invalid'))
+        // new Assert\PasswordStrength(minScore: PasswordStrength::STRENGTH_STRONG, message: $this->translator->trans('validation.password.invalid'))
+        new Assert\Callback(function (string $password, ExecutionContextInterface $context) {
+          // (?=.*[a-z]) -> At least 1 Lowercase
+          // (?=.*[A-Z]) -> At least 1 Uppercase
+          // (?=.*\d)    -> At least 1 Digit
+          // (?=.*[\W_]) -> At least 1 Special Character (Symbol)
+          // .{8,}      -> At least 8 characters long
+          $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/';
+
+          if (!preg_match($regex, $password)) {
+            $context->buildViolation($this->translator->trans('validation.password.invalid'))->addViolation();
+          }
+        })
       ],
       'confirmPassword'    => [
         new Assert\NotBlank(message: $this->translator->trans('validation.confirm_password.not_blank')),
@@ -190,7 +202,7 @@ class AuthenticationController extends BaseController
     }
 
     $data['success'] = true;
-    return $this->render(view: TwigTemplate::PAGE_REGISTER);
+    return $this->render(view: TwigTemplate::PAGE_REGISTER, parameters: $data);
   }
 
   #[Route(path: Routes::FORGOT_PASSWORD_ROUTE_URL, name: Routes::FORGOT_PASSWORD_ROUTE_NAME, methods: [Request::METHOD_GET])]

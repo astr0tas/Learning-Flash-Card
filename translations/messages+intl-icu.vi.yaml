@@ -28,6 +28,8 @@ register:
   confirm_password: "Xác nhận mật khẩu"
   submit: "Đăng ký"
   back_to_login: "Quay lại trang đăng nhập"
+  email_sent_header: "Đã gửi email xác thực tài khoản"
+  email_sent_description: "Email xác thực tài khoản đã được gửi đến hòm thư của <strong>{email}</strong>. Vui lòng kiểm tra email và bấm vào liên kết đính kèm để hoàn tất quá trình đăng ký tài khoản."
 
 forgot_password:
   title: "Quên mật khẩu"

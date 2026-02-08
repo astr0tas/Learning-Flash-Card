@@ -28,6 +28,8 @@ register:
   confirm_password: "Confirm password"
   submit: "Register"
   back_to_login: "Back to login page"
+  email_sent_header: "Verification Email Sent"
+  email_sent_description: "A verification email has been sent to your email address of <strong>{email}</strong>. Please check your mail box and click on the attached link to complete your registration process."
 
 forgot_password:
   title: "Forgot Password"

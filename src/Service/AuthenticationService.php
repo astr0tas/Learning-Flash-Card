@@ -9,6 +9,7 @@ use App\DTO\ForgotPasswordDTO;
 use App\DTO\LoginDTO;
 use App\DTO\LoginWithGoogleDTO;
 use App\DTO\RegisterDTO;
+use App\Entity\EmailVerificationTokenEntity;
 use App\Entity\RecoveryTokenEntity;
 use App\Entity\UserEntity;
 use App\Repository\RecoveryTokenRepository;
@@ -219,6 +220,71 @@ class AuthenticationService extends BaseService
 
   public function register(RegisterDTO $dto, array $data)
   {
+    $user = new UserEntity();
+    $user->setFirstName($dto->firstName);
+    $user->setLastName($dto->lastName);
+    $user->setMiddleName($dto->middleName ?? null);
+    $user->setRoles([Constants::ROLE_USER]);
+    $user->setEmail($dto->email);
+    $user->setPassword($dto->password);
+
+    $this->entityManager->persist($user);
+
+    if (!$this->sendRegisterEmail($user)) {
+      $data['error'] = ['general' => [$this->translator->trans('general_error.system_error')]];
+      return $data;
+    }
+
     return $data;
+  }
+
+  private function sendRegisterEmail(UserEntity $user)
+  {
+    $userEmail = $user->getEmail();
+    $userFullName = $user->getUserFullName();
+
+    $token = Utility::generateRandomToken();
+    $verifyToken = new EmailVerificationTokenEntity();
+    $verifyToken->email = $userEmail;
+    $verifyToken->token = Utility::hashString($token);
+    $verifyToken->expiresAt = (new \DateTimeImmutable())->modify('+7 days');
+
+    $this->entityManager->persist($verifyToken);
+
+    // Get email verification link
+    $emailVerifyLink = $this->router->generate(
+      name: Routes::EMAIL_VERIFICATION_ROUTE_NAME,
+      parameters: [
+        'token' => $token,
+        'email' => $userEmail
+      ],
+      referenceType: UrlGeneratorInterface::ABSOLUTE_URL
+    );
+
+    // Send email verification
+    $this->emailService->setTo($userEmail);
+    $this->emailService->setSubject(Constants::EMAIL_SUBJECT_EMAIL_VERIFICATION);
+    $this->emailService->setHtml($this->twig->render(
+      name: TwigTemplate::EMAIL_VERIFICATION_HTML,
+      context: [
+        'name' => $userFullName,
+        'emailVerifyLink' => $emailVerifyLink
+      ]
+    ));
+    $this->emailService->setBody($this->twig->render(
+      name: TwigTemplate::EMAIL_VERIFICATION_TEXT,
+      context: [
+        'name' => $userFullName,
+        'emailVerifyLink' => $emailVerifyLink
+      ]
+    ));
+
+    $result = $this->emailService->sendEmail();
+
+    if ($result) {
+      $this->entityManager->flush();
+    }
+
+    return $result;
   }
 }

@@ -16,4 +16,7 @@ class TwigTemplate
   // Email templates
   public const EMAIL_RECOVERY_HTML = '/emails/recovery/index.html.twig';
   public const EMAIL_RECOVERY_TEXT = '/emails/recovery/text.txt.twig';
+
+  public const EMAIL_VERIFICATION_HTML = '/emails/verify/index.html.twig';
+  public const EMAIL_VERIFICATION_TEXT = '/emails/verify/text.txt.twig';
 }

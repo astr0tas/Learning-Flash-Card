@@ -13,7 +13,16 @@
 
 {% block auth_body %}
 	{% if success %}
-		<div data-turbo="false"></div>
+		<div class="flex flex-col items-center" data-turbo="false">
+			<div class="w-[50px] h-[50px]">
+				{{include('icons/success.svg')}}
+			</div>
+			<h1 class="font-bold text-[23px] text-center my-3">{{ 'register.email_sent_header'|trans }}</h1>
+			<p class="text-justify">{{'register.email_sent_description'|trans({'email':email})|raw}}</p>
+			<p class="text-center mt-5">
+				<a href="{{ constant('App\\Config\\Routes::LOGIN_ROUTE_URL') }}" class="text-(--blue) hover:cursor-pointer hover:opacity-80 active:opacity-70">{{ 'register.back_to_login'|trans }}</a>
+			</p>
+		</div>
 	{% else %}
 		<div data-turbo="false">
 			<h1 class="font-bold text-2xl text-center">{{ 'register.header'|trans }}</h1>
@@ -34,10 +43,10 @@
 					<twig:Input name="email" label="{{ 'register.email'|trans }}" aria-label="{{ 'register.email'|trans }}" type="text" autocomplete="email" value="{{ email }}" required error="{{ error.email is defined ? error.email[0] : '' }}"/>
 				</div>
 				<div class="mt-3">
-					<twig:Input name="password" label="{{ 'register.password'|trans }}" aria-label="{{ 'register.password'|trans }}" type="password" required error="{{ error.password is defined ? error.password[0] : '' }}"/>
+					<twig:Input name="password" label="{{ 'register.password'|trans }}" aria-label="{{ 'register.password'|trans }}" type="password" required autocomplete="off" error="{{ error.password is defined ? error.password[0] : '' }}"/>
 				</div>
 				<div class="mt-3">
-					<twig:Input name="confirm_password" label="{{ 'register.confirm_password'|trans }}" aria-label="{{ 'register.confirm_password'|trans }}" type="password" required error="{{ error.confirm_password is defined ? error.confirm_password[0] : '' }}"/>
+					<twig:Input name="confirm_password" label="{{ 'register.confirm_password'|trans }}" aria-label="{{ 'register.confirm_password'|trans }}" type="password" required autocomplete="off" error="{{ error.confirm_password is defined ? error.confirm_password[0] : '' }}"/>
 				</div>
 				<twig:Button type="submit" variant="primary" class="my-5">{{'register.submit'|trans }}</twig:Button>
 				<p class="text-center">
