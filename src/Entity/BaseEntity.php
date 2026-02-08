@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\MappedSuperclass]
 #[ORM\HasLifecycleCallbacks] // Vital for triggering PrePersist/PreUpdate
-class BaseEntity
+abstract class BaseEntity
 {
   #[ORM\Id]
   #[ORM\GeneratedValue]
