@@ -226,8 +226,9 @@ class AuthenticationService extends BaseService
       ->setPassword($dto->password);
 
     $this->entityManager->persist($user);
+    $this->entityManager->flush();
 
-    if (!$this->sendRegisterEmail($user)) {
+    if (!$this->sendVerificationEmail($user)) {
       $data['error'] = ['general' => [$this->translator->trans('general_error.system_error')]];
       return $data;
     }
@@ -235,7 +236,7 @@ class AuthenticationService extends BaseService
     return $data;
   }
 
-  private function sendRegisterEmail(UserEntity $user)
+  private function sendVerificationEmail(UserEntity $user)
   {
     $userEmail = $user->getEmail();
     $userFullName = $user->getUserFullName();
