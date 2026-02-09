@@ -166,10 +166,7 @@ class AuthenticationService extends BaseService
 
     // Create recovery token entity
     $token = Utility::generateRandomToken();
-    $recoveryTokenEntity = new RecoveryTokenEntity();
-    $recoveryTokenEntity->email = $userEmail;
-    $recoveryTokenEntity->token = Utility::hashString($token);
-    $recoveryTokenEntity->expiresAt = (new \DateTimeImmutable())->modify('+1 day');
+    $this->recoveryTokenRepository->createToken($userEmail, Utility::hashString($token));
 
     // Get reset password link
     $resetPasswordLink = $this->router->generate(
@@ -202,7 +199,6 @@ class AuthenticationService extends BaseService
 
     if ($result) {
       // Save recovery token to database
-      $this->entityManager->persist($recoveryTokenEntity);
       $this->entityManager->flush();
     }
 
