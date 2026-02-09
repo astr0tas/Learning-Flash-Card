@@ -28,6 +28,7 @@ use Twig\Environment;
 class AuthenticationService extends BaseService
 {
   private ?Google $googleOAuthProvider = null;
+  private ?RememberMeBadge $rememberMeBadge = null;
 
   public function __construct(
     #[Autowire(env: 'GOOGLE_CLIENT_ID')] private string $googleOAuthClientId,
@@ -45,6 +46,8 @@ class AuthenticationService extends BaseService
       'clientSecret' => $this->googleOAuthClientSecret,
       'redirectUri' => $this->router->generate(Routes::LOGIN_WITH_GOOGLE_ROUTE_NAME, parameters: [], referenceType: UrlGeneratorInterface::ABSOLUTE_URL),
     ]);
+
+    $this->rememberMeBadge = new RememberMeBadge();
   }
 
   public function login(LoginDTO $dto, array $data)
@@ -62,16 +65,14 @@ class AuthenticationService extends BaseService
       return $data;
     }
 
-    $rememberMeBadge = new RememberMeBadge();
-
     if (!empty($dto->rememberMe)) {
-      $rememberMeBadge->enable();
+      $this->rememberMeBadge->enable();
     } else {
-      $rememberMeBadge->disable();
+      $this->rememberMeBadge->disable();
     }
 
     $this->security->login($user, Constants::AUTHENTICATOR_NAME, null, [
-      $rememberMeBadge,
+      $this->rememberMeBadge,
     ]);
 
     return $data;
@@ -140,7 +141,7 @@ class AuthenticationService extends BaseService
     }
 
     $this->security->login($user, Constants::AUTHENTICATOR_NAME, null, [
-      (new RememberMeBadge())->enable(),
+      $this->rememberMeBadge->enable(),
     ]);
 
     return true;

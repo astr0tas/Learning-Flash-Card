@@ -167,7 +167,7 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
     return $this->password;
   }
 
-  public function setPassword(string $password): self
+  public function setPassword(?string $password): self
   {
     $this->password = empty($password) ? null : password_hash($password, PASSWORD_BCRYPT, [
       'cost' => Constants::BCRYPT_COST,
