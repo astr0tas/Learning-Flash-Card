@@ -11,9 +11,11 @@ login:
   login_with: "Sign In with {service_name}"
   or: "or"
   incorrect_credentials: "Incorrect email or password."
+  email_not_verified: "This account has not been verified, please check your mailbox and click on the attached link to finished the registration process and try logging in again."
 
 login_with_google:
   error: "Sign in with Google failed. Please try again."
+  notice_change_login_method_to_SSO: "You have changed your login method to {service} and your current password will now be disabled. To continue using your password to login, please change it to a new passsword."
 
 logout: "Sign Out"
 

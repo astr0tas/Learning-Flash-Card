@@ -124,6 +124,11 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
     return $this;
   }
 
+  public function getEmailVerifiedAt()
+  {
+    return $this->emailVerifiedAt;
+  }
+
 
   /**
    * The public representation of the user (e.g. a username, an email address, etc.)
@@ -164,7 +169,7 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
 
   public function setPassword(string $password): self
   {
-    $this->password = password_hash($password, PASSWORD_BCRYPT, [
+    $this->password = empty($password) ? null : password_hash($password, PASSWORD_BCRYPT, [
       'cost' => Constants::BCRYPT_COST,
     ]);
 

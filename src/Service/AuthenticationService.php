@@ -57,6 +57,11 @@ class AuthenticationService extends BaseService
       return $data;
     }
 
+    if (!$this->isEmailVerified($user)) {
+      $data['error'] = ['general' => [$this->translator->trans(id: 'login.email_not_verified')]];
+      return $data;
+    }
+
     $rememberMeBadge = new RememberMeBadge();
 
     if (!empty($dto->rememberMe)) {
@@ -124,8 +129,14 @@ class AuthenticationService extends BaseService
       $this->entityManager->persist($user);
       $this->entityManager->flush();
     } else if (empty($user->getGoogleId())) {
-      $user->setGoogleId($googleId);
+      $user->setGoogleId($googleId)
+        ->setPassword(null);
+
       $this->entityManager->flush();
+
+      if ($this->session instanceof FlashBagAwareSessionInterface) {
+        $this->session->getFlashBag()->add('notice', $this->translator->trans('login_with_google.notice_change_login_method_to_SSO', ['service' => 'Google']));
+      }
     }
 
     $this->security->login($user, Constants::AUTHENTICATOR_NAME, null, [
@@ -281,5 +292,19 @@ class AuthenticationService extends BaseService
     }
 
     return $result;
+  }
+
+  private function isEmailVerified(UserEntity $user)
+  {
+    if (!empty($user->getEmailVerifiedAt())) {
+      return true;
+    }
+
+    // Check if email verification token exists and is still valid, if not create another one
+    if (empty($this->emailVerificationTokenRepository->getLatestToken($user->getEmail()))) {
+      $this->sendVerificationEmail($user);
+    }
+
+    return false;
   }
 }

@@ -11,9 +11,11 @@ login:
   login_with: "Đăng nhập bằng {service_name}"
   or: "hoặc"
   incorrect_credentials: "Email hoặc mật khẩu không đúng."
+  email_not_verified: "Tài khoản chưa được xác thực, vui lòng kiểm tra hộp thư và bấm vào liên kết xác thực tài khoản để hoàn tất quá trình đăng ký và đăng nhập lại."
 
 login_with_google:
   error: "Đăng nhập bằng Google không thành công. Vui lòng thử lại."
+  notice_change_login_method_to_SSO: "Tài khoản của bạn đã được thay đổi phương thức đăng nhập sang {service} và mật khẩu hiện tại bị vô hiệu hóa. Để tiếp tục sử dụng tính năng đăng nhập bằng mật khẩu của bạn, vui lòng đổi sang mật khẩu mới."
 
 logout: "Đăng xuất"
 
