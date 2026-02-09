@@ -117,7 +117,7 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
     return $this;
   }
 
-  public function setEmailVerifiedAt(DateTimeImmutable $emailVerifiedAt)
+  public function setEmailVerifiedAt(DateTimeImmutable $emailVerifiedAt): self
   {
     $this->emailVerifiedAt = $emailVerifiedAt;
 
