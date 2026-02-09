@@ -9,9 +9,9 @@ use App\DTO\ForgotPasswordDTO;
 use App\DTO\LoginDTO;
 use App\DTO\LoginWithGoogleDTO;
 use App\DTO\RegisterDTO;
-use App\Entity\EmailVerificationTokenEntity;
 use App\Entity\RecoveryTokenEntity;
 use App\Entity\UserEntity;
+use App\Repository\EmailVerificationTokenRepository;
 use App\Repository\RecoveryTokenRepository;
 use App\Repository\UserRepository;
 use App\Utility\Utility;
@@ -35,6 +35,7 @@ class AuthenticationService extends BaseService
     private EmailService $emailService,
     private UserRepository $userRepository,
     private RecoveryTokenRepository $recoveryTokenRepository,
+    private EmailVerificationTokenRepository $emailVerificationTokenRepository,
     private Security $security,
     private RouterInterface $router,
     private Environment $twig,
@@ -242,12 +243,8 @@ class AuthenticationService extends BaseService
     $userFullName = $user->getUserFullName();
 
     $token = Utility::generateRandomToken();
-    $verifyToken = new EmailVerificationTokenEntity();
-    $verifyToken->email = $userEmail;
-    $verifyToken->token = Utility::hashString($token);
-    $verifyToken->expiresAt = (new \DateTimeImmutable())->modify('+7 days');
 
-    $this->entityManager->persist($verifyToken);
+    $this->emailVerificationTokenRepository->createToken($userEmail, Utility::hashString($token));
 
     // Get email verification link
     $emailVerifyLink = $this->router->generate(
