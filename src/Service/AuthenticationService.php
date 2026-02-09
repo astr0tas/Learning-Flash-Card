@@ -113,11 +113,12 @@ class AuthenticationService extends BaseService
     if (!$user) {
       // Create new user
       $user = new UserEntity();
-      $user->setEmail($email);
-      $user->setFirstName($firstName);
-      $user->setLastName($lastName);
-      $user->setRoles([Constants::ROLE_USER]);
-      $user->setGoogleId($googleId);
+      $user->setEmail($email)
+        ->setFirstName($firstName)
+        ->setLastName($lastName)
+        ->setRoles([Constants::ROLE_USER])
+        ->setGoogleId($googleId)
+        ->setEmailVerifiedAt(new \DateTimeImmutable());
 
       $this->entityManager->persist($user);
       $this->entityManager->flush();
@@ -181,22 +182,22 @@ class AuthenticationService extends BaseService
     );
 
     // Send recovery email
-    $this->emailService->setTo($userEmail);
-    $this->emailService->setSubject(Constants::EMAIL_SUBJECT_PASSWORD_RECOVERY);
-    $this->emailService->setHtml($this->twig->render(
-      name: TwigTemplate::EMAIL_RECOVERY_HTML,
-      context: [
-        'name' => $userFullName,
-        'resetPasswordLink' => $resetPasswordLink
-      ]
-    ));
-    $this->emailService->setBody($this->twig->render(
-      name: TwigTemplate::EMAIL_RECOVERY_TEXT,
-      context: [
-        'name' => $userFullName,
-        'resetPasswordLink' => $resetPasswordLink
-      ]
-    ));
+    $this->emailService->setTo($userEmail)
+      ->setSubject(Constants::EMAIL_SUBJECT_PASSWORD_RECOVERY)
+      ->setHtml($this->twig->render(
+        name: TwigTemplate::EMAIL_RECOVERY_HTML,
+        context: [
+          'name' => $userFullName,
+          'resetPasswordLink' => $resetPasswordLink
+        ]
+      ))
+      ->setBody($this->twig->render(
+        name: TwigTemplate::EMAIL_RECOVERY_TEXT,
+        context: [
+          'name' => $userFullName,
+          'resetPasswordLink' => $resetPasswordLink
+        ]
+      ));
     $result = $this->emailService->sendEmail();
 
     if ($result) {
@@ -221,12 +222,12 @@ class AuthenticationService extends BaseService
   public function register(RegisterDTO $dto, array $data)
   {
     $user = new UserEntity();
-    $user->setFirstName($dto->firstName);
-    $user->setLastName($dto->lastName);
-    $user->setMiddleName($dto->middleName ?? null);
-    $user->setRoles([Constants::ROLE_USER]);
-    $user->setEmail($dto->email);
-    $user->setPassword($dto->password);
+    $user->setFirstName($dto->firstName)
+      ->setLastName($dto->lastName)
+      ->setMiddleName($dto->middleName ?? null)
+      ->setRoles([Constants::ROLE_USER])
+      ->setEmail($dto->email)
+      ->setPassword($dto->password);
 
     $this->entityManager->persist($user);
 
@@ -262,22 +263,22 @@ class AuthenticationService extends BaseService
     );
 
     // Send email verification
-    $this->emailService->setTo($userEmail);
-    $this->emailService->setSubject(Constants::EMAIL_SUBJECT_EMAIL_VERIFICATION);
-    $this->emailService->setHtml($this->twig->render(
-      name: TwigTemplate::EMAIL_VERIFICATION_HTML,
-      context: [
-        'name' => $userFullName,
-        'emailVerifyLink' => $emailVerifyLink
-      ]
-    ));
-    $this->emailService->setBody($this->twig->render(
-      name: TwigTemplate::EMAIL_VERIFICATION_TEXT,
-      context: [
-        'name' => $userFullName,
-        'emailVerifyLink' => $emailVerifyLink
-      ]
-    ));
+    $this->emailService->setTo($userEmail)
+      ->setSubject(Constants::EMAIL_SUBJECT_EMAIL_VERIFICATION)
+      ->setHtml($this->twig->render(
+        name: TwigTemplate::EMAIL_VERIFICATION_HTML,
+        context: [
+          'name' => $userFullName,
+          'emailVerifyLink' => $emailVerifyLink
+        ]
+      ))
+      ->setBody($this->twig->render(
+        name: TwigTemplate::EMAIL_VERIFICATION_TEXT,
+        context: [
+          'name' => $userFullName,
+          'emailVerifyLink' => $emailVerifyLink
+        ]
+      ));
 
     $result = $this->emailService->sendEmail();
 
