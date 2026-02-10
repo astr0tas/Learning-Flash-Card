@@ -9,6 +9,7 @@ class TwigTemplate
   public const PAGE_REGISTER = '/views/authentication/register.html.twig';
   public const PAGE_FORGOT_PASSWORD = '/views/authentication/forgot_password.html.twig';
   public const PAGE_RESET_PASSWORD = '/views/authentication/reset_password.html.twig';
+  public const PAGE_VERIFY_EMAIL = '/views/authentication/verify_email.html.twig';
   public const PAGE_USER_HOME = '/views/user/index.html.twig';
   public const PAGE_ADMIN_HOME = '/views/admin/index.html.twig';
 

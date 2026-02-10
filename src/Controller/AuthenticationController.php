@@ -6,6 +6,7 @@ use App\Config\Constants;
 use App\DTO\ForgotPasswordDTO;
 use App\DTO\LoginDTO;
 use App\DTO\LoginWithGoogleDTO;
+use App\DTO\ResetPasswordDTO;
 use App\Service\EmailService;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Config\Routes;
@@ -261,13 +262,94 @@ class AuthenticationController extends BaseController
   }
 
   #[Route(path: Routes::RESET_PASSWORD_ROUTE_URL, name: Routes::RESET_PASSWORD_ROUTE_NAME, methods: [Request::METHOD_GET])]
-  public function ResetPasswordAction()
+  public function ResetPasswordAction(Request $request)
   {
     if ($this->getUser()) {
       return $this->redirectUserToHome();
     }
 
-    return $this->render(view: TwigTemplate::PAGE_RESET_PASSWORD);
+    $requestParams = $request->query->all();
+
+    $dto = new TokenDTO();
+    Utility::mapArrayToDTO($requestParams, $dto);
+
+    $data = [];
+
+    $data = $this->service->checkRecoveryToken($dto, $data);
+
+    if (empty($data['error'])) {
+      $data['input_mode'] = true;
+      $data['email'] = $dto->email;
+      $data['token'] = $dto->token;
+    }
+
+    return $this->render(view: TwigTemplate::PAGE_RESET_PASSWORD, parameters: $data);
+  }
+
+  #[Route(path: Routes::RESET_PASSWORD_SUBMIT_ROUTE_URL, name: Routes::RESET_PASSWORD_SUBMIT_ROUTE_NAME, methods: [Request::METHOD_POST])]
+  public function ResetPasswordSubmitAction(Request $request)
+  {
+    if ($this->getUser()) {
+      return $this->redirectUserToHome();
+    }
+
+    $postData = $request->request->all();
+
+    $dto = new ResetPasswordDTO();
+    Utility::mapArrayToDTO($postData, $dto);
+
+    $fields = [
+      'email'    => [
+        new Assert\NotBlank(message: $this->translator->trans('validation.email.not_blank')),
+        new Assert\Email(message: $this->translator->trans('validation.email.invalid')),
+      ],
+      'newPassword'    => [
+        new Assert\NotBlank(message: $this->translator->trans('validation.new_password.not_blank')),
+        new Assert\Callback(function (string $password, ExecutionContextInterface $context) {
+          // (?=.*[a-z]) -> At least 1 Lowercase
+          // (?=.*[A-Z]) -> At least 1 Uppercase
+          // (?=.*\d)    -> At least 1 Digit
+          // (?=.*[\W_]) -> At least 1 Special Character (Symbol)
+          // .{8,}      -> At least 8 characters long
+          $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/';
+
+          if (!preg_match($regex, $password)) {
+            $context->buildViolation($this->translator->trans('validation.new_password.invalid'))->addViolation();
+          }
+        })
+      ],
+      'confirmNewPassword'    => [
+        new Assert\NotBlank(message: $this->translator->trans('validation.confirm_new_password.not_blank')),
+      ],
+    ];
+    $globals = [
+      new Assert\Callback(callback: function (array $data, ExecutionContextInterface $context) {
+        if ($data['newPassword'] !== $data['confirmNewPassword']) {
+          $context->buildViolation($this->translator->trans('validation.confirm_new_password.mismatch'))
+            ->atPath('[confirmNewPassword]')
+            ->addViolation();
+        }
+      })
+    ];
+    $error = Utility::validateInputDTO($dto, $fields, $globals);
+
+    $data = [];
+    $data['email'] = $dto->email;
+    $data['token'] = $dto->token;
+
+    if (count($error) > 0) {
+      $data['error'] = $error;
+      $data['input_mode'] = true;
+      return $this->render(view: TwigTemplate::PAGE_RESET_PASSWORD, parameters: $data);
+    }
+
+    $data = $this->service->resetPassowrd($dto, $data);
+
+    if (!empty($data['error'])) {
+      $data['input_mode'] = true;
+    }
+
+    return $this->render(view: TwigTemplate::PAGE_RESET_PASSWORD, parameters: $data);
   }
 
   #[Route(path: Routes::EMAIL_VERIFICATION_ROUTE_URL, name: Routes::EMAIL_VERIFICATION_ROUTE_NAME, methods: [Request::METHOD_GET])]

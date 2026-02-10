@@ -335,4 +335,40 @@ class AuthenticationService extends BaseService
 
     return $data;
   }
+
+  public function checkRecoveryToken(TokenDTO $dto, array $data)
+  {
+    $tokenEntity = $this->recoveryTokenRepository->getLatestToken($dto->email);
+
+    if (empty($tokenEntity) || !Utility::compareHash(Utility::hashString($dto->token), $tokenEntity->token)) {
+      $data['error'] = ['general' => [$this->translator->trans('reset_password.invalid_or_expire_url')]];
+      return $data;
+    }
+
+    return $data;
+  }
+
+  public function resetPassowrd(ResetPasswordDTO $dto, array $data)
+  {
+    $tokenEntity = $this->recoveryTokenRepository->getLatestToken($dto->email);
+
+    if (empty($tokenEntity) || !Utility::compareHash(Utility::hashString($dto->token), $tokenEntity->token)) {
+      $data['error'] = ['general' => [$this->translator->trans('reset_password.invalid_or_expire_url')]];
+      return $data;
+    }
+    $tokenEntity->isConsumed = true;
+    $this->recoveryTokenRepository->clearUnusedTokens($dto->email);
+
+    $user = $this->userRepository->findOneBy(['email' => $dto->email]);
+
+    if (empty($user)) {
+      $data['error'] = ['general' => [$this->translator->trans('reset_password.user_not_found')]];
+      return $data;
+    }
+    $user->setPassword($dto->newPassword);
+
+    $this->entityManager->flush();
+
+    return $data;
+  }
 }

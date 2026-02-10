@@ -36,3 +36,10 @@ class TokenDTO extends BaseDTO
   public string $email = '';
 }
 
+class ResetPasswordDTO extends BaseDTO
+{
+  public string $email = '';
+  public string $token = '';
+  public string $newPassword = '';
+  public string $confirmNewPassword = '';
+}

@@ -32,6 +32,9 @@ class Routes
   public const RESET_PASSWORD_ROUTE_URL = '/reset-password';
   public const RESET_PASSWORD_ROUTE_NAME = 'reset_password';
 
+  public const RESET_PASSWORD_SUBMIT_ROUTE_URL = '/reset-password';
+  public const RESET_PASSWORD_SUBMIT_ROUTE_NAME = 'reset_password_submit';
+
   public const EMAIL_VERIFICATION_ROUTE_URL = '/verify-email';
   public const EMAIL_VERIFICATION_ROUTE_NAME = 'verify_email';
 

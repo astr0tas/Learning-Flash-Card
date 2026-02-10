@@ -46,8 +46,14 @@ forgot_password:
 
 reset_password:
   title: "Reset Password"
-  new_password: "New Password"
-  confirm_new_password: "Confirm New Password"
+  header: "Reset Password"
+  new_password: "New password"
+  confirm_new_password: "Confirm new password"
+  invalid_or_expire_url: "Invalid URL or URL has expired"
+  back_to_login: "Back to login page"
+  submit: "Submit"
+  success: "New password has been set successfully"
+  user_not_found: "Can not find the user's account to set new password"
 
 verify_email:
   title: "Verify Account"
@@ -84,6 +90,12 @@ validation:
   confirm_password:
     not_blank: "Confirm password must not be blank"
     mismatch: "Confirm password does not match"
+  new_password:
+    not_blank: "New password must not be blank"
+    invalid: "New password must have at least 8 characters and contain at least 1 lower case, 1 upper case, 1 number and 1 special character"
+  confirm_new_password:
+    not_blank: "Confirm new password must not be blank"
+    mismatch: "Confirm new password does not match"
 
 general_error:
   system_error: "A system error has occurred. Please try again later"
