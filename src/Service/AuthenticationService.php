@@ -159,11 +159,11 @@ class AuthenticationService extends BaseService
       return $data;
     }
 
-    // Check for request spam
-    if ($this->checkRequestSpam(entityClass: RecoveryTokenEntity::class, alias: 't', conditions: ["t.email = '{$user->getEmail()}'"])) {
-      $data['error'] = ['general' => [$this->translator->trans('general_error.too_many_requests')]];
-      return $data;
-    }
+    // // Check for request spam
+    // if ($this->checkRequestSpam(entityClass: RecoveryTokenEntity::class, alias: 't', conditions: ["t.email = '{$user->getEmail()}'"])) {
+    //   $data['error'] = ['general' => [$this->translator->trans('general_error.too_many_requests')]];
+    //   return $data;
+    // }
 
     if (!$this->sendRecoveryEmail($user)) {
       $data['error'] = ['general' => [$this->translator->trans('general_error.system_error')]];
@@ -304,9 +304,9 @@ class AuthenticationService extends BaseService
     }
 
     // Check if email verification token exists and is still valid, if not create another one
-    if (empty($this->emailVerificationTokenRepository->getLatestToken($user->getEmail()))) {
-      $this->sendVerificationEmail($user);
-    }
+    // if (empty($this->emailVerificationTokenRepository->getLatestToken($user->getEmail()))) {
+    $this->sendVerificationEmail($user);
+    // }
 
     return false;
   }
