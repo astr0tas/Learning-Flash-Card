@@ -39,7 +39,7 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
   #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private ?string $googleId  = null;
 
-  #[ORM\Column(type: 'datetime', nullable: true)]
+  #[ORM\Column(type: 'datetime_immutable', nullable: true)]
   private ?DateTimeImmutable $emailVerifiedAt = null;
 
   #[ORM\Column(type: 'datetime', nullable: true)]

@@ -10,12 +10,12 @@ login:
   register: "Sign up now"
   login_with: "Sign In with {service_name}"
   or: "or"
-  incorrect_credentials: "Incorrect email or password."
-  email_not_verified: "This account has not been verified, please check your mailbox and click on the attached link to finished the registration process and try logging in again."
+  incorrect_credentials: "Incorrect email or password"
+  email_not_verified: "This account has not been verified, please check your mailbox and click on the attached link to finished the registration process and try logging in again"
 
 login_with_google:
-  error: "Sign in with Google failed. Please try again."
-  notice_change_login_method_to_SSO: "You have changed your login method to {service} and your current password will now be disabled. To continue using your password to login, please change it to a new passsword."
+  error: "Sign in with Google failed. Please try again"
+  notice_change_login_method_to_SSO: "You have changed your login method to {service} and your current password will now be disabled. To continue using your password to login, please change it to a new passsword"
 
 logout: "Sign Out"
 
@@ -31,7 +31,7 @@ register:
   submit: "Register"
   back_to_login: "Back to login page"
   email_sent_header: "Verification Email Sent"
-  email_sent_description: "A verification email has been sent to your email address of <strong>{email}</strong>. Please check your mail box and click on the attached link to complete your registration process."
+  email_sent_description: "A verification email has been sent to your email address of <strong>{email}</strong>. Please check your mail box and click on the attached link to complete your registration process"
 
 forgot_password:
   title: "Forgot Password"
@@ -42,7 +42,7 @@ forgot_password:
   user_not_found: User not found"
   # oauth_user: "This user is registered as an Google account. Please sign in with Google"
   email_sent_header: "Recovery Email Sent"
-  email_sent_description: "A recovery email has been sent to your email address of <strong>{email}</strong>. Please check your mail box and click on the attached link to reset your password."
+  email_sent_description: "A recovery email has been sent to your email address of <strong>{email}</strong>. Please check your mail box and click on the attached link to reset your password"
 
 reset_password:
   title: "Reset Password"
@@ -67,23 +67,23 @@ app_setting:
 
 validation:
   email:
-    not_blank: "Email must not be blank."
-    invalid: "Invalid email format."
-    email_exist: "This email is already existed."
+    not_blank: "Email must not be blank"
+    invalid: "Invalid email format"
+    email_exist: "This email is already existed"
   password:
-    not_blank: "Password must not be blank."
-    invalid: "Password must have at least 8 characters and contain at least 1 lower case, 1 upper case, 1 number and 1 special character."
+    not_blank: "Password must not be blank"
+    invalid: "Password must have at least 8 characters and contain at least 1 lower case, 1 upper case, 1 number and 1 special character"
   first_name:
-    not_blank: "First name must not be blank."
+    not_blank: "First name must not be blank"
   last_name:
-    not_blank: "Last name must not be blank."
+    not_blank: "Last name must not be blank"
   confirm_password:
-    not_blank: "Confirm password must not be blank."
-    mismatch: "Confirm password does not match."
+    not_blank: "Confirm password must not be blank"
+    mismatch: "Confirm password does not match"
 
 general_error:
-  system_error: "A system error has occurred. Please try again later."
-  too_many_requests: "You have sent too many requests. Please try again later."
+  system_error: "A system error has occurred. Please try again later"
+  too_many_requests: "You have sent too many requests. Please try again later"
 
 navigation_error:
   error_404: "Page not Found"

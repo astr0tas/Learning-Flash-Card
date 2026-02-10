@@ -185,8 +185,8 @@ class AuthenticationService extends BaseService
     $resetPasswordLink = $this->router->generate(
       name: Routes::RESET_PASSWORD_ROUTE_NAME,
       parameters: [
-        'token' => $token,
-        'email' => $userEmail
+        'email' => $userEmail,
+        'token' => $token
       ],
       referenceType: UrlGeneratorInterface::ABSOLUTE_URL
     );
@@ -262,8 +262,8 @@ class AuthenticationService extends BaseService
     $emailVerifyLink = $this->router->generate(
       name: Routes::EMAIL_VERIFICATION_ROUTE_NAME,
       parameters: [
-        'token' => $token,
-        'email' => $userEmail
+        'email' => $userEmail,
+        'token' => $token
       ],
       referenceType: UrlGeneratorInterface::ABSOLUTE_URL
     );

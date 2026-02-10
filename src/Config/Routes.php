@@ -24,16 +24,16 @@ class Routes
   public const REGISTER_SUBMIT_ROUTE_NAME = 'register_submit';
 
   public const FORGOT_PASSWORD_ROUTE_URL = '/forgot-password';
-  public const FORGOT_PASSWORD_ROUTE_NAME = 'forgot-password';
+  public const FORGOT_PASSWORD_ROUTE_NAME = 'forgot_password';
 
   public const FORGOT_PASSWORD_SUBMIT_ROUTE_URL = '/forgot-password';
   public const FORGOT_PASSWORD_SUBMIT_ROUTE_NAME = 'forgot_password_submit';
 
   public const RESET_PASSWORD_ROUTE_URL = '/reset-password';
-  public const RESET_PASSWORD_ROUTE_NAME = 'reset-password';
+  public const RESET_PASSWORD_ROUTE_NAME = 'reset_password';
 
   public const EMAIL_VERIFICATION_ROUTE_URL = '/verify-email';
-  public const EMAIL_VERIFICATION_ROUTE_NAME = 'verify-email';
+  public const EMAIL_VERIFICATION_ROUTE_NAME = 'verify_email';
 
   // Locale Route
   public const SET_LOCALE_ROUTE_URL = '/set-locale/{locale}';

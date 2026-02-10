@@ -10,12 +10,12 @@ login:
   register: "Đăng ký ngay"
   login_with: "Đăng nhập bằng {service_name}"
   or: "hoặc"
-  incorrect_credentials: "Email hoặc mật khẩu không đúng."
-  email_not_verified: "Tài khoản chưa được xác thực, vui lòng kiểm tra hộp thư và bấm vào liên kết xác thực tài khoản để hoàn tất quá trình đăng ký và đăng nhập lại."
+  incorrect_credentials: "Email hoặc mật khẩu không đúng"
+  email_not_verified: "Tài khoản chưa được xác thực, vui lòng kiểm tra hộp thư và bấm vào liên kết xác thực tài khoản để hoàn tất quá trình đăng ký và đăng nhập lại"
 
 login_with_google:
-  error: "Đăng nhập bằng Google không thành công. Vui lòng thử lại."
-  notice_change_login_method_to_SSO: "Tài khoản của bạn đã được thay đổi phương thức đăng nhập sang {service} và mật khẩu hiện tại bị vô hiệu hóa. Để tiếp tục sử dụng tính năng đăng nhập bằng mật khẩu của bạn, vui lòng đổi sang mật khẩu mới."
+  error: "Đăng nhập bằng Google không thành công. Vui lòng thử lại"
+  notice_change_login_method_to_SSO: "Tài khoản của bạn đã được thay đổi phương thức đăng nhập sang {service} và mật khẩu hiện tại bị vô hiệu hóa. Để tiếp tục sử dụng tính năng đăng nhập bằng mật khẩu của bạn, vui lòng đổi sang mật khẩu mới"
 
 logout: "Đăng xuất"
 
@@ -31,7 +31,7 @@ register:
   submit: "Đăng ký"
   back_to_login: "Quay lại trang đăng nhập"
   email_sent_header: "Đã gửi email xác thực tài khoản"
-  email_sent_description: "Email xác thực tài khoản đã được gửi đến hòm thư của <strong>{email}</strong>. Vui lòng kiểm tra email và bấm vào liên kết đính kèm để hoàn tất quá trình đăng ký tài khoản."
+  email_sent_description: "Email xác thực tài khoản đã được gửi đến hòm thư của <strong>{email}</strong>. Vui lòng kiểm tra email và bấm vào liên kết đính kèm để hoàn tất quá trình đăng ký tài khoản"
 
 forgot_password:
   title: "Quên mật khẩu"
@@ -40,9 +40,9 @@ forgot_password:
   reset_password: "Đặt lại mật khẩu"
   back_to_login: "Quay lại trang đăng nhập"
   user_not_found: "Email người dùng không tồn tại"
-  # oauth_user: "Người dùng này đã đăng ký tài khoản bằng Google. Vui lòng đăng nhập bằng Google để truy cập hệ thống."
+  # oauth_user: "Người dùng này đã đăng ký tài khoản bằng Google. Vui lòng đăng nhập bằng Google để truy cập hệ thống"
   email_sent_header: "Đã gửi email khôi phục mật khẩu"
-  email_sent_description: "Email khôi phục mật khẩu đã được gửi đến hòm thư của <strong>{email}</strong>. Vui lòng kiểm tra email và bấm vào liên kết đính kèm để khôi phục mật khẩu."
+  email_sent_description: "Email khôi phục mật khẩu đã được gửi đến hòm thư của <strong>{email}</strong>. Vui lòng kiểm tra email và bấm vào liên kết đính kèm để khôi phục mật khẩu"
 
 reset_password:
   title: "Đặt lại mật khẩu"
@@ -67,23 +67,23 @@ app_setting:
 
 validation:
   email:
-    not_blank: "Email không được để trống."
-    invalid: "Định dạng email không hợp lệ."
-    email_exist: "Email đã được sử dụng."
+    not_blank: "Email không được để trống"
+    invalid: "Định dạng email không hợp lệ"
+    email_exist: "Email đã được sử dụng"
   password:
-    not_blank: "Mật khẩu không được để trống."
-    invalid: "Mật khẩu phải có độ dài ít nhất 8 ký tự và phải chứa ít nhất 1 ký tự thường, 1 ký tự in hoa, 1 ký tự số và 1 ký tự đặc biệt."
+    not_blank: "Mật khẩu không được để trống"
+    invalid: "Mật khẩu phải có độ dài ít nhất 8 ký tự và phải chứa ít nhất 1 ký tự thường, 1 ký tự in hoa, 1 ký tự số và 1 ký tự đặc biệt"
   first_name:
-    not_blank: "Tên không được để trống."
+    not_blank: "Tên không được để trống"
   last_name:
-    not_blank: "Họ không được để trống."
+    not_blank: "Họ không được để trống"
   confirm_password:
-    not_blank: "Mật khẩu xác nhận không được để trống."
-    mismatch: "Mật khẩu xác nhận không trùng khớp."
+    not_blank: "Mật khẩu xác nhận không được để trống"
+    mismatch: "Mật khẩu xác nhận không trùng khớp"
 
 general_error:
-  system_error: "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau."
-  too_many_requests: "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau."
+  system_error: "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau"
+  too_many_requests: "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau"
 
 navigation_error:
   error_404: "Trang tìm kiếm không tồn tại"
