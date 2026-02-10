@@ -9,8 +9,8 @@ abstract class TokenEntity extends BaseEntity
   #[ORM\Column(type: 'string', length: 255)]
   public string $email;
 
-  #[ORM\Column(type: 'string', length: 255)]
-  public string $token;
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
+  public ?string $token = null;
   #[ORM\Column]
   public \DateTimeImmutable $expiresAt;
   #[ORM\Column(type: 'boolean', options: ['default' => false])]

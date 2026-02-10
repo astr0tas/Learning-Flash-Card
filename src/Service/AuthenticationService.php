@@ -9,6 +9,7 @@ use App\DTO\ForgotPasswordDTO;
 use App\DTO\LoginDTO;
 use App\DTO\LoginWithGoogleDTO;
 use App\DTO\RegisterDTO;
+use App\DTO\TokenDTO;
 use App\Entity\RecoveryTokenEntity;
 use App\Entity\UserEntity;
 use App\Repository\EmailVerificationTokenRepository;
@@ -307,5 +308,31 @@ class AuthenticationService extends BaseService
     }
 
     return false;
+  }
+
+  public function checkVerificationToken(TokenDTO $dto, array $data)
+  {
+    $tokenEntity = $this->emailVerificationTokenRepository->getLatestToken($dto->email);
+
+    if (empty($tokenEntity) || !Utility::compareHash(Utility::hashString($dto->token), $tokenEntity->token)) {
+      $data['error'] = ['general' => [$this->translator->trans('verify_email.invalid_or_expire_url')]];
+      return $data;
+    }
+
+    $tokenEntity->isConsumed = true;
+    $this->emailVerificationTokenRepository->clearUnusedTokens($dto->email);
+
+    $userEntity = $this->userRepository->findOneBy(['email' => $dto->email]);
+
+    if (empty($userEntity)) {
+      $data['error'] = ['general' => [$this->translator->trans('verify_email.user_not_found')]];
+      return $data;
+    }
+
+    $userEntity->setEmailVerifiedAt(new \DateTimeImmutable());
+
+    $this->entityManager->flush();
+
+    return $data;
   }
 }

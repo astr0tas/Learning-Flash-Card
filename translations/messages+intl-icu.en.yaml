@@ -50,7 +50,11 @@ reset_password:
   confirm_new_password: "Confirm New Password"
 
 verify_email:
-  title: "Verify Email Address"
+  title: "Verify Account"
+  invalid_or_expire_url: "Invalid URL or URL has expired"
+  user_not_found: "Can not find the verify account"
+  verify_success: "Your account has been verified successfully"
+  back_to_login: "Back to login page"
 
 dashboard:
   title: "Dashboard"

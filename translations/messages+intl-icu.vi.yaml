@@ -50,7 +50,11 @@ reset_password:
   confirm_new_password: "Xác nhận mật khẩu mới"
 
 verify_email:
-  title: "Xác minh địa chỉ email"
+  title: "Xác thực tài khoản"
+  invalid_or_expire_url: "Liên kết không hợp lệ hoặc đã hết hiệu lực"
+  user_not_found: "Không tìm thấy tài khoản cần xác thực"
+  verify_success: "Tài khoản của bạn đã được xác thực thành công"
+  back_to_login: "Quay lại trang đăng nhập"
 
 dashboard:
   title: "Trang chủ"

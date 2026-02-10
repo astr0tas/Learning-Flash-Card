@@ -29,3 +29,10 @@ class RegisterDTO extends BaseDTO
   public string $password = '';
   public string $confirmPassword = '';
 }
+
+class TokenDTO extends BaseDTO
+{
+  public string $token = '';
+  public string $email = '';
+}
+

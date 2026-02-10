@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use App\Config\Routes;
 use App\Config\TwigTemplate;
 use App\DTO\RegisterDTO;
+use App\DTO\TokenDTO;
 use App\Service\AuthenticationService;
 use App\Utility\Utility;
 use Symfony\Component\HttpFoundation\Request;
@@ -275,6 +276,17 @@ class AuthenticationController extends BaseController
     if ($this->getUser()) {
       return $this->redirectUserToHome();
     }
+
+    $requestParams = $request->query->all();
+
+    $dto = new TokenDTO();
+    Utility::mapArrayToDTO($requestParams, $dto);
+
+    $data = [];
+
+    $data = $this->service->checkVerificationToken($dto, $data);
+
+    return $this->render(view: TwigTemplate::PAGE_VERIFY_EMAIL, parameters: $data);
   }
 
   private function redirectUserToHome()
