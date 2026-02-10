@@ -9,6 +9,7 @@ use App\DTO\ForgotPasswordDTO;
 use App\DTO\LoginDTO;
 use App\DTO\LoginWithGoogleDTO;
 use App\DTO\RegisterDTO;
+use App\DTO\ResetPasswordDTO;
 use App\DTO\TokenDTO;
 use App\Entity\RecoveryTokenEntity;
 use App\Entity\UserEntity;
