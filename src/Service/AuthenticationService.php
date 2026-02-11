@@ -11,7 +11,6 @@ use App\DTO\LoginWithGoogleDTO;
 use App\DTO\RegisterDTO;
 use App\DTO\ResetPasswordDTO;
 use App\DTO\TokenDTO;
-use App\Entity\RecoveryTokenEntity;
 use App\Entity\UserEntity;
 use App\Repository\EmailVerificationTokenRepository;
 use App\Repository\RecoveryTokenRepository;
@@ -137,9 +136,7 @@ class AuthenticationService extends BaseService
 
       $this->entityManager->flush();
 
-      if ($this->session instanceof FlashBagAwareSessionInterface) {
-        $this->session->getFlashBag()->add('notice', $this->translator->trans('login_with_google.notice_change_login_method_to_SSO', ['service' => 'Google']));
-      }
+      Utility::addNoticeToSessionFlash($this->session, 'info', $this->translator->trans('login_with_google.notice_change_login_method_to_SSO', ['service' => 'Google']));
     }
 
     $this->security->login($user, Constants::AUTHENTICATOR_NAME, null, [

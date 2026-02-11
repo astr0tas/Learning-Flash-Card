@@ -1,0 +1,63 @@
+{# This component focus on running JS scripts that rely on PHP data to run properly #}
+
+{# Notification script, notifications must always be saved in session's flash data #}
+{% set notices = app.flashes('notice') | default([]) %}
+
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function () {
+    const notices = [{% for notice in notices %}{ type: '{{ notice.type }}', message: '{{ notice.message }}' },{% endfor %}];
+    for (const notice of notices) {
+      let style = {
+        color: 'white',
+        borderRadius: '5px',
+        display: 'flex',
+        alignItems: 'center',
+      };
+      let avatar = '';
+
+      switch(notice.type){
+        case 'info':
+          style.background = "#2196f3";
+          avatar = '/svg/info_toast.svg';
+          break;
+        case 'warning':
+          style.background = "#ffc107";
+          avatar = '/svg/warning_toast.svg';
+          break;
+        case 'error':
+          style.background = "#ff5252";
+          avatar = '/svg/error_toast.svg';
+          break;
+        case 'success':
+          style.background = '#4caf50';
+          avatar = '/svg/success_toast.svg';
+          break;
+      }
+
+      const toast = Toastify({
+        text: `<p class='max-w-[350px]'>${notice.message}</p>
+        <img class="toast-close" src="/svg/close_toast.svg">`,
+        duration: 10000, // Display toast for 10 seconds
+        // newWindow: false,
+        // offset: {
+        //   x: 0, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+        //   y: 0, // vertical axis - can be a number or a string indicating unity. eg: '2em'
+        // },
+        escapeMarkup: false,
+        close: false, // Display close icon
+        gravity: "top", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style,
+        avatar,
+        onClick: function(){} // Callback after click
+      });
+
+      toast.showToast();
+
+      toast.toastElement.querySelector('.toast-close').addEventListener('click', () => {
+        toast.removeElement(toast.toastElement);
+      });
+    }
+  });
+</script>

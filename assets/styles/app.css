@@ -92,3 +92,8 @@ input[type="checkbox"]:checked::after {
      translateY(-25%) pulls it slightly UP so it looks optically centered. */
   transform: translate(-50%, -50%) rotate(35deg) translateY(-25%);
 }
+
+.toastify-avatar{
+  margin: 0;
+  margin-right: 10px;
+}

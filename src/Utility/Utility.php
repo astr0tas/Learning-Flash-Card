@@ -3,6 +3,8 @@
 namespace App\Utility;
 
 use App\DTO\BaseDTO;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Constraints as Assert;
 use function Symfony\Component\String\u;
@@ -167,5 +169,22 @@ class Utility
     }
 
     return true;
+  }
+
+  /**
+   * Add a notice to the session flash bag
+   * @param SessionInterface $session Session instance passed to by the caller
+   * @param string $noticeType Type of the notice. Currently there are 4 types: info, warning, error, success.
+   * @param string $message Message of the notice
+   * @return void
+   */
+  public static function addNoticeToSessionFlash(SessionInterface $session, string $noticeType, string $message)
+  {
+    if ($session instanceof FlashBagAwareSessionInterface) {
+      $session->getFlashBag()->add('notice', [
+        'type' => $noticeType,
+        'message' => $message
+      ]);
+    }
   }
 }
