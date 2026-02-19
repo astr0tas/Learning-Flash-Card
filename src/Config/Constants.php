@@ -34,10 +34,6 @@ class Constants
   // Session keys
   public const SESSION_OAUTH2STATE = 'oauth2state';
 
-  // Log channels
-  public const LOG_CHANNEL_EMAIL_CONTENT = 'email_content.logger';
-  public const LOG_CHANNEL_EMAIL_SERVICE = 'email_service.logger';
-
   // Email subjects
   public const EMAIL_SUBJECT_PASSWORD_RECOVERY = 'Khôi phục mật khẩu | Password Recovery';
   public const EMAIL_SUBJECT_EMAIL_VERIFICATION = 'Xác thực tài khoản | Verify Account';
@@ -49,4 +45,5 @@ class Constants
 
   // Technical messages
   public const MESSAGE_INVALID_CSRF = 'Invalid CSRF token.';
+  public const UNKNOWN_LOG_LEVEL = 'Unknown log level.';
 }

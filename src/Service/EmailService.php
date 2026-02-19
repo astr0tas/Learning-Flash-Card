@@ -3,13 +3,12 @@
 namespace App\Service;
 
 use App\Config\Constants;
+use App\Utility\Logger;
 use App\Utility\Utility;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Component\DependencyInjection\Attribute\Target;
 
 class EmailService extends BaseService
 {
@@ -17,16 +16,17 @@ class EmailService extends BaseService
   private string $subject;
   private string $body;
   private string $html;
+  private Logger $mailContentLogger;
+  private Logger $mailServiceLogger;
 
   public function __construct(
     private MailerInterface $mailer,
-    #[Target(Constants::LOG_CHANNEL_EMAIL_CONTENT)]
-    private LoggerInterface $mailContentLogger,
-    #[Target(Constants::LOG_CHANNEL_EMAIL_SERVICE)]
-    private LoggerInterface $mailServiceLogger,
     #[Autowire('%kernel.environment%')]
     private string $environment
-  ) {}
+  ) {
+    $this->mailContentLogger = new Logger(Logger::EMAIL_CONTENT_LOGGER_CONFIG);
+    $this->mailServiceLogger = new Logger(Logger::EMAIL_SERVICE_LOGGER_CONFIG);
+  }
 
   public function setTo(string $to): self
   {
@@ -61,7 +61,7 @@ class EmailService extends BaseService
 
     // Write down the email details to the log for debugging
     $emailId = Utility::generateRandomToken();
-    $this->mailContentLogger->info('Email content', [
+    $this->mailContentLogger->writeLog(Logger::LOG_LEVEL_INFO, 'Email content', [
       'email_id' => $emailId,
       'to' => $this->to,
       'subject' => $this->subject,
@@ -70,7 +70,7 @@ class EmailService extends BaseService
     ]);
 
     try {
-      $this->mailServiceLogger->debug('Sending email', [
+      $this->mailServiceLogger->writeLog(Logger::LOG_LEVEL_DEBUG, 'Sending email', [
         'email_id' => $emailId,
         'to' => $this->to,
       ]);
@@ -82,7 +82,7 @@ class EmailService extends BaseService
           ->html($this->html ?? '')
       );
     } catch (TransportExceptionInterface $e) {
-      $this->mailServiceLogger->error('Email sending process failed', [
+      $this->mailServiceLogger->writeLog(Logger::LOG_LEVEL_ERROR, 'Email sending process failed', [
         'email_id' => $emailId,
         'error' => $e->getMessage(),
       ]);
