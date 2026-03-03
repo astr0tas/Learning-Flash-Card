@@ -14,6 +14,7 @@ document.addEventListener('alpine:init', () =>
       return false;
     })(),
     appMenuExpanded: false,
+    isLoading: false,
     setDarkMode(value)
     {
       this.darkMode = value;
