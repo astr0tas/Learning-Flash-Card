@@ -22,14 +22,18 @@ class ClassUtility
 
     $reflection = new ReflectionObject($instance);
 
-    foreach($reflection->getProperties() as $property){
+    foreach ($reflection->getProperties() as $property) {
       $propertyNames[] = $property->getName();
     }
 
     foreach ($data as $key => $value) {
       foreach ($propertyNames as $propertyName) {
         if (u($propertyName)->camel()->toString() === u($key)->camel()->toString()) {
-          $instance->{self::getPropertySetterFunctionName($propertyName)}($value);
+          $method = self::getPropertySetterFunctionName($propertyName);
+
+          if ($reflection->hasMethod($method)) {
+            $instance->{$method}($value);
+          }
         }
       }
     }
@@ -48,10 +52,13 @@ class ClassUtility
     $reflection = new ReflectionObject($instance);
     foreach ($reflection->getProperties() as $property) {
       $name = $property->getName();
+      $method = self::getPropertyGetterFunctionName($name);
 
-      $value = $instance->{self::getPropertyGetterFunctionName($name)}();
+      if ($reflection->hasMethod($method)) {
+        $value = $instance->{$method}();
 
       $dtoData[$name] = $value;
+    }
     }
 
     // Merge: DTO data overwrites existing data if keys match
