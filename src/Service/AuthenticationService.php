@@ -54,9 +54,9 @@ class AuthenticationService extends BaseService
   public function login(LoginDTO $dto, array $data)
   {
     $user = $this->userRepository
-      ->findOneBy(criteria: ['email' => $dto->email]);
+      ->findOneBy(criteria: ['email' => $dto->getEmail()]);
 
-    if (!$user || !$user->comparePassword(plainPassword: $dto->password)) {
+    if (!$user || !$user->comparePassword(plainPassword: $dto->getPassword())) {
       $data['error'] = ['general' => [$this->translator->trans(id: 'login.incorrect_credentials')]];
       return $data;
     }
@@ -66,7 +66,7 @@ class AuthenticationService extends BaseService
       return $data;
     }
 
-    if (!empty($dto->rememberMe)) {
+    if (!empty($dto->getRememberMe())) {
       $this->rememberMeBadge->enable();
     } else {
       $this->rememberMeBadge->disable();
@@ -81,7 +81,7 @@ class AuthenticationService extends BaseService
 
   public function loginWithGoogle(LoginWithGoogleDTO $dto)
   {
-    $state = $dto->state;
+    $state = $dto->getState();
     $oauth2state = null;
 
     $oauth2state = $this->session->get(Constants::SESSION_OAUTH2STATE);
@@ -97,7 +97,7 @@ class AuthenticationService extends BaseService
     }
 
     $token = $this->googleOAuthProvider->getAccessToken('authorization_code', [
-      'code' => $dto->code
+      'code' => $dto->getCode()
     ]);
 
     try {
@@ -149,7 +149,7 @@ class AuthenticationService extends BaseService
   public function forgotPassword(ForgotPasswordDTO $dto, array $data)
   {
     $user = $this->userRepository
-      ->findOneBy(criteria: ['email' => $dto->email]);
+      ->findOneBy(criteria: ['email' => $dto->getEmail()]);
 
     if (!$user) {
       $data['error'] = ['general' => [$this->translator->trans('forgot_password.user_not_found')]];
@@ -230,12 +230,12 @@ class AuthenticationService extends BaseService
   public function register(RegisterDTO $dto, array $data)
   {
     $user = new UserEntity();
-    $user->setFirstName($dto->firstName)
-      ->setLastName($dto->lastName)
-      ->setMiddleName($dto->middleName ?? null)
+    $user->setFirstName($dto->getFirstName())
+      ->setLastName($dto->getLastName())
+      ->setMiddleName($dto->getMiddleName() ?? null)
       ->setRoles([Constants::ROLE_USER])
-      ->setEmail($dto->email)
-      ->setPassword($dto->password);
+      ->setEmail($dto->getEmail())
+      ->setPassword($dto->getPassword());
 
     $this->entityManager->persist($user);
     $this->entityManager->flush();
@@ -310,17 +310,17 @@ class AuthenticationService extends BaseService
 
   public function checkVerificationToken(TokenDTO $dto, array $data)
   {
-    $tokenEntity = $this->emailVerificationTokenRepository->getLatestToken($dto->email);
+    $tokenEntity = $this->emailVerificationTokenRepository->getLatestToken($dto->getEmail());
 
-    if (empty($tokenEntity) || !Utility::compareHash(Utility::hashString($dto->token), $tokenEntity->token)) {
+    if (empty($tokenEntity) || !Utility::compareHash(Utility::hashString($dto->getToken()), $tokenEntity->token)) {
       $data['error'] = ['general' => [$this->translator->trans('verify_email.invalid_or_expire_url')]];
       return $data;
     }
 
     $tokenEntity->isConsumed = true;
-    $this->emailVerificationTokenRepository->clearUnusedTokens($dto->email);
+    $this->emailVerificationTokenRepository->clearUnusedTokens($dto->getEmail());
 
-    $userEntity = $this->userRepository->findOneBy(['email' => $dto->email]);
+    $userEntity = $this->userRepository->findOneBy(['email' => $dto->getEmail()]);
 
     if (empty($userEntity)) {
       $data['error'] = ['general' => [$this->translator->trans('verify_email.user_not_found')]];
@@ -336,9 +336,9 @@ class AuthenticationService extends BaseService
 
   public function checkRecoveryToken(TokenDTO $dto, array $data)
   {
-    $tokenEntity = $this->recoveryTokenRepository->getLatestToken($dto->email);
+    $tokenEntity = $this->recoveryTokenRepository->getLatestToken($dto->getEmail());
 
-    if (empty($tokenEntity) || !Utility::compareHash(Utility::hashString($dto->token), $tokenEntity->token)) {
+    if (empty($tokenEntity) || !Utility::compareHash(Utility::hashString($dto->getToken()), $tokenEntity->token)) {
       $data['error'] = ['general' => [$this->translator->trans('reset_password.invalid_or_expire_url')]];
       return $data;
     }
@@ -348,22 +348,22 @@ class AuthenticationService extends BaseService
 
   public function resetPassowrd(ResetPasswordDTO $dto, array $data)
   {
-    $tokenEntity = $this->recoveryTokenRepository->getLatestToken($dto->email);
+    $tokenEntity = $this->recoveryTokenRepository->getLatestToken($dto->getEmail());
 
-    if (empty($tokenEntity) || !Utility::compareHash(Utility::hashString($dto->token), $tokenEntity->token)) {
+    if (empty($tokenEntity) || !Utility::compareHash(Utility::hashString($dto->getToken()), $tokenEntity->token)) {
       $data['error'] = ['general' => [$this->translator->trans('reset_password.invalid_or_expire_url')]];
       return $data;
     }
     $tokenEntity->isConsumed = true;
-    $this->recoveryTokenRepository->clearUnusedTokens($dto->email);
+    $this->recoveryTokenRepository->clearUnusedTokens($dto->getEmail());
 
-    $user = $this->userRepository->findOneBy(['email' => $dto->email]);
+    $user = $this->userRepository->findOneBy(['email' => $dto->getEmail()]);
 
     if (empty($user)) {
       $data['error'] = ['general' => [$this->translator->trans('reset_password.user_not_found')]];
       return $data;
     }
-    $user->setPassword($dto->newPassword);
+    $user->setPassword($dto->getNewPassword());
 
     $this->entityManager->flush();
 

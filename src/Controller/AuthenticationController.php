@@ -14,7 +14,7 @@ use App\Config\TwigTemplate;
 use App\DTO\RegisterDTO;
 use App\DTO\TokenDTO;
 use App\Service\AuthenticationService;
-use App\Utility\Utility;
+use App\Utility\ClassUtility;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
@@ -59,11 +59,11 @@ class AuthenticationController extends BaseController
 
     // Pass the form data to a DTO
     $dto = new LoginDTO();
-    Utility::mapArrayToDTO($postData, $dto);
+    ClassUtility::mapArrayToDTO($postData, $dto);
 
     // Echo back input values except password
-    $data['email'] = $dto->email ?? '';
-    $data['remember_me'] = !empty($dto->rememberMe) ? 'checked' : '';
+    $data['email'] = $dto->getEmail() ?? '';
+    $data['remember_me'] = !empty($dto->getRememberMe()) ? 'checked' : '';
 
     // Validate post data
     $fields = [
@@ -73,7 +73,7 @@ class AuthenticationController extends BaseController
       ],
       'password' => [new Assert\NotBlank(message: $this->translator->trans('validation.password.not_blank'))],
     ];
-    $error = Utility::validateInputDTO($dto, $fields);
+    $error = ClassUtility::validateInputDTO($dto, $fields);
 
     if (count($error) > 0) {
       $data['error'] = $error;
@@ -98,7 +98,7 @@ class AuthenticationController extends BaseController
 
     $requestParams = $request->query->all();
     $dto = new LoginWithGoogleDTO();
-    Utility::mapArrayToDTO($requestParams, $dto);
+    ClassUtility::mapArrayToDTO($requestParams, $dto);
 
     if (!$this->service->loginWithGoogle($dto)) {
       return $this->redirectToRoute(Routes::LOGIN_ROUTE_NAME);
@@ -140,13 +140,13 @@ class AuthenticationController extends BaseController
 
     // Map post data to DTO
     $dto = new RegisterDTO();
-    Utility::mapArrayToDTO($postData, $dto);
+    ClassUtility::mapArrayToDTO($postData, $dto);
 
     // Echo back input values
-    $data['first_name'] = $dto->firstName ?? '';
-    $data['last_name'] = $dto->lastName ?? '';
-    $data['middle_name'] = $dto->middleName ?? '';
-    $data['email'] = $dto->email ?? '';
+    $data['first_name'] = $dto->getFirstName() ?? '';
+    $data['last_name'] = $dto->getLastName() ?? '';
+    $data['middle_name'] = $dto->getMiddleName() ?? '';
+    $data['email'] = $dto->getEmail() ?? '';
 
     // Validate post data
     $fields = [
@@ -190,7 +190,7 @@ class AuthenticationController extends BaseController
         }
       })
     ];
-    $error = Utility::validateInputDTO($dto, $fields, $globals);
+    $error = ClassUtility::validateInputDTO($dto, $fields, $globals);
 
     if (count($error) > 0) {
       $data['error'] = $error;
@@ -232,10 +232,10 @@ class AuthenticationController extends BaseController
 
     // Map post data to DTO
     $dto = new ForgotPasswordDTO();
-    Utility::mapArrayToDTO($postData, $dto);
+    ClassUtility::mapArrayToDTO($postData, $dto);
 
     // Echo back input values
-    $data['email'] = $dto->email ?? '';
+    $data['email'] = $dto->getEmail() ?? '';
 
     // Validate post data
     $fields = [
@@ -244,7 +244,7 @@ class AuthenticationController extends BaseController
         new Assert\Email(message: $this->translator->trans('validation.email.invalid'))
       ],
     ];
-    $error = Utility::validateInputDTO($dto, $fields);
+    $error = ClassUtility::validateInputDTO($dto, $fields);
 
     if (count($error) > 0) {
       $data['error'] = $error;
@@ -271,7 +271,7 @@ class AuthenticationController extends BaseController
     $requestParams = $request->query->all();
 
     $dto = new TokenDTO();
-    Utility::mapArrayToDTO($requestParams, $dto);
+    ClassUtility::mapArrayToDTO($requestParams, $dto);
 
     $data = [];
 
@@ -279,8 +279,8 @@ class AuthenticationController extends BaseController
 
     if (empty($data['error'])) {
       $data['input_mode'] = true;
-      $data['email'] = $dto->email;
-      $data['token'] = $dto->token;
+      $data['email'] = $dto->getEmail();
+      $data['token'] = $dto->getToken();
     }
 
     return $this->render(view: TwigTemplate::PAGE_RESET_PASSWORD, parameters: $data);
@@ -296,7 +296,7 @@ class AuthenticationController extends BaseController
     $postData = $request->request->all();
 
     $dto = new ResetPasswordDTO();
-    Utility::mapArrayToDTO($postData, $dto);
+    ClassUtility::mapArrayToDTO($postData, $dto);
 
     $fields = [
       'email'    => [
@@ -331,11 +331,11 @@ class AuthenticationController extends BaseController
         }
       })
     ];
-    $error = Utility::validateInputDTO($dto, $fields, $globals);
+    $error = ClassUtility::validateInputDTO($dto, $fields, $globals);
 
     $data = [];
-    $data['email'] = $dto->email;
-    $data['token'] = $dto->token;
+    $data['email'] = $dto->getEmail();
+    $data['token'] = $dto->getToken();
 
     if (count($error) > 0) {
       $data['error'] = $error;
@@ -362,7 +362,7 @@ class AuthenticationController extends BaseController
     $requestParams = $request->query->all();
 
     $dto = new TokenDTO();
-    Utility::mapArrayToDTO($requestParams, $dto);
+    ClassUtility::mapArrayToDTO($requestParams, $dto);
 
     $data = [];
 

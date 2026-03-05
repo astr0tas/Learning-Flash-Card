@@ -198,4 +198,11 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
 
     return trim($this->lastName . ' ' . $this->firstName);
   }
+
+  public function setDeletedAt(?\DateTime $deletedAt): static
+  {
+      $this->deletedAt = $deletedAt;
+
+      return $this;
+  }
 }

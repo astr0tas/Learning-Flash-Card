@@ -14,10 +14,10 @@ abstract class BaseEntity
   private ?int $id = null;
 
   #[ORM\Column]
-  protected ?\DateTimeImmutable $createdAt = null;
+  private ?\DateTimeImmutable $createdAt = null;
 
   #[ORM\Column(nullable: true)]
-  protected ?\DateTimeImmutable $updatedAt = null;
+  private ?\DateTimeImmutable $updatedAt = null;
 
   public function getId(): ?int
   {

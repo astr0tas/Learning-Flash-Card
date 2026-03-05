@@ -2,12 +2,10 @@
 
 namespace App\Utility;
 
-use App\DTO\BaseDTO;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Constraints as Assert;
-use function Symfony\Component\String\u;
 
 class Utility
 {
@@ -45,41 +43,6 @@ class Utility
   public static function compareHash(string $input, string $hash): bool
   {
     return hash_equals($hash, $input);
-  }
-
-  /**
-   * Map data from an associative array to a DTO instance
-   * @param array $data Associative array containing the data
-   * @param BaseDTO $instance DTO instance to be mapped
-   */
-  public static function mapArrayToDTO(array $data, BaseDTO $instance)
-  {
-    $instance->setOriginalInputKey(array_keys($data));
-
-    $objectProperty = array_keys(get_object_vars($instance));
-
-    foreach ($data as $key => $value) {
-      foreach ($objectProperty as $propertyName) {
-        if (u($propertyName)->camel()->toString() === u($key)->camel()->toString()) {
-          $instance->{$propertyName} = $value;
-        }
-      }
-    }
-  }
-
-  /**
-   * Map data from a DTO instance to an associative array
-   * @param BaseDTO $instance DTO instance containing the data
-   * @param array $existingData Associative array that might or might not have existing data beforehand
-   * @return array Returned array containing old data from $existingData (if any) and new data from $instance (duplicated key-value pairs will be overwritten by $instance)
-   */
-  public static function mapDTOtoArray(BaseDTO $instance, array $existingData = []): array
-  {
-    // Get instance's public properties and their values in the form of an associative array
-    $dtoData = get_object_vars($instance);
-
-    // Merge: DTO data overwrites existing data if keys match
-    return array_merge($existingData, $dtoData);
   }
 
   /**
@@ -124,34 +87,6 @@ class Utility
     }
 
     return $formattedViolations;
-  }
-
-  /**
-   * Validate input DTO data against specified constraints.
-   * Important: the keys in $fields must match with public properties of the DTO
-   * @param BaseDTO $instance The input DTO data to validate
-   * @param array  $fields An associative array mapping field names to their constraints (Assert\Collection).
-   * @param array  $globals  An array of global constraints (e.g., Assert\Callback) to apply to the entire object.
-   * @param bool $allowExtraFields Whether to allow extra fields not specified in $fields
-   * @return array An array of validation errors, empty if none found
-   */
-  public static function validateInputDTO(BaseDTO $instance, array $fields, array $globals = [], bool $allowExtraFields = true): array
-  {
-    $arrayData = self::mapDTOtoArray($instance);
-
-    $errors = self::validateInputArray($arrayData, $fields, $globals, $allowExtraFields);
-
-    $result = [];
-
-    foreach ($errors as $key => $value) {
-      foreach ($instance->getOriginalInputKey() as $inputKey) {
-        if (u($inputKey)->camel()->toString() === u($key)->camel()->toString()) {
-          $result[$inputKey] = $value;
-        }
-      }
-    }
-
-    return $result;
   }
 
   /**
