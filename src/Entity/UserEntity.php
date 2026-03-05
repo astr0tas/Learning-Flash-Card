@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Config\Constants;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -44,6 +45,9 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
 
   #[ORM\Column(type: 'datetime', nullable: true)]
   private ?\DateTimeInterface $deletedAt = null;
+
+  #[ORM\OneToMany(targetEntity: CardBagEntity::class, mappedBy: 'userEntity')]
+  private Collection $cardBagEntities;
 
   public function getEmail(): string
   {
@@ -201,8 +205,43 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
 
   public function setDeletedAt(?\DateTime $deletedAt): static
   {
-      $this->deletedAt = $deletedAt;
+    $this->deletedAt = $deletedAt;
 
-      return $this;
+    return $this;
+  }
+
+  /**
+   * Get the value of cardBagEntities
+   *
+   * @return Collection
+   */
+  public function getCardBagEntities(): Collection
+  {
+    return $this->cardBagEntities;
+  }
+
+  public function addCardBag(CardBagEntity $bag): self
+  {
+    if (!$this->cardBagEntities->contains($bag)) {
+      $this->cardBagEntities->add($bag);
+
+      // Keep the relationship in sync!
+      // When you add B to A, you must tell B that A is its owner.
+      $bag->setUserEntity($this);
+    }
+
+    return $this;
+  }
+
+  public function removeCardBag(CardBagEntity $bag): self
+  {
+    if ($this->cardBagEntities->removeElement($bag)) {
+      // Set the owning side to null (unless already changed)
+      if ($bag->getUserEntity() === $this) {
+        $bag->setUserEntity(null);
+      }
+    }
+
+    return $this;
   }
 }
