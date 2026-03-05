@@ -57,8 +57,8 @@ class ClassUtility
       if ($reflection->hasMethod($method)) {
         $value = $instance->{$method}();
 
-      $dtoData[$name] = $value;
-    }
+        $dtoData[$name] = $value;
+      }
     }
 
     // Merge: DTO data overwrites existing data if keys match
@@ -111,5 +111,23 @@ class ClassUtility
   public static function getPropertySetterFunctionName(string $propertyName): string
   {
     return 'set' . ucfirst($propertyName);
+  }
+
+  public static function mapObject(object $sourceInstance, object $destinationInstance): void
+  {
+    $sourceReflection = new ReflectionObject($sourceInstance);
+    $destinationReflection = new ReflectionObject($destinationInstance);
+    foreach ($destinationReflection->getProperties() as $destinationProperty) {
+      $destinationPropertyName = $destinationProperty->getName();
+
+      if ($sourceReflection->hasProperty($destinationPropertyName)) {
+        $sourceGetterMethod = self::getPropertyGetterFunctionName($destinationPropertyName);
+        $destinationSetterMethod = self::getPropertySetterFunctionName($destinationPropertyName);
+
+        if ($sourceReflection->hasMethod($sourceGetterMethod) && $destinationReflection->hasMethod($destinationSetterMethod)) {
+          $destinationInstance->{$destinationSetterMethod}($sourceInstance->{$sourceGetterMethod});
+        }
+      }
+    }
   }
 }
