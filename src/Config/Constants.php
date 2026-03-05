@@ -44,6 +44,7 @@ class Constants
   public const TABLE_EMAIL_VERIFICATION_TOKEN = 'email_verification_token_tbl';
   public const TABLE_CARD_BAG = 'card_bag_tbl';
   public const TABLE_CARD = 'card_tbl';
+  public const TABLE_CARD_CONTENT = 'card_content_tbl';
 
   // Technical messages
   public const MESSAGE_INVALID_CSRF = 'Invalid CSRF token.';

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Config\Constants;
 use App\Repository\CardRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -15,8 +16,11 @@ class CardEntity extends BaseEntity
   #[ORM\Column(type: 'string', length: 255)]
   private string $title;
 
-  #[ORM\Column(type: 'string')]
-  private string $body;
+  #[ORM\Column(type: 'string', length: 1000)]
+  private string $description;
+
+  #[ORM\OneToMany(targetEntity: CardContentEntity::class, mappedBy: 'cardEntity')]
+  private Collection $cardContentEntities;
 
   #[ORM\ManyToOne(targetEntity: CardBagEntity::class)]
   #[ORM\JoinColumn(name: 'card_bag_id', nullable: false)]
@@ -35,30 +39,6 @@ class CardEntity extends BaseEntity
   public function setDeletedAt(?\DateTimeInterface $deletedAt): self
   {
     $this->deletedAt = $deletedAt;
-
-    return $this;
-  }
-
-  /**
-   * Get the value of body
-   *
-   * @return string
-   */
-  public function getBody(): string
-  {
-    return $this->body;
-  }
-
-  /**
-   * Set the value of body
-   *
-   * @param string $body
-   *
-   * @return self
-   */
-  public function setBody(string $body): self
-  {
-    $this->body = $body;
 
     return $this;
   }
@@ -107,6 +87,63 @@ class CardEntity extends BaseEntity
   public function setCardBagEntity(?CardBagEntity $cardBagEntity): self
   {
     $this->cardBagEntity = $cardBagEntity;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of cardContentEntities
+   *
+   * @return Collection
+   */
+  public function getCardContentEntities(): Collection
+  {
+    return $this->cardContentEntities;
+  }
+
+  public function addCardContentEntity(CardContentEntity $cardContentEntity): self
+  {
+    if (!$this->cardContentEntities->contains($cardContentEntity)) {
+      $this->cardContentEntities->add($cardContentEntity);
+      // Sync the relationship!
+      $cardContentEntity->setCardEntity($this);
+    }
+
+    return $this;
+  }
+
+  public function removeCardContentEntity(CardContentEntity $cardContentEntity): self
+  {
+    if ($this->cardContentEntities->removeElement($cardContentEntity)) {
+      // set the owning side to null (unless already changed)
+      if ($cardContentEntity->getCardEntity() === $this) {
+        $cardContentEntity->setCardEntity(null);
+      }
+    }
+
+    return $this;
+  }
+
+  /**
+   * Get the value of description
+   *
+   * @return string
+   */
+  public function getDescription(): string
+  {
+    return $this->description;
+  }
+
+  /**
+   * Set the value of description
+   *
+   * @param string $description
+   *
+   * @return self
+   */
+  public function setDescription(string $description): self
+  {
+    $this->description = $description;
 
     return $this;
   }
