@@ -75,6 +75,10 @@ app_setting:
   set_english: "Chuyển ngôn ngữ sang tiếng Anh"
   set_vietnamese: "Chuyển ngôn ngữ sang tiếng Việt"
 
+menu:
+  expand: "Mở rộng"
+  minimize: "Thu gọn"
+
 validation:
   email:
     not_blank: "Email không được để trống"

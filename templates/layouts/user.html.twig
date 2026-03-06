@@ -1,5 +1,18 @@
 {% extends 'layouts/base.html.twig' %}
 
 {% block body %}
-	{% block user_body %}{% endblock %}
+	<div class="flex w-full h-full">
+		<div x-ref="menu" x-data="{isCollapsed: false}" class="h-full w-[250px] py-6 px-3 border-r border-gray-400 flex flex-col transition-[width] ease-in-out gap-5" x-bind:class="isCollapsed?'duration-500':'duration-300'">
+			<div x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'hover:bg-gray-100 active:bg-gray-200'" class="w-12 h-12 cursor-pointer flex items-center justify-center rounded-full" @click="$refs.menu.style.width = isCollapsed ? '250px' : '75px' ; isCollapsed=!isCollapsed;" x-bind:title="isCollapsed ? '{{ 'menu.expand'|trans }}' : '{{ 'menu.minimize'|trans }}'">
+				<div class="w-5 h-5">
+					{{include('icons/menu.svg')}}
+				</div>
+			</div>
+			<div class="flex flex-col gap-5">
+			</div>
+		</div>
+		<div class="flex-1 p-5">
+			{% block user_body %}{% endblock %}
+		</div>
+	</div>
 {% endblock %}

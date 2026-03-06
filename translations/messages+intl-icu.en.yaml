@@ -75,6 +75,10 @@ app_setting:
   set_english: "Set language to English"
   set_vietnamese: "Set language to Vietnamese"
 
+menu:
+  expand: "Expand"
+  minimize: "Minimize"
+
 validation:
   email:
     not_blank: "Email must not be blank"
