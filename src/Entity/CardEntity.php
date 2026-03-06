@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Config\Constants;
 use App\Repository\CardRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -16,11 +15,11 @@ class CardEntity extends BaseEntity
   #[ORM\Column(type: 'string', length: 255)]
   private string $title;
 
+  #[ORM\Column(type: 'string', length: 255)]
+  private string $subTitle;
+
   #[ORM\Column(type: 'string', length: 1000)]
   private string $description;
-
-  #[ORM\OneToMany(targetEntity: CardContentEntity::class, mappedBy: 'cardEntity')]
-  private Collection $cardContentEntities;
 
   #[ORM\ManyToOne(targetEntity: CardBagEntity::class)]
   #[ORM\JoinColumn(name: 'card_bag_id', nullable: false)]
@@ -92,39 +91,6 @@ class CardEntity extends BaseEntity
   }
 
   /**
-   * Get the value of cardContentEntities
-   *
-   * @return Collection
-   */
-  public function getCardContentEntities(): Collection
-  {
-    return $this->cardContentEntities;
-  }
-
-  public function addCardContentEntity(CardContentEntity $cardContentEntity): self
-  {
-    if (!$this->cardContentEntities->contains($cardContentEntity)) {
-      $this->cardContentEntities->add($cardContentEntity);
-      // Sync the relationship!
-      $cardContentEntity->setCardEntity($this);
-    }
-
-    return $this;
-  }
-
-  public function removeCardContentEntity(CardContentEntity $cardContentEntity): self
-  {
-    if ($this->cardContentEntities->removeElement($cardContentEntity)) {
-      // set the owning side to null (unless already changed)
-      if ($cardContentEntity->getCardEntity() === $this) {
-        $cardContentEntity->setCardEntity(null);
-      }
-    }
-
-    return $this;
-  }
-
-  /**
    * Get the value of description
    *
    * @return string
@@ -144,6 +110,30 @@ class CardEntity extends BaseEntity
   public function setDescription(string $description): self
   {
     $this->description = $description;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of subTitle
+   *
+   * @return string
+   */
+  public function getSubTitle(): string
+  {
+    return $this->subTitle;
+  }
+
+  /**
+   * Set the value of subTitle
+   *
+   * @param string $subTitle
+   *
+   * @return self
+   */
+  public function setSubTitle(string $subTitle): self
+  {
+    $this->subTitle = $subTitle;
 
     return $this;
   }

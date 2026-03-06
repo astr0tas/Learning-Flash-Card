@@ -31,6 +31,12 @@ class Constants
     self::LOCALE_EN => self::LOCALE_EN
   ];
 
+  // Flash card bag types
+  public const FLASH_CARD_BAG_NORMAL_TYPE = 'NORMAL';
+  public const FLASH_CARD_BAG_LANGUAGE_TYPE = 'LANGUAGE';
+  public const FLASH_CARD_BAG_TYPES = [self::FLASH_CARD_BAG_NORMAL_TYPE, self::FLASH_CARD_BAG_LANGUAGE_TYPE];
+  public const FLASH_CARD_BAG_TYPES_STR = 'NORMAL, LANGUAGE';
+
   // Session keys
   public const SESSION_OAUTH2STATE = 'oauth2state';
 

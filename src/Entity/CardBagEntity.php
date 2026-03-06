@@ -19,6 +19,9 @@ class CardBagEntity extends BaseEntity
   #[ORM\Column(type: 'string', length: 1000)]
   private string $description;
 
+  #[ORM\Column(type: 'string', length: 10, options: ["comment" => "Type of flash card bag. Current available values: " . Constants::FLASH_CARD_BAG_TYPES_STR])]
+  private string $bagType;
+
   #[ORM\ManyToOne(targetEntity: UserEntity::class)]
   #[ORM\JoinColumn(name: 'user_id', nullable: false)]
   private ?UserEntity $userEntity = null;
@@ -213,6 +216,30 @@ class CardBagEntity extends BaseEntity
         $childCardBagEntity->setParentCardBagEntity(null);
       }
     }
+
+    return $this;
+  }
+
+  /**
+   * Get the value of bagType
+   *
+   * @return string
+   */
+  public function getBagType(): string
+  {
+    return $this->bagType;
+  }
+
+  /**
+   * Set the value of bagType
+   *
+   * @param string $bagType
+   *
+   * @return self
+   */
+  public function setBagType(string $bagType): self
+  {
+    $this->bagType = $bagType;
 
     return $this;
   }
