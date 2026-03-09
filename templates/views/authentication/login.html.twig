@@ -13,12 +13,16 @@
 		<div class="my-5 flex flex-col gap-3">
 			<div class="relative hover:cursor-pointer hover:opacity-80 active:opacity-70 overflow-hidden h-[50px]">
 				<a href="{{ google_oauth_url }}" class="absolute flex items-center justify-center gap-3 border border-gray-400 rounded-md py-2 px-4 w-full select-none h-[50px]">
-					<img class="w-8 h-8" src="/svg/google.svg"/>
+					<div class="w-8 h-8">
+						{{include('icons/google.svg')}}
+					</div>
 					{{ 'login.login_with'|trans({'service_name': 'Google'}) }}
 				</a>
 			</div>
 			{# <div class="flex-1 flex items-center justify-center gap-3 border border-gray-400 rounded-md py-2 hover:cursor-pointer hover:opacity-80 active:opacity-70 select-none">
-				<img class="w-9 h-9 ms-3" src="/svg/facebook.svg"/>
+				<div class="w-9 h-9 ms-3">
+					{{include('icons/facebook.svg')}}
+				</div>
 				{{ 'login.login_with'|trans({'service_name': 'Facebook'}) }}
 			</div> #}
 		</div>
