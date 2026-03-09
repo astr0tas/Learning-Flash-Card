@@ -78,6 +78,11 @@ app_setting:
 menu:
   expand: "Mở rộng"
   minimize: "Thu gọn"
+  dash_board: "Trang chủ"
+  card_bag: "Túi thẻ"
+  trash: "Thùng rác"
+  logout: "Đăng xuất"
+  account: "Tài khoản"
 
 validation:
   email:

@@ -110,9 +110,13 @@ class AuthenticationController extends BaseController
   #[Route(path: Routes::LOGOUT_ROUTE_URL, name: Routes::LOGOUT_ROUTE_NAME, methods: [Request::METHOD_POST])]
   public function LogoutAction()
   {
-    if (!$this->getUser()) {
-      return $this->redirectUserToHome();
+    if ($this->getUser()) {
+      $response = $this->service->logout();
+      $response->isRedirect(Routes::LOGIN_ROUTE_URL);
+      return $response;
     }
+
+    return $this->redirect(Routes::LOGIN_ROUTE_URL);
   }
 
   #[Route(path: Routes::REGISTER_ROUTE_URL, name: Routes::REGISTER_ROUTE_NAME, methods: [Request::METHOD_GET])]

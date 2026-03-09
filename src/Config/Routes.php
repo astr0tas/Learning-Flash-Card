@@ -46,6 +46,12 @@ class Routes
   // User Routes
   public const HOME_ROUTE_URL = '/';
   public const HOME_ROUTE_NAME = 'home';
+  public const CARD_BAG_ROUTE_URL = '/card-bag';
+  public const CARD_BAG_ROUTE_NAME = 'card-bag';
+  public const TRASH_ROUTE_URL = '/trash';
+  public const TRASH_ROUTE_NAME = 'trash';
+  public const ACCOUNT_ROUTE_URL = '/account';
+  public const ACCOUNT_ROUTE_NAME = 'account';
 
   // Admin Routes
   public const ADMIN_HOME_ROUTE_URL = '/admin';

@@ -369,4 +369,9 @@ class AuthenticationService extends BaseService
 
     return $data;
   }
+
+  public function logout()
+  {
+    return $this->security->logout(false);
+  }
 }

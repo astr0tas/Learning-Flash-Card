@@ -78,6 +78,11 @@ app_setting:
 menu:
   expand: "Expand"
   minimize: "Minimize"
+  dash_board: "Dash Board"
+  card_bag: "Card Bag"
+  trash: "Trash Bin"
+  logout: "Logout"
+  account: "Account"
 
 validation:
   email:
