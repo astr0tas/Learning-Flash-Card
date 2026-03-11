@@ -65,6 +65,12 @@ verify_email:
 dashboard:
   title: "Dashboard"
 
+card_bag:
+  title: "Card Bag"
+
+trash:
+  title: "Trash Bin"
+
 feature_in_development: "Feature in Development"
 
 app_setting:

@@ -65,6 +65,12 @@ verify_email:
 dashboard:
   title: "Trang chủ"
 
+card_bag:
+  title: "Túi thẻ"
+
+trash:
+  title: "Thùng rác"
+
 feature_in_development: "Tính năng đang phát triển"
 
 app_setting:
