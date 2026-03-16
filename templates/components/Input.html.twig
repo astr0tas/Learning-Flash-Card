@@ -1,16 +1,26 @@
-{% set base_class = "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer" %}
-{% set size_class = "text-" ~ size|default('base') %}
+{% set base_class = "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer select-none" %}
 {% set error_class = error is empty
     ? "border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500"
     : "border border-[var(--red)] text-red-900 placeholder-red-700 focus:ring-red-300"
 %}
 {% set password_padding = (type == 'password') ? '!pe-9' : '' %}
-{% set final_class = base_class ~ ' ' ~ size_class ~ ' ' ~ error_class ~ ' ' ~ password_padding %}
+{% set search_padding = (type == 'search') ? '!ps-14 !pe-9' :'' %}
+{# force text size to be base #}
+{% set size_class = "!text-base" %}
+{% set final_class = base_class ~ ' ' ~ error_class ~ ' ' ~ password_padding ~ ' ' ~ search_padding ~ ' ' ~ size_class %}
 
-<div class="w-full relative component-input" {% if type == 'password' %} x-data="{ showPassword: false }" {% endif %}>
-	<input {% if type == 'password' %} x-bind:type="showPassword ? 'text' : 'password'" {% else %} type="{{ type }}" {% endif %} name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class } ) }} placeholder="">
+{# If the input is "search", when clicking on the search icon, alpine will dispatch a "search" event. The parent component's container will need to catch that. Example in templates\views\user\card_bag\index.html.twig #}
+<div class="w-full relative component-input" {% if type == 'password' %} x-data="{ showPassword: false }" {% endif %} {% if type == 'search' %} x-data="{ hasValue: false }" {% endif %}>
+	{% if type == 'search' %}
+		<div class="w-10 h-10 absolute left-2 top-1 cursor-pointer rounded-full p-4 flex items-center justify-center hover:text-(--blue) active:text-(--blue)" x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'hover:bg-gray-100 active:bg-gray-200'" @click="$dispatch('search', $refs.{{ name|default(id) }}.value)">
+			<div class="w-5 h-5 absolute">
+				{{include('icons/search.svg')}}
+			</div>
+		</div>
+	{% endif %}
+	<input @input="hasValue = $el.value.length > 0" x-ref="{{ name|default(id) }}" {% if type == 'password' %} x-bind:type="showPassword ? 'text' : 'password'" {% elseif type == 'search' %} type='text' {% else %} type="{{ type }}" {% endif %} name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class } ) }} placeholder="">
 	{% if label is not empty %}
-		<label {% if name|default(id) is not empty %} for="{{ name|default(id) }}" {% endif %} {% if error is not empty %} class="pointer-events-none absolute left-2.5 -top-2.5 max-w-[calc(100%-18px)] truncate px-1 text-xs text-(--red) transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-{{size}} peer-focus:-top-2.5 peer-focus:text-xs text-(--red) peer-focus:text-(--red)" {% else %} class="pointer-events-none absolute left-2.5 -top-2.5 max-w-[calc(100%-18px)] truncate px-1 text-xs text-zinc-400 transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-{{size}} peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-blue-400" {% endif %}>
+		<label {% if name|default(id) is not empty %} for="{{ name|default(id) }}" {% endif %} {% if error is not empty %} class="pointer-events-none absolute left-2.5 -top-2.5 max-w-[calc(100%-18px)] truncate px-1 text-xs text-(--red) transition-all peer-placeholder-shown:top-3 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-(--red)" {% else %} class="pointer-events-none absolute left-2.5 -top-2.5 max-w-[calc(100%-18px)] truncate px-1 text-xs text-zinc-400 transition-all peer-placeholder-shown:top-3 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-blue-400" {% endif %}>
 			{{ label }}
 			{% if required %}
 				<span class="text-(--red)">*</span>
@@ -18,7 +28,7 @@
 		</label>
 	{% endif %}
 	{% if error is not empty %}
-		<div class="mt-1 text-{{ size is same as('sm') ? 'xs' : 'sm'}} text-(--red)">
+		<div class="mt-1 text-xs text-(--red)">
 			{{ error }}
 		</div>
 	{% endif %}
@@ -29,6 +39,13 @@
 			</div>
 			<div x-show="!showPassword">
 				{{include('icons/hide.svg')}}
+			</div>
+		</div>
+	{% endif %}
+	{% if type == 'search' %}
+		<div x-show="hasValue" class="w-10 h-10 absolute right-2 top-1 cursor-pointer rounded-full p-4 flex items-center justify-center" x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'hover:bg-gray-100 active:bg-gray-200'" @click="$refs.{{ name|default(id) }}.value = ''; hasValue = false;">
+			<div class="w-4 h-4 absolute">
+				{{include('icons/close.svg')}}
 			</div>
 		</div>
 	{% endif %}

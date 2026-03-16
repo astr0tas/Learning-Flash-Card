@@ -4,4 +4,30 @@
 	{{ 'card_bag.title'|trans }}
 {% endblock %}
 
-{% block user_body %}{% endblock %}
+{% block user_body %}
+	<div class="flex flex-col w-full h-full">
+		<div
+			class="flex items-center justify-between gap-2">
+			{# Search bar #}
+			<div class="w-full max-w-[700px]" @search="">
+				<twig:Input type="search" name="search" placeholder="{{ 'card_bag.search_placeholder'|trans }}" size="9xl"/>
+			</div>
+			{# Control buttons #}
+			<div class="flex items-center gap-2">
+				<div class="relative" x-ref="addDropdownRef">
+					<twig:Button variant="primary" class="flex items-center" title="{{'card_bag.create'|trans}}" @click="dropdowns.addDropdown=!dropdowns.addDropdown">
+						<div class="w-5 h-5">{{include('icons/plus.svg')}}</div>
+						<div class="ms-2">{{'card_bag.create'|trans}}</div>
+					</twig:Button>
+				</div>
+				<div class="relative" x-ref="optionDropdownRef">
+					<twig:Button variant="secondary" class="flex items-center px-1!" title="{{'card_bag.other_option'|trans}}" @click="dropdowns.optionDropdown=!dropdowns.optionDropdown">
+						<div class="w-5 h-5 flex items-center justify-center">
+							<div class="w-3 h-3 opacity-70">{{include('icons/option.svg')}}</div>
+						</div>
+					</twig:Button>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

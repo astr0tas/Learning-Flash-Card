@@ -67,6 +67,9 @@ dashboard:
 
 card_bag:
   title: "Card Bag"
+  search_placeholder: "Search card bags or cards"
+  create: "Create"
+  other_option: "Other options"
 
 trash:
   title: "Trash Bin"

@@ -67,6 +67,9 @@ dashboard:
 
 card_bag:
   title: "Túi thẻ"
+  search_placeholder: "Tìm kiếm túi thẻ hoặc thẻ"
+  create: "Thêm"
+  other_option: "Tùy chọn khác"
 
 trash:
   title: "Thùng rác"
