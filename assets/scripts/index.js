@@ -13,7 +13,6 @@ document.addEventListener('alpine:init', () =>
       }
       return false;
     })(),
-    appMenuExpanded: false,
     isLoading: false,
     setDarkMode(value)
     {
@@ -24,15 +23,35 @@ document.addEventListener('alpine:init', () =>
       const expires = "expires="+ d.toUTCString();
       document.cookie = "dark_mode=" + value + ";" + expires + ";path=/";
     },
-    checkAppClick: function (event)
-    {
-      // 1. Access refs via $refs
-      const menu = this.$refs.appMenuRef;
-
-      // 2. Check if menu exists AND click was outside
-      if (menu && !menu.contains(event.target)) {
-          this.appMenuExpanded = false;
-      }
-    }
+    ...dropdownProcessor,
   }));
 });
+
+// This variable contains every dropdowns and the closing logic for them
+const dropdownProcessor = {
+  dropdowns: {
+    appMenuDropdown: false,
+    addDropdown: false,
+    optionDropdown: false,
+  },
+  checkAppClick: function (event)
+  {
+    // Check if menu exists AND click was outside
+    const menu = this.$refs.appMenuDropdownRef;
+    if (menu && !menu.contains(event.target)) {
+        this.dropdowns.appMenuDropdown = false;
+    }
+
+    // Check if add dropdown exists AND click was outside
+    const addDropdownElem = this.$refs.addDropdownRef;
+    if (addDropdownElem && !addDropdownElem.contains(event.target)) {
+        this.dropdowns.addDropdown = false;
+    }
+
+    // Check if option dropdown exists AND click was outside
+    const optionDropdownElem = this.$refs.optionDropdownRef;
+    if (optionDropdownElem && !optionDropdownElem.contains(event.target)) {
+        this.dropdowns.optionDropdown = false;
+    }
+  }
+};

@@ -1,5 +1,5 @@
-<div class="fixed bottom-5 right-5 z-50 flex flex-col gap-2" x-ref="appMenuRef">
-	<div x-show="appMenuExpanded" x-collapse.duration.100ms class="flex flex-col gap-2">
+<div class="fixed bottom-5 right-5 z-50 flex flex-col gap-2" x-ref="appMenuDropdownRef">
+	<div x-show="dropdowns.appMenuDropdown" x-collapse.duration.100ms class="flex flex-col gap-2">
 		{% if get_locale() == constant('App\\Config\\Constants::LOCALE_VI') %}
 			<twig:Form class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button" method="POST" action="{{ constant('App\\Config\\Routes::SET_LOCALE_ROUTE_URL')|replace({'{locale}': constant('App\\Config\\Constants::LOCALE_EN')}) }}" onclick="this.submit()" title="{{ 'app_setting.set_english'|trans }}">
 				<div class="w-6 h-6">
@@ -22,11 +22,11 @@
 			</div>
 		</div>
 	</div>
-	<div class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button" @click="appMenuExpanded = !appMenuExpanded" x-bind:title="appMenuExpanded ? '{{ 'app_setting.close'|trans }}' : '{{ 'app_setting.setting'|trans }}'">
-		<div x-show="!appMenuExpanded" class="w-6 h-6">
+	<div class="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 flex items-center justify-center app-setting-button" @click="dropdowns.appMenuDropdown = !dropdowns.appMenuDropdown" x-bind:title="dropdowns.appMenuDropdown ? '{{ 'app_setting.close'|trans }}' : '{{ 'app_setting.setting'|trans }}'">
+		<div x-show="!dropdowns.appMenuDropdown" class="w-6 h-6">
 			{{include('icons/setting.svg')}}
 		</div>
-		<div x-show="appMenuExpanded" class="w-4 h-4">
+		<div x-show="dropdowns.appMenuDropdown" class="w-4 h-4">
 			{{include('icons/close.svg')}}
 		</div>
 	</div>
