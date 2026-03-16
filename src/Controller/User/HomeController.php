@@ -8,7 +8,7 @@ use App\Config\TwigTemplate;
 use App\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 
-class UserHomeController extends BaseController
+class HomeController extends BaseController
 {
   #[Route(path: Routes::HOME_ROUTE_URL, name: Routes::HOME_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function UserHome()

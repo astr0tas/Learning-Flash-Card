@@ -8,7 +8,7 @@ use App\Config\TwigTemplate;
 use App\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 
-class AdminHomeController extends BaseController
+class HomeController extends BaseController
 {
   #[Route(path: Routes::ADMIN_HOME_ROUTE_URL, name: Routes::ADMIN_HOME_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function AdminHome()
