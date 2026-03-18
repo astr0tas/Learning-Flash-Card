@@ -22,4 +22,6 @@
 ###< symfony/asset-mapper ###
 
 ### Others ###
+*compose.override.yaml
+*compose.override.yml
 .vscode
