@@ -1,0 +1,27 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # Mounts the root of your project into the container's workspace
+      - ../:/workspace:cached
+    command: sleep infinity
+    ports:
+      - "8000:8000"
+
+  database:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: lfc
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    ports:
+      # Exposes the DB to your Windows machine on port 5436 so you can use DBeaver/pgAdmin
+      - "5436:5432"
+
+volumes:
+  pg-data:

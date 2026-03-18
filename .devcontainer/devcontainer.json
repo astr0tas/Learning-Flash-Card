@@ -1,9 +1,12 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/php
 {
-	"name": "PHP",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/php:3-8.4-bookworm",
+	"name": "Learning Flash Card Dev Container",
+	// // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	// "image": "mcr.microsoft.com/devcontainers/php:3-8.4-bookworm",
+	"dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -11,10 +14,9 @@
 	// Configure tool-specific properties.
 	// "customizations": {},
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [
-		8000
-	],
+	// // Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
 	"features": {
 		"ghcr.io/shyim/devcontainers-features/symfony-cli:0": {},
 		"ghcr.io/r3dpoint/devcontainer-features/tailwindcss-standalone-cli:1": {},
