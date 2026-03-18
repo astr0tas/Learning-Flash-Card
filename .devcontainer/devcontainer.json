@@ -4,7 +4,7 @@
 	"name": "Learning Flash Card Dev Container",
 	// // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	// "image": "mcr.microsoft.com/devcontainers/php:3-8.4-bookworm",
-	"dockerComposeFile": "docker-compose.yml",
+	"dockerComposeFile": ["compose.yaml", "compose.override.yaml"],
   "service": "app",
   "workspaceFolder": "/workspace",
 
