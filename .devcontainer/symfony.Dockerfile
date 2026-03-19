@@ -8,3 +8,6 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 # Install the Symfony CLI
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | sudo -E bash \
     && apt-get install -y symfony-cli
+
+# Install other packages
+RUN apt install iputils-ping

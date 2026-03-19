@@ -2,7 +2,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: symfony.Dockerfile
     volumes:
       # Mounts the root of your project into the container's workspace
       - ../:/workspace:cached
@@ -11,7 +11,9 @@ services:
       - "8000:8000"
 
   database:
-    image: postgres:17-alpine
+    build:
+      context: .
+      dockerfile: postgres.Dockerfile
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
