@@ -69,7 +69,12 @@ card_bag:
   title: "Card Bag"
   search_placeholder: "Search card bags or cards"
   create: "Create"
+  create_options:
+    new_bag: "Create new bag"
+    new_card: "Create new card"
   other_option: "Other options"
+  delete: "Move to trash"
+  move: "Move"
 
 trash:
   title: "Trash Bin"

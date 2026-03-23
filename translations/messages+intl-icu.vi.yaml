@@ -69,7 +69,12 @@ card_bag:
   title: "Túi thẻ"
   search_placeholder: "Tìm kiếm túi thẻ hoặc thẻ"
   create: "Thêm"
+  create_options:
+    new_bag: "Thêm túi mới"
+    new_card: "Thêm thẻ mới"
   other_option: "Tùy chọn khác"
+  delete: "Xóa"
+  move: "Chuyển túi"
 
 trash:
   title: "Thùng rác"
