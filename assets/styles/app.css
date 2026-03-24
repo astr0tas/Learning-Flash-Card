@@ -40,6 +40,17 @@
   .dropdown_content *:not(svg, svg *) {
     color: var(--white);
   }
+
+  .dropdown_content *:focus {
+    color: #101828 !important;
+    background-color: #f3f4f6;
+    --tw-outline-style: none;
+    outline-style: none;
+    @media (forced-colors: active) {
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+    }
+  }
 }
 
 .light_theme{
@@ -63,7 +74,18 @@
   }
 
   .dropdown_content *:not(svg, svg *) {
-    color: #364153;
+    color: #101828 !important;
+  }
+
+  .dropdown_content *:focus {
+    color: #101828 !important;
+    background-color: #f3f4f6;
+    --tw-outline-style: none;
+    outline-style: none;
+    @media (forced-colors: active) {
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+    }
   }
 }
 
@@ -133,14 +155,3 @@ input[type="checkbox"]:checked::after {
   animation: l3 1s infinite linear;
 }
 @keyframes l3 {to{transform: rotate(1turn)}}
-
-.dropdown_content *:focus {
-  color: #101828;
-  background-color: #f3f4f6;
-  --tw-outline-style: none;
-  outline-style: none;
-  @media (forced-colors: active) {
-    outline: 2px solid transparent;
-    outline-offset: 2px;
-  }
-}
