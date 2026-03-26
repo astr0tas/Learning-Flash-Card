@@ -8,13 +8,16 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 final class Button
 {
   public string $variant = "";
+  public string $class = "text-base";
   public string $element_class;
 
-  public function mount(string $variant): void
+  public function mount(string $variant, string $class): void
   {
     $this->element_class = match ($variant) {
-      "primary" => "bg-[var(--blue)] hover:opacity-80 text-white font-semibold py-2 px-4 rounded",
-      "secondary" => "border-1 border-gray-500 hover:opacity-80 font-semibold py-2 px-4 rounded",
+      "primary" => "bg-(--blue) text-white font-semibold py-2 px-4 $class",
+      "secondary" => "border-1 border-gray-500 font-semibold py-2 px-4 $class",
+      "outline" => "inset-ring inset-ring-gray-300 font-semibold py-2 px-4 $class",
+      "danger" => "bg-(--red) text-white font-semibold py-2 px-4 $class",
       default => "",
     };
   }

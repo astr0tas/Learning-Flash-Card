@@ -1,2 +1,44 @@
-<div>
-</div>
+<el-dialog {{ attributes }}>
+	<dialog id="{{ modalGeneratedId }}" aria-labelledby="dialog-title"
+		class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent">
+		<el-dialog-backdrop
+			class="fixed inset-0 bg-gray-500/75 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"></el-dialog-backdrop>
+		<div tabindex="0" class="flex min-h-full items-center justify-center p-4 text-center focus:outline-none sm:p-0">
+			<el-dialog-panel
+				class="px-5 relative transform overflow-hidden rounded-lg text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95"
+				:class="darkMode ? 'bg-(--black) text-(--white)' : 'bg-(--white) text-(--black)'">
+				<div class="py-4">
+					<div class="flex items-center justify-between">
+						<h3 id="dialog-title" class="text-xl font-semibold">{{ modalTitle }}</h3>
+						<button type="button" class="w-5 h-5 cursor-pointer hover:opacity-70" command="close"
+							commandfor="{{ modalGeneratedId }}">
+							{{include('icons/close.svg')}}
+						</button>
+					</div>
+					<div class="mt-8">
+						{% block modal_body %}
+						<p class="text-sm">
+							This is the sample modal body
+						</p>
+						{% endblock %}
+					</div>
+				</div>
+				<hr :class="darkMode ? 'border-gray-600' : 'border-gray-300'">
+				<div class="pb-3 pt-2 flex flex-col sm:flex sm:flex-row-reverse gap-3">
+					<div class="inline-flex">
+						{# Action button (must have) #}
+						<twig:Button type="button" command="close" commandfor="{{ modalGeneratedId }}" class="text-sm"
+							variant="{{ actionButtonVariant }}" title="{{ actionButtonText }}" @click="$dispatch('modal-action')">{{
+							actionButtonText }}</twig:Button>
+					</div>
+					{% if displayCancelButton %}
+					<div class="inline-flex">
+						<twig:Button type="button" command="close" commandfor="{{ modalGeneratedId }}" class="text-sm"
+							variant="outline" title="{{ 'action.cancel'|trans }}">{{ 'action.cancel'|trans }}</twig:Button>
+					</div>
+					{% endif %}
+				</div>
+			</el-dialog-panel>
+		</div>
+	</dialog>
+</el-dialog>

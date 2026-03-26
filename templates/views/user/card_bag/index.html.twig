@@ -30,8 +30,8 @@
 					</twig:block>
 					<twig:block name="dropdown_content">
 						<div class="py-1">
-							<button class="block px-4 py-2 cursor-pointer w-full text-start">{{'card_bag.create_options.new_bag'|trans}}</button>
-							<button class="block px-4 py-2 cursor-pointer w-full text-start">{{'card_bag.create_options.new_card'|trans}}</button>
+							<button class="block px-4 py-2 cursor-pointer w-full text-start" @click="$refs.addNewBagModal.open=true">{{'card_bag.create_options.new_bag'|trans}}</button>
+							<button class="block px-4 py-2 cursor-pointer w-full text-start" @click="$refs.addNewCardModal.open=true">{{'card_bag.create_options.new_card'|trans}}</button>
 						</div>
 					</twig:block>
 				</twig:Dropdown>
@@ -45,11 +45,11 @@
 					</twig:block>
 					<twig:block name="dropdown_content">
 						<div class="py-1">
-							<button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full hover:text-[#101828]!">
+							<button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full hover:text-[#101828]!" @click="$refs.moveObjectModal.open=true">
 								<div class="w-5 h-5 text-inherit!">{{include('icons/move_folder.svg')}}</div>
 								<div class="ms-2 text-inherit!">{{'action.move'|trans}}</div>
 							</button>
-							<button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full text-(--red)!">
+							<button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full text-(--red)!" @click="$refs.deleteObjectModal.open=true">
 								<div class="w-5 h-5 text-inherit!">{{include('icons/trash.svg')}}</div>
 								<div class="ms-2 text-inherit!">{{'action.delete'|trans}}</div>
 							</button>
@@ -60,4 +60,11 @@
 		</div>
 		{# Display body #}
 	</div>
+{% endblock %}
+
+{% block modals %}
+	<twig:Modal modalTitle="{{ 'card_bag.create_options.new_bag'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="alert('add bag')" x-ref="addNewBagModal"></twig:Modal>
+	<twig:Modal modalTitle="{{ 'card_bag.create_options.new_card'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="alert('add card')" x-ref="addNewCardModal"></twig:Modal>
+	<twig:Modal modalTitle="{{ 'action.move'|trans }}" actionButtonText="{{ 'action.confirm'|trans }}" actionButtonVariant="primary" @modal-action="alert('move object')" x-ref="moveObjectModal"></twig:Modal>
+	<twig:Modal modalTitle="{{ 'action.delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="alert('delete object')" x-ref="deleteObjectModal"></twig:Modal>
 {% endblock %}
