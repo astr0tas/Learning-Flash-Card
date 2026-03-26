@@ -68,13 +68,10 @@ dashboard:
 card_bag:
   title: "Túi thẻ"
   search_placeholder: "Tìm kiếm túi thẻ hoặc thẻ"
-  create: "Thêm"
   create_options:
-    new_bag: "Thêm túi mới"
-    new_card: "Thêm thẻ mới"
+    new_bag: "Tạo túi mới"
+    new_card: "Tạo thẻ mới"
   other_option: "Tùy chọn khác"
-  delete: "Xóa"
-  move: "Chuyển túi"
 
 trash:
   title: "Thùng rác"
@@ -127,3 +124,14 @@ general_error:
 navigation_error:
   error_404: "Trang tìm kiếm không tồn tại"
   error_500: "Lỗi hệ thống"
+
+action:
+  cancel: "Hủy"
+  confirm: "Xác nhận"
+  close: "Đóng"
+  submit: "Xác nhận"
+  delete: "Xóa"
+  edit: "Chỉnh sửa"
+  move: "Di chuyển"
+  create: "Tạo"
+  add: "Thêm"

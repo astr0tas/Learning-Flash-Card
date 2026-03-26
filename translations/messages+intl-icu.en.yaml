@@ -68,13 +68,10 @@ dashboard:
 card_bag:
   title: "Card Bag"
   search_placeholder: "Search card bags or cards"
-  create: "Create"
   create_options:
     new_bag: "Create new bag"
     new_card: "Create new card"
   other_option: "Other options"
-  delete: "Move to trash"
-  move: "Move"
 
 trash:
   title: "Trash Bin"
@@ -127,3 +124,14 @@ general_error:
 navigation_error:
   error_404: "Page not Found"
   error_500: "Internal Server Error"
+
+action:
+  cancel: "Cancel"
+  confirm: "Confirm"
+  close: "Close"
+  submit: "Submit"
+  delete: "Delete"
+  edit: "Edit"
+  move: "Move"
+  create: "Create"
+  add: "Add"

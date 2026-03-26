@@ -23,9 +23,9 @@
 			<div class="flex items-center gap-2">
 				<twig:Dropdown>
 					<twig:block name="dropdown_toggler">
-						<twig:Button variant="primary" class="flex items-center" title="{{'card_bag.create'|trans}}">
+						<twig:Button variant="primary" class="flex items-center" title="{{'action.create'|trans}}">
 							<div class="w-5 h-5">{{include('icons/plus.svg')}}</div>
-							<div class="ms-2">{{'card_bag.create'|trans}}</div>
+							<div class="ms-2">{{'action.create'|trans}}</div>
 						</twig:Button>
 					</twig:block>
 					<twig:block name="dropdown_content">
@@ -47,11 +47,11 @@
 						<div class="py-1">
 							<button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full hover:text-[#101828]!">
 								<div class="w-5 h-5 text-inherit!">{{include('icons/move_folder.svg')}}</div>
-								<div class="ms-2 text-inherit!">{{'card_bag.move'|trans}}</div>
+								<div class="ms-2 text-inherit!">{{'action.move'|trans}}</div>
 							</button>
 							<button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full text-(--red)!">
 								<div class="w-5 h-5 text-inherit!">{{include('icons/trash.svg')}}</div>
-								<div class="ms-2 text-inherit!">{{'card_bag.delete'|trans}}</div>
+								<div class="ms-2 text-inherit!">{{'action.delete'|trans}}</div>
 							</button>
 						</div>
 					</twig:block>
