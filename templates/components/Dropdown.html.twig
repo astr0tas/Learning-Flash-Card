@@ -1,13 +1,20 @@
-<el-dropdown class="inline-block" {{attributes}}> {% block dropdown_toggler %}{% endblock %}
+<el-dropdown class="inline-block" {{ attributes }}>
+  {% block dropdown_toggler %}{% endblock %}
 
-	<el-menu anchor="bottom start" popover class="dropdown_content min-w-42 origin-top-right rounded-md shadow-lg outline-1 outline-black/5 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in">
-		{% block dropdown_content %}
-			{# Example content #}
-			<div class="py-1">
-				<a href="#" class="block px-4 py-2 text-sm">Option 1</a>
-				<a href="#" class="block px-4 py-2 text-sm">Option 2</a>
-				<a href="#" class="block px-4 py-2 text-sm">Option 3</a>
-			</div>
-		{% endblock %}
-	</el-menu>
+  <el-menu anchor="bottom start" popover class="dropdown_content min-w-42 origin-top-right rounded-md shadow-lg outline-1 outline-black/5 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in">
+    {% block dropdown_content %}
+      {# Example content #}
+      <div class="py-1">
+        <a href="#" class="block px-4 py-2 text-sm">
+          Option 1
+        </a>
+        <a href="#" class="block px-4 py-2 text-sm">
+          Option 2
+        </a>
+        <a href="#" class="block px-4 py-2 text-sm">
+          Option 3
+        </a>
+      </div>
+    {% endblock %}
+  </el-menu>
 </el-dropdown>
