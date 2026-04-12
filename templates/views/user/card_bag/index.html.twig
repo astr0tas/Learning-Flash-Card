@@ -85,6 +85,14 @@
         <div>
           <twig:Input type="text" name="new_bag_name" label="{{ 'card_bag.bag_name'|trans }}" aria-label="{{ 'card_bag.bag_name'|trans }}" required />
         </div>
+        <div class="my-3">
+          <twig:Input type="textarea" name="new_bag_description" label="{{ 'card_bag.bag_description'|trans }}" aria-label="{{ 'card_bag.bag_description'|trans }}" rows="3" />
+        </div>
+        <div>
+          <twig:Select name="new_bag_type" label="{{ 'card_bag.bag_type'|trans }}" aria-label="{{ 'card_bag.bag_type'|trans }}" required>
+            <twig:block name="options"></twig:block>
+          </twig:Select>
+        </div>
       </twig:Form>
     </twig:block>
   </twig:Modal>

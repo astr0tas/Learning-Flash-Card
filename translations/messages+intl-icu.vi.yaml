@@ -73,6 +73,8 @@ card_bag:
     new_card: "Tạo thẻ mới"
   other_option: "Tùy chọn khác"
   bag_name: "Tên túi thẻ"
+  bag_description: "Mô tả"
+  bag_type: "Loại túi thẻ"
 
 trash:
   title: "Thùng rác"
@@ -119,6 +121,9 @@ validation:
     mismatch: "Mật khẩu xác nhận không trùng khớp"
   new_bag:
     name_not_blank: "Tên túi không được để trống"
+    name_exist: "Tên túi đã được dùng"
+    bag_type_not_blank: "Loại túi thẻ không được để trống"
+    invalid_bag_type: "Loại túi thẻ không hợp lệ"
 
 general_error:
   system_error: "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau"

@@ -2,6 +2,7 @@
 
 namespace App\Controller\User;
 
+use App\Config\Constants;
 use App\Config\Routes;
 use App\Config\TwigTemplate;
 use App\Controller\BaseController;
@@ -11,12 +12,11 @@ use App\Utility\ClassUtility;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Contracts\Service\Attribute\Required;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class CardBagController extends BaseController
 {
-  #[Required]
-  private CardBagService $service;
+  public function __construct(private CardBagService $service) {}
 
   #[Route(path: Routes::CARD_BAG_ROUTE_URL, name: Routes::CARD_BAG_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function index()
@@ -57,7 +57,16 @@ class CardBagController extends BaseController
     $fields = [
       'newBagName' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.new_bag.name_not_blank')),
+        new Assert\Callback(callback: function (string $data, ExecutionContextInterface $context) {
+          if ($this->service->checkDuplicationBagName($data)) {
+            $context->buildViolation($this->translator->trans('validation.new_bag.name_exist'))->addViolation();
+          }
+        })
       ],
+      'newBagType' => [
+        new Assert\NotBlank(message: $this->translator->trans('validation.new_bag.bag_type_not_blank')),
+        new Assert\Choice(choices: Constants::FLASH_CARD_BAG_TYPES, message: $this->translator->trans('validation.new_bag.invalid_bag_type')),
+      ]
     ];
     $error = ClassUtility::validateInputDTO($dto, $fields);
 
@@ -67,6 +76,11 @@ class CardBagController extends BaseController
       ]);
       return $this->redirectToRoute(route: $previousRoute);
     }
+
+    $newBag = $this->service->addNewBag($dto);
+
+    $redirectUrl = str_replace('{id}', $newBag->getId(), Routes::CARD_BAG_DETAIL_ROUTE_URL);
+    return $this->redirectToRoute(route: $redirectUrl);
   }
 
   #[Route(path: Routes::CREATE_NEW_CARD_ROUTE_URL, name: Routes::CCREATE_NEW_CARD_ROUTE_NAME, methods: [Request::METHOD_GET, Request::METHOD_POST])]

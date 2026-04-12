@@ -73,6 +73,8 @@ card_bag:
     new_card: "Create new card"
   other_option: "Other options"
   bag_name: "Bag name"
+  bag_description: "Bag description"
+  bag_type: "Bag type"
 
 trash:
   title: "Trash Bin"
@@ -119,6 +121,9 @@ validation:
     mismatch: "Confirm new password does not match"
   new_bag:
     name_not_blank: "Bag name must not be blank"
+    name_exist: "Bag name has already been used"
+    bag_type_not_blank: "Bag type must not be blank"
+    invalid_bag_type: "Invalid bag type"
 
 general_error:
   system_error: "A system error has occurred. Please try again later"
