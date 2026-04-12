@@ -15,6 +15,9 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <!-- App Styles -->
     <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+    {% block importmap %}
+      {{ importmap('app') }}
+    {% endblock %}
     {% block stylesheets %}{% endblock %}
     {% block head_javascripts %}{% endblock %}
   </head>
@@ -29,9 +32,6 @@
       {% block modals %}{% endblock %}
     </div>
     {% block javascripts %}
-      {% block importmap %}
-        {{ importmap('app') }}
-      {% endblock %}
     {% endblock %}
     <!-- Alpine Plugins -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
@@ -41,6 +41,8 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <!-- Tailwind Plus -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+    <!-- validator -->
+    <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
     <twig:AppJsScript/>
   </body>
 </html>

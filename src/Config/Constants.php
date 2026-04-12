@@ -55,4 +55,5 @@ class Constants
   // Technical messages
   public const MESSAGE_INVALID_CSRF = 'Invalid CSRF token.';
   public const UNKNOWN_LOG_LEVEL = 'Unknown log level.';
+  public const NO_SESSION_FLASH_BAG = 'No session flash bag found.';
 }

@@ -21,7 +21,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
 use League\OAuth2\Client\Provider\Google;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment;
@@ -43,7 +42,7 @@ class AuthenticationService extends BaseService
     private Environment $twig,
   ) {
     $this->googleOAuthProvider = new Google([
-      'clientId'     => $this->googleOAuthClientId,
+      'clientId' => $this->googleOAuthClientId,
       'clientSecret' => $this->googleOAuthClientSecret,
       'redirectUri' => $this->router->generate(Routes::LOGIN_WITH_GOOGLE_ROUTE_NAME, parameters: [], referenceType: UrlGeneratorInterface::ABSOLUTE_URL),
     ]);
@@ -103,9 +102,7 @@ class AuthenticationService extends BaseService
     try {
       $payload = $this->googleOAuthProvider->getResourceOwner($token);
     } catch (\Exception $e) {
-      if ($this->session instanceof FlashBagAwareSessionInterface) {
-        $this->session->getFlashBag()->add('error', ['general' => [$this->translator->trans('login_with_google.error')]]);
-      }
+      $this->getFlashBag()->add('error', ['general' => [$this->translator->trans('login_with_google.error')]]);
       return false;
     }
 
@@ -373,5 +370,24 @@ class AuthenticationService extends BaseService
   public function logout()
   {
     return $this->security->logout(false);
+  }
+
+  /**
+   * Check if an email exist in user table
+   * @param string $email Input email
+   * @return bool True if the email exist in the user table, otherwise false
+   */
+  public function checkEmailExist(string $email)
+  {
+    $sql = $this->entityManager->createQueryBuilder()
+      ->select('u')
+      ->from(UserEntity::class, 'u')
+      ->where('u.email = :email')
+      ->setParameter("email", $email);
+
+    $query = $sql->getQuery();
+    $result = $query->execute();
+
+    return count($result) > 0;
   }
 }

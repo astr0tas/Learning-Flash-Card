@@ -17,7 +17,6 @@ use App\Service\AuthenticationService;
 use App\Utility\ClassUtility;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\HttpFoundation\Response;
 // use Symfony\Component\Validator\Constraints\PasswordStrength;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -32,10 +31,8 @@ class AuthenticationController extends BaseController
   #[Route(path: Routes::LOGIN_ROUTE_URL, name: Routes::LOGIN_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function LoginAction()
   {
-    if ($this->session instanceof FlashBagAwareSessionInterface) {
-      $error = $this->session->getFlashBag()->get('error', []);
-      $error = count($error) > 0 ? $error[0] : [];
-    }
+    $error = $this->getFlashBag()->get('error', []);
+    $error = count($error) > 0 ? $error[0] : [];
 
     if ($this->getUser()) {
       return $this->redirectUserToHome();
@@ -67,7 +64,7 @@ class AuthenticationController extends BaseController
 
     // Validate post data
     $fields = [
-      'email'    => [
+      'email' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.email.not_blank')),
         new Assert\Email(message: $this->translator->trans('validation.email.invalid'))
       ],
@@ -154,9 +151,9 @@ class AuthenticationController extends BaseController
 
     // Validate post data
     $fields = [
-      'firstName'    => [new Assert\NotBlank(message: $this->translator->trans('validation.first_name.not_blank'))],
-      'lastName'    => [new Assert\NotBlank(message: $this->translator->trans('validation.last_name.not_blank'))],
-      'email'    => [
+      'firstName' => [new Assert\NotBlank(message: $this->translator->trans('validation.first_name.not_blank'))],
+      'lastName' => [new Assert\NotBlank(message: $this->translator->trans('validation.last_name.not_blank'))],
+      'email' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.email.not_blank')),
         new Assert\Email(message: $this->translator->trans('validation.email.invalid')),
         new Assert\Callback(callback: function (string $data, ExecutionContextInterface $context) {
@@ -165,7 +162,7 @@ class AuthenticationController extends BaseController
           }
         })
       ],
-      'password'    => [
+      'password' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.password.not_blank')),
         // new Assert\PasswordStrength(minScore: PasswordStrength::STRENGTH_STRONG, message: $this->translator->trans('validation.password.invalid'))
         new Assert\Callback(function (string $password, ExecutionContextInterface $context) {
@@ -181,7 +178,7 @@ class AuthenticationController extends BaseController
           }
         })
       ],
-      'confirmPassword'    => [
+      'confirmPassword' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.confirm_password.not_blank')),
       ],
     ];
@@ -243,7 +240,7 @@ class AuthenticationController extends BaseController
 
     // Validate post data
     $fields = [
-      'email'    => [
+      'email' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.email.not_blank')),
         new Assert\Email(message: $this->translator->trans('validation.email.invalid'))
       ],
@@ -303,11 +300,11 @@ class AuthenticationController extends BaseController
     ClassUtility::mapArrayToDTO($postData, $dto);
 
     $fields = [
-      'email'    => [
+      'email' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.email.not_blank')),
         new Assert\Email(message: $this->translator->trans('validation.email.invalid')),
       ],
-      'newPassword'    => [
+      'newPassword' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.new_password.not_blank')),
         new Assert\Callback(function (string $password, ExecutionContextInterface $context) {
           // (?=.*[a-z]) -> At least 1 Lowercase
@@ -322,7 +319,7 @@ class AuthenticationController extends BaseController
           }
         })
       ],
-      'confirmNewPassword'    => [
+      'confirmNewPassword' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.confirm_new_password.not_blank')),
       ],
     ];

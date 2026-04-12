@@ -2,13 +2,15 @@
 
 namespace App\Service;
 
+use App\Config\Constants;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Contracts\Service\Attribute\Required;
-use App\Config\Constants;
-use App\Entity\UserEntity;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 class BaseService
 {
@@ -22,6 +24,15 @@ class BaseService
     $this->translator = $translator;
     $this->session = $requestStack->getSession();
     $this->entityManager = $entityManager;
+  }
+
+  public function getFlashBag(): FlashBagInterface|null
+  {
+    if ($this->session instanceof FlashBagAwareSessionInterface) {
+      return $this->session->getFlashBag();
+    }
+
+    throw new InternalErrorException(Constants::NO_SESSION_FLASH_BAG);
   }
 
   // /**
@@ -52,23 +63,4 @@ class BaseService
 
   //   return $result >= Constants::REQUEST_LIMIT;
   // }
-
-  /**
-   * Check if an email exist in user table
-   * @param string $email Input email
-   * @return bool True if the email exist in the user table, otherwise false
-   */
-  public function checkEmailExist(string $email)
-  {
-    $sql = $this->entityManager->createQueryBuilder()
-      ->select('u')
-      ->from(UserEntity::class, 'u')
-      ->where('u.email = :email')
-      ->setParameter("email", $email);
-
-    $query = $sql->getQuery();
-    $result = $query->execute();
-
-    return count($result) > 0;
-  }
 }

@@ -79,7 +79,15 @@
 {% endblock %}
 
 {% block modals %}
-  <twig:Modal modalTitle="{{ 'card_bag.create_options.new_bag'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="alert('add bag')" x-ref="addNewBagModal"></twig:Modal>
+  <twig:Modal modalTitle="{{ 'card_bag.create_options.new_bag'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newBagFormRef.submit()" x-ref="addNewBagModal">
+    <twig:block name="modal_body">
+      <twig:Form x-ref="newBagFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_BAG_ROUTE_URL') }}" method="POST">
+        <div>
+          <twig:Input type="text" name="new_bag_name" label="{{ 'card_bag.bag_name'|trans }}" aria-label="{{ 'card_bag.bag_name'|trans }}" required />
+        </div>
+      </twig:Form>
+    </twig:block>
+  </twig:Modal>
   <twig:Modal modalTitle="{{ 'card_bag.create_options.new_card'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="alert('add card')" x-ref="addNewCardModal"></twig:Modal>
   <twig:Modal modalTitle="{{ 'action.move'|trans }}" actionButtonText="{{ 'action.confirm'|trans }}" actionButtonVariant="primary" @modal-action="alert('move object')" x-ref="moveObjectModal"></twig:Modal>
   <twig:Modal modalTitle="{{ 'action.delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="alert('delete object')" x-ref="deleteObjectModal"></twig:Modal>
