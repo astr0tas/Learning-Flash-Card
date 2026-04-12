@@ -17,37 +17,43 @@
       </div>
     </div>
   {% endif %}
-  <input @input="hasValue = $el.value.length > 0" x-ref="{{ name|default(id) }}" {% if type == 'password' %} x-bind:type="showPassword ? 'text' : 'password'" {% elseif type == 'search' %} type='text' {% else %} type="{{ type }}" {% endif %} name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class } ) }} placeholder="">
-    {% if label is not empty %}
-      <label {% if name|default(id) is not empty %} for="{{ name|default(id) }}" {% endif %} {% if error is not empty %} class="pointer-events-none absolute left-2.5 -top-2.5 max-w-[calc(100%-18px)] truncate px-1 text-xs text-(--red) transition-all peer-placeholder-shown:top-3 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-(--red)" {% else %} class="pointer-events-none absolute left-2.5 -top-2.5 max-w-[calc(100%-18px)] truncate px-1 text-xs text-zinc-400 transition-all peer-placeholder-shown:top-3 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-blue-400" :class="darkMode ? 'bg-(--dark-theme-bg-color)' : ''" {% endif %}>
-        {{ label }}
-        {% if required %}
-          <span class="text-(--red)">
-            *
-          </span>
-        {% endif %}
-      </label>
-    {% endif %}
-    {% if error is not empty %}
-      <div class="mt-1 text-xs text-(--red)">
-        {{ error }}
+
+  {% if type == 'textarea' %}
+    <textarea @input="hasValue = $el.value.length > 0" x-ref="{{ name|default(id) }}" name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class } ) }} placeholder="">{{ value|default('') }}</textarea>
+  {% else %}
+    <input @input="hasValue = $el.value.length > 0" x-ref="{{ name|default(id) }}" {% if type == 'password' %} x-bind:type="showPassword ? 'text' : 'password'" {% elseif type == 'search' %} type='text' {% else %} type="{{ type }}" {% endif %} name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class } ) }} placeholder="" value="{{ value|default('') }}">
+  {% endif %}
+
+  {% if label is not empty %}
+    <label {% if name|default(id) is not empty %} for="{{ name|default(id) }}" {% endif %} {% if error is not empty %} class="pointer-events-none absolute left-2.5 -top-2.5 max-w-[calc(100%-18px)] truncate px-1 text-xs text-(--red) transition-all peer-placeholder-shown:top-3 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-(--red)" {% else %} class="pointer-events-none absolute left-2.5 -top-2.5 max-w-[calc(100%-18px)] truncate px-1 text-xs text-zinc-400 transition-all peer-placeholder-shown:top-3 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-blue-400" :class="darkMode ? 'bg-(--dark-theme-bg-color)' : 'bg-(--white)'" {% endif %}>
+      {{ label }}
+      {% if required %}
+        <span class="text-(--red)">
+          *
+        </span>
+      {% endif %}
+    </label>
+  {% endif %}
+  {% if error is not empty %}
+    <div class="mt-1 text-xs text-(--red)">
+      {{ error }}
+    </div>
+  {% endif %}
+  {% if type == 'password' %}
+    <div class="absolute cursor-pointer w-5 h-5 opacity-80 hover:opacity-60 active:opacity-40 right-3 top-3.75" @click="showPassword = !showPassword">
+      <div x-show="showPassword">
+        {{ include('icons/show.svg') }}
       </div>
-    {% endif %}
-    {% if type == 'password' %}
-      <div class="absolute cursor-pointer w-5 h-5 opacity-80 hover:opacity-60 active:opacity-40 right-3 top-3.75" @click="showPassword = !showPassword">
-        <div x-show="showPassword">
-          {{ include('icons/show.svg') }}
-        </div>
-        <div x-show="!showPassword">
-          {{ include('icons/hide.svg') }}
-        </div>
+      <div x-show="!showPassword">
+        {{ include('icons/hide.svg') }}
       </div>
-    {% endif %}
-    {% if type == 'search' %}
-      <div x-show="hasValue" class="w-10 h-10 absolute right-2 top-1 cursor-pointer rounded-full p-4 flex items-center justify-center" x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'hover:bg-gray-100 active:bg-gray-200'" @click="$refs.{{ name|default(id) }}.value = ''; hasValue = false;">
-        <div class="w-4 h-4 absolute">
-          {{ include('icons/close.svg') }}
-        </div>
+    </div>
+  {% endif %}
+  {% if type == 'search' %}
+    <div x-show="hasValue" class="w-10 h-10 absolute right-2 top-1 cursor-pointer rounded-full p-4 flex items-center justify-center" x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'hover:bg-gray-100 active:bg-gray-200'" @click="$refs.{{ name|default(id) }}.value = ''; hasValue = false;">
+      <div class="w-4 h-4 absolute">
+        {{ include('icons/close.svg') }}
       </div>
-    {% endif %}
+    </div>
+  {% endif %}
   </div>
