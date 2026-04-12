@@ -37,7 +37,6 @@ class AuthenticationService extends BaseService
     private UserRepository $userRepository,
     private RecoveryTokenRepository $recoveryTokenRepository,
     private EmailVerificationTokenRepository $emailVerificationTokenRepository,
-    private Security $security,
     private RouterInterface $router,
     private Environment $twig,
   ) {

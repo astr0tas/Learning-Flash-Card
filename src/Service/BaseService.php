@@ -11,19 +11,22 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class BaseService
 {
   public TranslatorInterface $translator;
   public SessionInterface $session;
   public EntityManagerInterface $entityManager;
+  public Security $security;
 
   #[Required]
-  public function initProperties(TranslatorInterface $translator, RequestStack $requestStack, EntityManagerInterface $entityManager)
+  public function initProperties(TranslatorInterface $translator, RequestStack $requestStack, EntityManagerInterface $entityManager, Security $security)
   {
     $this->translator = $translator;
     $this->session = $requestStack->getSession();
     $this->entityManager = $entityManager;
+    $this->security = $security;
   }
 
   public function getFlashBag(): FlashBagInterface|null
