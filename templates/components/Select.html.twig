@@ -1,4 +1,4 @@
-{% set base_class = "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer select-none" %}
+{% set base_class = "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer select-none appearance-none" %}
 {% set error_class = error is empty
     ? "border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500"
     : "border border-[var(--red)] text-red-900 placeholder-red-700 focus:ring-red-300" %}
@@ -6,12 +6,9 @@
 {% set size_class = "!text-base" %}
 {% set final_class = base_class ~ ' ' ~ error_class ~ ' ' ~ size_class %}
 
-<div class="w-full relative component-input">
-  <select x-ref="{{ name|default(id) }}" name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class } ) }} placeholder="">
-    {% block options %}{% endblock %}
-  </select>
+<div class="w-full flex flex-col component-input">
   {% if label is not empty %}
-    <label {% if name|default(id) is not empty %} for="{{ name|default(id) }}" {% endif %} {% if error is not empty %} class="pointer-events-none absolute left-2.5 -top-2.5 max-w-[calc(100%-18px)] truncate px-1 text-xs text-(--red) transition-all peer-placeholder-shown:top-3 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-(--red)" {% else %} class="pointer-events-none absolute left-2.5 -top-2.5 max-w-[calc(100%-18px)] truncate px-1 text-xs text-zinc-400 transition-all peer-placeholder-shown:top-3 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-blue-400" :class="darkMode ? 'bg-(--dark-theme-bg-color)' : 'bg-(--white)'" {% endif %}>
+    <label {% if name|default(id) is not empty %} for="{{ name|default(id) }}" {% endif %} class="text-sm text-zinc-400 mb-1">
       {{ label }}
       {% if required %}
         <span class="text-(--red)">
@@ -20,9 +17,20 @@
       {% endif %}
     </label>
   {% endif %}
-  {% if error is not empty %}
-    <div class="mt-1 text-xs text-(--red)">
-      {{ error }}
+
+  <div class="w-full relative">
+    <select x-ref="{{ name|default(id) }}" name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class } ) }} placeholder="">
+      {% block options %}{% endblock %}
+    </select>
+    {% if error is not empty %}
+      <div class="mt-1 text-xs text-(--red)">
+        {{ error }}
+      </div>
+    {% endif %}
+    <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+      </svg>
     </div>
-  {% endif %}
+  </div>
 </div>
