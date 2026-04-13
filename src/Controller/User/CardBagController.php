@@ -2,7 +2,6 @@
 
 namespace App\Controller\User;
 
-use App\Config\Constants;
 use App\Config\Routes;
 use App\Config\TwigTemplate;
 use App\Controller\BaseController;
@@ -43,7 +42,7 @@ class CardBagController extends BaseController
     $previousRoute = $request->headers->get('referer');
 
     if ($request->getMethod() === Request::METHOD_GET) {
-      return $this->redirectToRoute(route: $previousRoute);
+      return $this->redirect($previousRoute);
     }
 
     // Handle login submission
@@ -62,10 +61,6 @@ class CardBagController extends BaseController
             $context->buildViolation($this->translator->trans('validation.new_bag.name_exist'))->addViolation();
           }
         })
-      ],
-      'newBagType' => [
-        new Assert\NotBlank(message: $this->translator->trans('validation.new_bag.bag_type_not_blank')),
-        new Assert\Choice(choices: Constants::FLASH_CARD_BAG_TYPES, message: $this->translator->trans('validation.new_bag.invalid_bag_type')),
       ]
     ];
     $error = ClassUtility::validateInputDTO($dto, $fields);
@@ -74,13 +69,13 @@ class CardBagController extends BaseController
       $flashBag->add('newBagError', [
         'newBagNameError' => $error
       ]);
-      return $this->redirectToRoute(route: $previousRoute);
+      return $this->redirect($previousRoute);
     }
 
     $newBag = $this->service->addNewBag($dto);
 
     $redirectUrl = str_replace('{id}', $newBag->getId(), Routes::CARD_BAG_DETAIL_ROUTE_URL);
-    return $this->redirectToRoute(route: $redirectUrl);
+    return $this->redirect($redirectUrl);
   }
 
   #[Route(path: Routes::CREATE_NEW_CARD_ROUTE_URL, name: Routes::CCREATE_NEW_CARD_ROUTE_NAME, methods: [Request::METHOD_GET, Request::METHOD_POST])]
@@ -90,7 +85,7 @@ class CardBagController extends BaseController
     $previousRoute = $request->headers->get('referer');
 
     if ($request->getMethod() === Request::METHOD_GET) {
-      return $this->redirectToRoute(route: $previousRoute);
+      return $this->redirect($previousRoute);
     }
 
     return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG);

@@ -14,13 +14,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class CardBagEntity extends BaseEntity
 {
   #[ORM\Column(type: 'string', length: 255)]
-  private string $title;
+  private string $name;
 
   #[ORM\Column(type: 'string', length: 1000)]
   private string $description;
-
-  #[ORM\Column(type: 'string', length: 10, options: ["comment" => "Type of flash card bag. Current available values: " . Constants::FLASH_CARD_BAG_TYPES_STR])]
-  private string $bagType;
 
   #[ORM\ManyToOne(targetEntity: UserEntity::class)]
   #[ORM\JoinColumn(name: 'user_id', nullable: false)]
@@ -76,30 +73,6 @@ class CardBagEntity extends BaseEntity
   public function setDescription(string $description): self
   {
     $this->description = $description;
-
-    return $this;
-  }
-
-  /**
-   * Get the value of title
-   *
-   * @return string
-   */
-  public function getTitle(): string
-  {
-    return $this->title;
-  }
-
-  /**
-   * Set the value of title
-   *
-   * @param string $title
-   *
-   * @return self
-   */
-  public function setTitle(string $title): self
-  {
-    $this->title = $title;
 
     return $this;
   }
@@ -221,25 +194,25 @@ class CardBagEntity extends BaseEntity
   }
 
   /**
-   * Get the value of bagType
+   * Get the value of name
    *
    * @return string
    */
-  public function getBagType(): string
+  public function getName(): string
   {
-    return $this->bagType;
+    return $this->name;
   }
 
   /**
-   * Set the value of bagType
+   * Set the value of name
    *
-   * @param string $bagType
+   * @param string $name
    *
    * @return self
    */
-  public function setBagType(string $bagType): self
+  public function setName(string $name): self
   {
-    $this->bagType = $bagType;
+    $this->name = $name;
 
     return $this;
   }

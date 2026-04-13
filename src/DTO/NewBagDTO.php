@@ -4,9 +4,9 @@ namespace App\DTO;
 
 class NewBagDTO extends BaseDTO
 {
-  private $newBagName;
-  private $newBagDescription;
-  private $newBagType;
+  private string $newBagName;
+  private string $newBagDescription;
+  private ?int $parentCard;
 
   /**
    * Get the value of newBagName
@@ -45,19 +45,25 @@ class NewBagDTO extends BaseDTO
   }
 
   /**
-   * Get the value of newBagType
+   * Get the value of parentCard
+   *
+   * @return ?int
    */
-  public function getNewBagType()
+  public function getParentCard(): ?int
   {
-    return $this->newBagType;
+    return $this->parentCard;
   }
 
   /**
-   * Set the value of newBagType
+   * Set the value of parentCard
+   *
+   * @param ?int $parentCard
+   *
+   * @return self
    */
-  public function setNewBagType($newBagType): self
+  public function setParentCard(?int $parentCard): self
   {
-    $this->newBagType = $newBagType;
+    $this->parentCard = $parentCard;
 
     return $this;
   }
