@@ -23,7 +23,7 @@
                 {{ 'menu.dash_board'|trans }}
               </div>
             </a>
-            <a href="{{ constant('App\\Config\\Routes::CARD_BAG_ROUTE_URL') }}" class="flex items-center cursor-pointer gap-2 rounded-md p-3 select-none {{ app.request.attributes.get('_route') == constant('App\\Config\\Routes::CARD_BAG_ROUTE_NAME') ? 'text-(--blue)!' : '' }}" x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200'" title="{{ 'menu.card_bag'|trans }}">
+            <a href="{{ constant('App\\Config\\Routes::CARD_BAG_ROUTE_URL') }}" class="flex items-center cursor-pointer gap-2 rounded-md p-3 select-none {{ constant('App\\Config\\Routes::CARD_BAG_ROUTE_URL') in app.request.pathInfo ? 'text-(--blue)!' : '' }}" x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200'" title="{{ 'menu.card_bag'|trans }}">
               <div class="w-6 h-6">
                 {{ include('icons/folder.svg') }}
               </div>
