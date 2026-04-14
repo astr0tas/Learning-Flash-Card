@@ -102,7 +102,15 @@
         {% if bag is defined %}
           <twig:Input hidden name="bag" value="{{ bag.id }}"/>
         {% endif %}
-        <div></div>
+        <div>
+          <twig:Input type="text" name="title" label="{{ 'card_bag.card_title'|trans }}" aria-label="{{ 'card_bag.card_title'|trans }}" required error="{{ error.newCardError is defined and error.newCardError.title ? error.newCardError.title[0] : '' }}" />
+        </div>
+        <div class="my-3">
+          <twig:Input type="text" name="sub_title" label="{{ 'card_bag.card_subtitle'|trans }}" aria-label="{{ 'card_bag.card_subtitle'|trans }}" error="{{ error.newCardError is defined and error.newCardError.sub_title ? error.newCardError.sub_title[0] : '' }}" />
+        </div>
+        <div>
+          <twig:Input type="textarea" name="description" label="{{ 'card_bag.card_description'|trans }}" aria-label="{{ 'card_bag.card_description'|trans }}" rows="3" />
+        </div>
       </twig:Form>
     </twig:block>
   </twig:Modal>

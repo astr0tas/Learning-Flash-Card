@@ -74,6 +74,9 @@ card_bag:
   other_option: "Other options"
   bag_name: "Bag name"
   bag_description: "Bag description"
+  card_title: "Card title"
+  card_subtitle: "Card subtitle"
+  card_description: "Card description"
 
 trash:
   title: "Trash Bin"

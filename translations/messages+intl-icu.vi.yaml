@@ -74,6 +74,9 @@ card_bag:
   other_option: "Tùy chọn khác"
   bag_name: "Tên túi thẻ"
   bag_description: "Mô tả"
+  card_title: "Tiêu đề thẻ"
+  card_subtitle: "Phụ đề thẻ"
+  card_description: "Mô tả thẻ"
 
 trash:
   title: "Thùng rác"
