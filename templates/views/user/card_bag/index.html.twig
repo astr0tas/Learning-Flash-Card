@@ -9,6 +9,8 @@
   <script src="{{ asset('scripts/templates/views/user/card_bag/index.js') }}"></script>
 {% endblock %}
 
+{% set new_bag_name_class = "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer select-none border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500 !text-base" %}
+
 {% block user_body %}
   <div class="flex flex-col w-full h-full">
     {# Header panel #}
@@ -32,7 +34,7 @@
           </twig:block>
           <twig:block name="dropdown_content">
             <div class="py-1">
-              <button class="block px-4 py-2 cursor-pointer w-full text-start" @click="$refs.addNewBagModal.open=true">
+              <button class="block px-4 py-2 cursor-pointer w-full text-start" @click="$refs.addNewBagModal.open=true; $refs.new_bag_name_error.remove(); $refs.new_bag_name.className='{{ new_bag_name_class }}'">
                 {{ 'card_bag.create_options.new_bag'|trans }}
               </button>
               <button class="block px-4 py-2 cursor-pointer w-full text-start" @click="$refs.addNewCardModal.open=true">
@@ -79,11 +81,11 @@
 {% endblock %}
 
 {% block modals %}
-  <twig:Modal modalTitle="{{ 'card_bag.create_options.new_bag'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newBagFormRef.submit()" x-ref="addNewBagModal">
+  <twig:Modal open="{{ error.newBagError is defined }}" modalTitle="{{ 'card_bag.create_options.new_bag'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newBagFormRef.submit()" x-ref="addNewBagModal">
     <twig:block name="modal_body">
       <twig:Form x-ref="newBagFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_BAG_ROUTE_URL') }}" method="POST">
         <div>
-          <twig:Input type="text" name="new_bag_name" label="{{ 'card_bag.bag_name'|trans }}" aria-label="{{ 'card_bag.bag_name'|trans }}" required />
+          <twig:Input type="text" name="new_bag_name" label="{{ 'card_bag.bag_name'|trans }}" aria-label="{{ 'card_bag.bag_name'|trans }}" required error="{{ error.newBagError is defined and error.newBagError.new_bag_name ? error.newBagError.new_bag_name[0] : '' }}" />
         </div>
         <div class="my-3">
           <twig:Input type="textarea" name="new_bag_description" label="{{ 'card_bag.bag_description'|trans }}" aria-label="{{ 'card_bag.bag_description'|trans }}" rows="3" />

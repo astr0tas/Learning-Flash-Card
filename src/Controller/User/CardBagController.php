@@ -66,9 +66,7 @@ class CardBagController extends BaseController
     $error = ClassUtility::validateInputDTO($dto, $fields);
 
     if (count($error) > 0) {
-      $flashBag->add('newBagError', [
-        'newBagNameError' => $error
-      ]);
+      $flashBag->add('newBagError', $error);
       return $this->redirect($previousRoute);
     }
 
@@ -103,15 +101,14 @@ class CardBagController extends BaseController
 
     // Get flash errors when creating new bag
     if ($flashBag->has('newBagError')) {
-      $errors['newBagError'] = true;
-
-      $flashErrors = $flashBag->get('newBagError');
-      $errors['newBagNameError'] = $flashErrors['newBagNameError'];
+      $flashErrors = $flashBag->get('newBagError')[0];
+      $errors['newBagError'] = $flashErrors;
     }
 
     // Get flash errors when creating new card
     if ($flashBag->has('newCardError')) {
-      $errors['newCardError'] = true;
+      $flashErrors = $flashBag->get('newCardError')[0];
+      $errors['newCardError'] = $flashErrors;
     }
 
     return $errors;

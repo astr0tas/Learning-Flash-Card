@@ -6,7 +6,7 @@ class NewBagDTO extends BaseDTO
 {
   private string $newBagName;
   private string $newBagDescription;
-  private ?int $parentCard;
+  private ?int $parentCard = null;
 
   /**
    * Get the value of newBagName
