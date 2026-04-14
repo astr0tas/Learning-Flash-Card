@@ -5,7 +5,7 @@ namespace App\DTO;
 class NewBagDTO extends BaseDTO
 {
   private string $newBagName;
-  private string $newBagDescription;
+  private ?string $newBagDescription = null;
   private ?int $parentBag = null;
 
   /**

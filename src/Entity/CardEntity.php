@@ -15,11 +15,11 @@ class CardEntity extends BaseEntity
   #[ORM\Column(type: 'string', length: 255)]
   private string $title;
 
-  #[ORM\Column(type: 'string', length: 255)]
-  private string $subTitle;
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
+  private ?string $subTitle;
 
-  #[ORM\Column(type: 'string', length: 1000)]
-  private string $description;
+  #[ORM\Column(type: 'string', length: 1000, nullable: true)]
+  private ?string $description;
 
   #[ORM\ManyToOne(targetEntity: CardBagEntity::class)]
   #[ORM\JoinColumn(name: 'card_bag_id', nullable: false)]

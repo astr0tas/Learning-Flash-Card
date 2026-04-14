@@ -16,8 +16,8 @@ class CardBagEntity extends BaseEntity
   #[ORM\Column(type: 'string', length: 255)]
   private string $name;
 
-  #[ORM\Column(type: 'string', length: 1000)]
-  private string $description;
+  #[ORM\Column(type: 'string', length: 1000, nullable: true)]
+  private ?string $description;
 
   #[ORM\ManyToOne(targetEntity: UserEntity::class)]
   #[ORM\JoinColumn(name: 'user_id', nullable: false)]
