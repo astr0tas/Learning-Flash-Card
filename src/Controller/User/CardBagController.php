@@ -21,16 +21,14 @@ class CardBagController extends BaseController
   public function index()
   {
     $error = $this->getErrorFlash();
-
-    return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG, parameters: ['error' => $error]);
+    return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG, parameters: ['error' => $error, 'data' => $this->service->getRootContent()]);
   }
 
   #[Route(path: Routes::CARD_BAG_DETAIL_ROUTE_URL, name: Routes::CARD_BAG_DETAIL_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function bagDetail(int $id)
   {
     $error = $this->getErrorFlash();
-
-    return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG, parameters: ['error' => $error]);
+    return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG, parameters: ['error' => $error, 'data' => $this->service->getBagContent($id), 'bag_id' => $id]);
   }
 
   #[Route(path: Routes::CREATE_NEW_BAG_ROUTE_URL, name: Routes::CCREATE_NEW_BAG_ROUTE_NAME, methods: [Request::METHOD_GET, Request::METHOD_POST])]
@@ -64,8 +62,8 @@ class CardBagController extends BaseController
           $context->buildViolation($this->translator->trans('validation.new_bag.name_exist'))
             ->atPath('[newBagName]')
             ->addViolation();
-          }
-        })
+        }
+      })
     ];
     $error = ClassUtility::validateInputDTO($dto, $fields, $globals);
 

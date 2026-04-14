@@ -9,7 +9,7 @@
   <script src="{{ asset('scripts/templates/views/user/card_bag/index.js') }}"></script>
 {% endblock %}
 
-{% set new_bag_name_class = "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer select-none border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500 !text-base" %}
+{% set input_normal_class = "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer select-none border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500 !text-base" %}
 
 {% block user_body %}
   <div class="flex flex-col w-full h-full">
@@ -34,7 +34,7 @@
           </twig:block>
           <twig:block name="dropdown_content">
             <div class="py-1">
-              <button class="block px-4 py-2 cursor-pointer w-full text-start" @click="$refs.addNewBagModal.open=true; $refs.new_bag_name_error.remove(); $refs.new_bag_name.className='{{ new_bag_name_class }}'">
+              <button class="block px-4 py-2 cursor-pointer w-full text-start" @click="$refs.addNewBagModal.open=true; $refs.new_bag_name_error.remove(); $refs.new_bag_name.className='{{ input_normal_class }}'">
                 {{ 'card_bag.create_options.new_bag'|trans }}
               </button>
               <button class="block px-4 py-2 cursor-pointer w-full text-start" @click="$refs.addNewCardModal.open=true">
@@ -99,6 +99,9 @@
   <twig:Modal modalTitle="{{ 'card_bag.create_options.new_card'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newCardFormRef.submit()" x-ref="addNewCardModal">
     <twig:block name="modal_body">
       <twig:Form x-ref="newCardFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_CARD_ROUTE_URL') }}" method="POST">
+        {% if bag_id is defined %}
+          <twig:Input hidden name="bag" value="{{ bag_id }}"/>
+        {% endif %}
         <div></div>
       </twig:Form>
     </twig:block>

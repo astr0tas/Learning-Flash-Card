@@ -5,11 +5,12 @@ namespace App\Service;
 use App\DTO\NewBagDTO;
 use App\Repository\CardBagRepository;
 use App\Entity\CardBagEntity;
+use App\Repository\CardRepository;
 
 class CardBagService extends BaseService
 {
 
-  public function __construct(private CardBagRepository $cardBagRepository) {}
+  public function __construct(private CardBagRepository $cardBagRepository, private CardRepository $cardRepository) {}
 
   public function checkDuplicationBagName(string $name, ?int $id): bool
   {
@@ -40,5 +41,29 @@ class CardBagService extends BaseService
     $this->entityManager->flush();
 
     return $newBag;
+  }
+
+  public function getRootContent(): array
+  {
+    $result = [];
+
+    $bagList = $this->cardBagRepository->findBy(['parentCardBagEntity' => null]);
+    $cardList = $this->cardRepository->findBy(['cardBagEntity' => null]);
+
+    $result = [...$bagList, ...$cardList];
+
+    return $result;
+  }
+
+  public function getBagContent(int $id): array
+  {
+    $result = [];
+
+    $bagList = $this->cardBagRepository->findBy(['parentCardBagEntity' => $id]);
+    $cardList = $this->cardRepository->findBy(['cardBagEntity' => $id]);
+
+    $result = [...$bagList, ...$cardList];
+
+    return $result;
   }
 }
