@@ -11,9 +11,9 @@ class CardBagService extends BaseService
 
   public function __construct(private CardBagRepository $cardBagRepository) {}
 
-  public function checkDuplicationBagName(string $name): bool
+  public function checkDuplicationBagName(string $name, ?int $id): bool
   {
-    $result = $this->cardBagRepository->findBy(['name' => $name]);
+    $result = $this->cardBagRepository->findBy(['name' => $name, 'parentCardBagEntity' => $id]);
 
     return count($result) > 0;
   }
@@ -23,7 +23,7 @@ class CardBagService extends BaseService
     // Get user entity through security
     $user = $this->security->getUser();
     // Get parent card bag entity
-    $queryResult = $this->cardBagRepository->findBy(['id' => $newBagDTO->getParentCard()]);
+    $queryResult = $this->cardBagRepository->findBy(['id' => $newBagDTO->getParentBag()]);
     if (count($queryResult) > 0) {
       $parentCardBag = $queryResult[0];
     } else {

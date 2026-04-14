@@ -56,14 +56,18 @@ class CardBagController extends BaseController
     $fields = [
       'newBagName' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.new_bag.name_not_blank')),
-        new Assert\Callback(callback: function (string $data, ExecutionContextInterface $context) {
-          if ($this->service->checkDuplicationBagName($data)) {
-            $context->buildViolation($this->translator->trans('validation.new_bag.name_exist'))->addViolation();
-          }
-        })
       ]
     ];
-    $error = ClassUtility::validateInputDTO($dto, $fields);
+    $globals = [
+      new Assert\Callback(callback: function (array $data, ExecutionContextInterface $context) {
+        if ($this->service->checkDuplicationBagName($data['newBagName'], $data['parentBag'] ?? null)) {
+          $context->buildViolation($this->translator->trans('validation.new_bag.name_exist'))
+            ->atPath('[newBagName]')
+            ->addViolation();
+          }
+        })
+    ];
+    $error = ClassUtility::validateInputDTO($dto, $fields, $globals);
 
     if (count($error) > 0) {
       $flashBag->add('newBagError', $error);

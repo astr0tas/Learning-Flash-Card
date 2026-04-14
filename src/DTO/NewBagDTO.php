@@ -6,7 +6,7 @@ class NewBagDTO extends BaseDTO
 {
   private string $newBagName;
   private string $newBagDescription;
-  private ?int $parentCard = null;
+  private ?int $parentBag = null;
 
   /**
    * Get the value of newBagName
@@ -45,25 +45,25 @@ class NewBagDTO extends BaseDTO
   }
 
   /**
-   * Get the value of parentCard
+   * Get the value of parentBag
    *
    * @return ?int
    */
-  public function getParentCard(): ?int
+  public function getParentBag(): ?int
   {
-    return $this->parentCard;
+    return $this->parentBag;
   }
 
   /**
-   * Set the value of parentCard
+   * Set the value of parentBag
    *
-   * @param ?int $parentCard
+   * @param ?int $parentBag
    *
    * @return self
    */
-  public function setParentCard(?int $parentCard): self
+  public function setParentBag(?int $parentBag): self
   {
-    $this->parentCard = $parentCard;
+    $this->parentBag = $parentBag;
 
     return $this;
   }
