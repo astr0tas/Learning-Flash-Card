@@ -93,7 +93,13 @@
       </twig:Form>
     </twig:block>
   </twig:Modal>
-  <twig:Modal modalTitle="{{ 'card_bag.create_options.new_card'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="alert('add card')" x-ref="addNewCardModal"></twig:Modal>
+  <twig:Modal modalTitle="{{ 'card_bag.create_options.new_card'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newCardFormRef.submit()" x-ref="addNewCardModal">
+    <twig:block name="modal_body">
+      <twig:Form x-ref="newCardFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_CARD_ROUTE_URL') }}" method="POST">
+        <div></div>
+      </twig:Form>
+    </twig:block>
+  </twig:Modal>
   <twig:Modal modalTitle="{{ 'action.move'|trans }}" actionButtonText="{{ 'action.confirm'|trans }}" actionButtonVariant="primary" @modal-action="alert('move object')" x-ref="moveObjectModal"></twig:Modal>
   <twig:Modal modalTitle="{{ 'action.delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="alert('delete object')" x-ref="deleteObjectModal"></twig:Modal>
 {% endblock %}
