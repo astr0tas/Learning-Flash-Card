@@ -21,14 +21,23 @@ class CardBagController extends BaseController
   public function index()
   {
     $error = $this->getErrorFlash();
-    return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG, parameters: ['error' => $error, 'data' => $this->service->getRootContent()]);
+    return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG, parameters: [
+      'error' => $error,
+      'bagList' => $this->service->getBagList(null),
+      'cardList' => $this->service->getCardList(null)
+    ]);
   }
 
   #[Route(path: Routes::CARD_BAG_DETAIL_ROUTE_URL, name: Routes::CARD_BAG_DETAIL_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function bagDetail(int $id)
   {
     $error = $this->getErrorFlash();
-    return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG, parameters: ['error' => $error, 'data' => $this->service->getBagContent($id), 'bag_id' => $id]);
+    return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG, parameters: [
+      'error' => $error,
+      'bagList' => $this->service->getBagList($id),
+      'cardList' => $this->service->getCardList($id),
+      'bag' => $this->service->getBag($id)
+    ]);
   }
 
   #[Route(path: Routes::CREATE_NEW_BAG_ROUTE_URL, name: Routes::CCREATE_NEW_BAG_ROUTE_NAME, methods: [Request::METHOD_GET, Request::METHOD_POST])]

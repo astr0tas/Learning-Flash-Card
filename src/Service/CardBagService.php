@@ -43,27 +43,18 @@ class CardBagService extends BaseService
     return $newBag;
   }
 
-  public function getRootContent(): array
+  public function getBagList(?int $bagId): array
   {
-    $result = [];
-
-    $bagList = $this->cardBagRepository->findBy(['parentCardBagEntity' => null]);
-    $cardList = $this->cardRepository->findBy(['cardBagEntity' => null]);
-
-    $result = [...$bagList, ...$cardList];
-
-    return $result;
+    return $this->cardBagRepository->findBy(['parentCardBagEntity' => $bagId]);
   }
 
-  public function getBagContent(int $id): array
+  public function getCardList(?int $bagId): array
   {
-    $result = [];
+    return $this->cardRepository->findBy(['cardBagEntity' => $bagId]);
+  }
 
-    $bagList = $this->cardBagRepository->findBy(['parentCardBagEntity' => $id]);
-    $cardList = $this->cardRepository->findBy(['cardBagEntity' => $id]);
-
-    $result = [...$bagList, ...$cardList];
-
-    return $result;
+  public function getBag(int $bagId)
+  {
+    return $this->cardBagRepository->find($bagId);
   }
 }

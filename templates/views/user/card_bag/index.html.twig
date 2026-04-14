@@ -84,8 +84,8 @@
   <twig:Modal open="{{ error.newBagError is defined }}" modalTitle="{{ 'card_bag.create_options.new_bag'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newBagFormRef.submit()" x-ref="addNewBagModal">
     <twig:block name="modal_body">
       <twig:Form x-ref="newBagFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_BAG_ROUTE_URL') }}" method="POST">
-        {% if bag_id is defined %}
-          <twig:Input hidden name="parent_bag" value="{{ bag_id }}"/>
+        {% if bag is defined %}
+          <twig:Input hidden name="parent_bag" value="{{ bag.id }}"/>
         {% endif %}
         <div>
           <twig:Input type="text" name="new_bag_name" label="{{ 'card_bag.bag_name'|trans }}" aria-label="{{ 'card_bag.bag_name'|trans }}" required error="{{ error.newBagError is defined and error.newBagError.new_bag_name ? error.newBagError.new_bag_name[0] : '' }}" />
@@ -99,8 +99,8 @@
   <twig:Modal modalTitle="{{ 'card_bag.create_options.new_card'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newCardFormRef.submit()" x-ref="addNewCardModal">
     <twig:block name="modal_body">
       <twig:Form x-ref="newCardFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_CARD_ROUTE_URL') }}" method="POST">
-        {% if bag_id is defined %}
-          <twig:Input hidden name="bag" value="{{ bag_id }}"/>
+        {% if bag is defined %}
+          <twig:Input hidden name="bag" value="{{ bag.id }}"/>
         {% endif %}
         <div></div>
       </twig:Form>
