@@ -46,7 +46,7 @@ class CardBagController extends BaseController
     $flashBag = $this->getFlashBag();
 
     // Get the previous route to redirect back to it
-    $previousRoute = $request->headers->get('referer');
+    $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
 
     if ($request->getMethod() === Request::METHOD_GET) {
       return $this->redirect($previousRoute);
