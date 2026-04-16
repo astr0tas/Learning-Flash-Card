@@ -77,6 +77,9 @@ card_bag:
   card_title: "Card title"
   card_subtitle: "Card subtitle"
   card_description: "Card description"
+  card_type: "Card type"
+  card_type_normal: "Normal"
+  card_type_language: "Language"
 
 trash:
   title: "Trash Bin"
@@ -124,6 +127,10 @@ validation:
   new_bag:
     name_not_blank: "Bag name must not be blank"
     name_exist: "Bag name has already been used"
+  new_card:
+    title_not_blank: "Card title must not be blank"
+    card_type_not_blank: "Card type must not be blank"
+    card_type_invalid: "Card type is invalid"
 
 general_error:
   system_error: "A system error has occurred. Please try again later"

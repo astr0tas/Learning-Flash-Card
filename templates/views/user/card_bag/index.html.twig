@@ -35,7 +35,7 @@
               <button class="block px-4 py-2 cursor-pointer w-full text-start" @click="openNewBagModal">
                 {{ 'card_bag.create_options.new_bag'|trans }}
               </button>
-              <button class="block px-4 py-2 cursor-pointer w-full text-start" @click="$refs.addNewCardModal.open=true">
+              <button class="block px-4 py-2 cursor-pointer w-full text-start" @click="openNewCardModal">
                 {{ 'card_bag.create_options.new_card'|trans }}
               </button>
             </div>
@@ -94,17 +94,27 @@
       </twig:Form>
     </twig:block>
   </twig:Modal>
-  <twig:Modal modalTitle="{{ 'card_bag.create_options.new_card'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newCardFormRef.submit()" x-ref="addNewCardModal">
+  <twig:Modal open="{{ error.newCardError is defined }}" modalTitle="{{ 'card_bag.create_options.new_card'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newCardFormRef.submit()" id="addNewCardModal">
     <twig:block name="modal_body">
-      <twig:Form x-ref="newCardFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_CARD_ROUTE_URL') }}" method="POST">
+      <twig:Form x-ref="newCardFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_CARD_ROUTE_URL') }}" method="POST" class="flex flex-col gap-3">
         {% if bag is defined %}
           <twig:Input hidden name="bag" value="{{ bag.id }}"/>
         {% endif %}
         <div>
-          <twig:Input type="text" name="title" label="{{ 'card_bag.card_title'|trans }}" aria-label="{{ 'card_bag.card_title'|trans }}" required error="{{ error.newCardError is defined and error.newCardError.title ? error.newCardError.title[0] : '' }}" />
+          <twig:Input type="text" name="title" label="{{ 'card_bag.card_title'|trans }}" aria-label="{{ 'card_bag.card_title'|trans }}" required error="{{ error.newCardError is defined and error.newCardError.title is defined ? error.newCardError.title[0] : '' }}" />
         </div>
-        <div class="my-3">
-          <twig:Input type="text" name="sub_title" label="{{ 'card_bag.card_subtitle'|trans }}" aria-label="{{ 'card_bag.card_subtitle'|trans }}" error="{{ error.newCardError is defined and error.newCardError.sub_title ? error.newCardError.sub_title[0] : '' }}" />
+        <div>
+          <twig:Input type="text" name="sub_title" label="{{ 'card_bag.card_subtitle'|trans }}" aria-label="{{ 'card_bag.card_subtitle'|trans }}" />
+        </div>
+        <div>
+          <twig:Select name="card_type" label="{{ 'card_bag.card_type'|trans }}" aria-label="{{ 'card_bag.card_type'|trans }}" required error="{{ error.newCardError is defined and error.newCardError.card_type is defined ? error.newCardError.card_type[0] : '' }}" default="">
+            <twig:block name="options">
+              <option value="" class="hidden"></option>
+              {% for type in constant('App\\Config\\Constants::FLASH_CARD_BAG_TYPES') %}
+                <option value="{{ type }}">{{ ('card_bag.card_type_'~(type|lower))|trans }}</option>
+              {% endfor %}
+            </twig:block>
+          </twig:Select>
         </div>
         <div>
           <twig:Input type="textarea" name="description" label="{{ 'card_bag.card_description'|trans }}" aria-label="{{ 'card_bag.card_description'|trans }}" rows="3" />

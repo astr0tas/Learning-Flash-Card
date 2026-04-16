@@ -3,8 +3,10 @@
 namespace App\Service;
 
 use App\DTO\NewBagDTO;
+use App\DTO\NewCardDTO;
 use App\Repository\CardBagRepository;
 use App\Entity\CardBagEntity;
+use App\Entity\CardEntity;
 use App\Repository\CardRepository;
 
 class CardBagService extends BaseService
@@ -41,6 +43,29 @@ class CardBagService extends BaseService
     $this->entityManager->flush();
 
     return $newBag;
+  }
+
+  public function addNewCard(NewCardDTO $dto){
+    // Get user entity through security
+    $user = $this->security->getUser();
+    // Get card bag entity
+    $queryResult = $this->cardBagRepository->findBy(['id' => $dto->getBag()]);
+    if (count($queryResult) > 0) {
+      $parentCardBag = $queryResult[0];
+    } else {
+      $parentCardBag = null;
+    }
+
+    $newCard = new CardEntity();
+    $newCard->setTitle($dto->getTitle());
+    $newCard->setSubTitle($dto->getSubTitle());
+    $newCard->setCardType($dto->getCardType());
+    $newCard->setDescription($dto->getDescription());
+    $newCard->setUserEntity($user);
+    $newCard->setCardBagEntity($parentCardBag);
+
+    $this->entityManager->persist($newCard);
+    $this->entityManager->flush();
   }
 
   public function getBagList(?int $bagId): array

@@ -2,19 +2,22 @@
 
 namespace App\DTO;
 
+use App\Config\Constants;
+
 class NewCardDTO extends BaseDTO
 {
   private string $title;
   private ?string $subTitle = null;
   private ?string $description = null;
-  private int $bag;
+  private ?int $bag = null;
+  private string $cardType;
 
   /**
    * Get the value of bag
    *
    * @return int
    */
-  public function getBag(): int
+  public function getBag(): ?int
   {
     return $this->bag;
   }
@@ -26,7 +29,7 @@ class NewCardDTO extends BaseDTO
    *
    * @return self
    */
-  public function setBag(int $bag): self
+  public function setBag(?int $bag): self
   {
     $this->bag = $bag;
 
@@ -101,6 +104,30 @@ class NewCardDTO extends BaseDTO
   public function setTitle(string $title): self
   {
     $this->title = $title;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of cardType
+   *
+   * @return string
+   */
+  public function getCardType(): string
+  {
+    return $this->cardType;
+  }
+
+  /**
+   * Set the value of cardType
+   *
+   * @param string $cardType
+   *
+   * @return self
+   */
+  public function setCardType(string $cardType): self
+  {
+    $this->cardType = $cardType;
 
     return $this;
   }

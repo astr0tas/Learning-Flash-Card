@@ -77,6 +77,9 @@ card_bag:
   card_title: "Tiêu đề thẻ"
   card_subtitle: "Phụ đề thẻ"
   card_description: "Mô tả thẻ"
+  card_type: "Loại thẻ"
+  card_type_normal: "Thường"
+  card_type_language: "Ngôn ngữ"
 
 trash:
   title: "Thùng rác"
@@ -124,6 +127,10 @@ validation:
   new_bag:
     name_not_blank: "Tên túi không được để trống"
     name_exist: "Tên túi đã được dùng"
+  new_card:
+    title_not_blank: "Tiêu đề thẻ không được để trống"
+    card_type_not_blank: "Loại thẻ không được để trống"
+    card_type_invalid: "Loại thẻ không hợp lệ"
 
 general_error:
   system_error: "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau"

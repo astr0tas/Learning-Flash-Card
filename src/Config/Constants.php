@@ -32,9 +32,10 @@ class Constants
   ];
 
   // Flash card bag types
-  public const FLASH_CARD_BAG_NORMAL_TYPE = 'NORMAL';
-  public const FLASH_CARD_BAG_LANGUAGE_TYPE = 'LANGUAGE';
-  public const FLASH_CARD_BAG_TYPES = [self::FLASH_CARD_BAG_NORMAL_TYPE, self::FLASH_CARD_BAG_LANGUAGE_TYPE];
+  public const FLASH_CARD_NORMAL_TYPE = 'NORMAL';
+  public const FLASH_CARD_LANGUAGE_TYPE = 'LANGUAGE';
+  public const FLASH_CARD_DEFAULT_TYPE = self::FLASH_CARD_NORMAL_TYPE;
+  public const FLASH_CARD_BAG_TYPES = [self::FLASH_CARD_NORMAL_TYPE, self::FLASH_CARD_LANGUAGE_TYPE];
   public const FLASH_CARD_BAG_TYPES_STR = 'NORMAL, LANGUAGE';
 
   // Session keys

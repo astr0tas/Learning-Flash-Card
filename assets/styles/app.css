@@ -20,6 +20,17 @@
   transition-timing-function: linear;
 }
 
+select {
+  -webkit-appearance: none;  /* Chrome, Safari, and newer Edge */
+  -moz-appearance: none;     /* Firefox */
+  appearance: none;          /* Modern standard */
+}
+
+/* Specifically for Internet Explorer and legacy Edge */
+select::-ms-expand {
+  display: none;
+}
+
 .dark_theme{
   background: var(--dark-theme-bg-color);
   color: var(--white);

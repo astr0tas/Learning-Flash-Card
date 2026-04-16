@@ -1,4 +1,4 @@
-{% set base_class = "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer select-none appearance-none" %}
+{% set base_class = "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer select-none" %}
 {% set error_class = error is empty
     ? "border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500"
     : "border border-[var(--red)] text-red-900 placeholder-red-700 focus:ring-red-300" %}
@@ -23,7 +23,7 @@
       {% block options %}{% endblock %}
     </select>
     {% if error is not empty %}
-      <div class="mt-1 text-xs text-(--red)">
+      <div id="{{ name|default(id) }}_error" x-ref="{{ name|default(id) }}_error" class="mt-1 text-xs text-(--red)">
         {{ error }}
       </div>
     {% endif %}

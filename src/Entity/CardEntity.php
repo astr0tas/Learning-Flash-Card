@@ -21,9 +21,16 @@ class CardEntity extends BaseEntity
   #[ORM\Column(type: 'string', length: 1000, nullable: true)]
   private ?string $description;
 
+  #[ORM\Column(type: 'string', length: 10, options: ['default' => Constants::FLASH_CARD_DEFAULT_TYPE, 'comment' => 'Possible values: ' . Constants::FLASH_CARD_BAG_TYPES_STR])]
+  private string $cardType;
+
   #[ORM\ManyToOne(targetEntity: CardBagEntity::class)]
-  #[ORM\JoinColumn(name: 'card_bag_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'card_bag_id', nullable: true)]
   private ?CardBagEntity $cardBagEntity = null;
+
+  #[ORM\ManyToOne(targetEntity: UserEntity::class)]
+  #[ORM\JoinColumn(name: 'user_id', nullable: false)]
+  private ?UserEntity $userEntity = null;
 
   #[ORM\Column(type: 'datetime', nullable: true)]
   private ?\DateTimeInterface $deletedAt = null;
@@ -134,6 +141,54 @@ class CardEntity extends BaseEntity
   public function setSubTitle(string $subTitle): self
   {
     $this->subTitle = $subTitle;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of cardType
+   *
+   * @return string
+   */
+  public function getCardType(): string
+  {
+    return $this->cardType;
+  }
+
+  /**
+   * Set the value of cardType
+   *
+   * @param string $cardType
+   *
+   * @return self
+   */
+  public function setCardType(string $cardType): self
+  {
+    $this->cardType = $cardType;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of userEntity
+   *
+   * @return ?UserEntity
+   */
+  public function getUserEntity(): ?UserEntity
+  {
+    return $this->userEntity;
+  }
+
+  /**
+   * Set the value of userEntity
+   *
+   * @param ?UserEntity $userEntity
+   *
+   * @return self
+   */
+  public function setUserEntity(?UserEntity $userEntity): self
+  {
+    $this->userEntity = $userEntity;
 
     return $this;
   }

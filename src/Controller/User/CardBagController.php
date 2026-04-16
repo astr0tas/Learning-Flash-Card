@@ -2,10 +2,12 @@
 
 namespace App\Controller\User;
 
+use App\Config\Constants;
 use App\Config\Routes;
 use App\Config\TwigTemplate;
 use App\Controller\BaseController;
 use App\DTO\NewBagDTO;
+use App\DTO\NewCardDTO;
 use App\Service\CardBagService;
 use App\Utility\ClassUtility;
 use Symfony\Component\HttpFoundation\Request;
@@ -90,14 +92,42 @@ class CardBagController extends BaseController
   #[Route(path: Routes::CREATE_NEW_CARD_ROUTE_URL, name: Routes::CCREATE_NEW_CARD_ROUTE_NAME, methods: [Request::METHOD_GET, Request::METHOD_POST])]
   public function createNewCard(Request $request)
   {
+    $flashBag = $this->getFlashBag();
+
     // Get the previous route to redirect back to it
-    $previousRoute = $request->headers->get('referer');
+    $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
 
     if ($request->getMethod() === Request::METHOD_GET) {
       return $this->redirect($previousRoute);
     }
 
-    return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG);
+    // Handle login submission
+    $postData = $request->request->all();
+
+    // Pass the form data to a DTO
+    $dto = new NewCardDTO();
+    ClassUtility::mapArrayToDTO($postData, $dto);
+
+    // Validate post data
+    $fields = [
+      'title' => [
+        new Assert\NotBlank(message: $this->translator->trans('validation.new_card.title_not_blank')),
+      ],
+      'cardType' => [
+        new Assert\NotBlank(message: $this->translator->trans('validation.new_card.card_type_not_blank')),
+        new Assert\Choice(choices: Constants::FLASH_CARD_BAG_TYPES, message: $this->translator->trans('validation.new_card.card_type_invalid'))
+      ]
+    ];
+    $error = ClassUtility::validateInputDTO($dto, $fields);
+
+    if (count($error) > 0) {
+      $flashBag->add('newCardError', $error);
+      return $this->redirect($previousRoute);
+    }
+
+    $this->service->addNewCard($dto);
+
+    return $this->redirect($previousRoute);
   }
 
   /**

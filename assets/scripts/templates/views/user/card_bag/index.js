@@ -11,5 +11,18 @@ document.addEventListener('alpine:init', () =>
       document.getElementById('new_bag_name').value = '';
       document.getElementById('new_bag_description').value = '';
     },
+    openNewCardModal() {
+      document.getElementById('addNewCardModal').open = true;
+
+      document.getElementById('title_error')?.remove();
+      document.getElementById('title').className = this.normalInputClass;
+      document.getElementById('card_type_error')?.remove();
+      document.getElementById('card_type').className = this.normalInputClass;
+
+      document.getElementById('title').value = '';
+      document.getElementById('sub_title').value = '';
+      document.getElementById('description').value = '';
+      document.getElementById('card_type').value = '';
+    }
   }));
 });
