@@ -2,7 +2,10 @@ document.addEventListener('alpine:init', () =>
 {
   Alpine.data('cardBag', () => ({
     normalInputClass: "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer select-none border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500 !text-base",
-    openNewBagModal() {
+    selectedBags: [],
+    selectedCards: [],
+    openNewBagModal()
+    {
       document.getElementById('addNewBagModal').open = true;
 
       document.getElementById('new_bag_name_error')?.remove();
@@ -23,6 +26,14 @@ document.addEventListener('alpine:init', () =>
       document.getElementById('sub_title').value = '';
       document.getElementById('description').value = '';
       document.getElementById('card_type').value = '';
+    },
+    openMoveObjectModal()
+    {
+      document.getElementById('moveObjectModal').open = true;
+    },
+    openDeleteObjectModal()
+    {
+      document.getElementById('deleteObjectModal').open = true;
     }
   }));
 });

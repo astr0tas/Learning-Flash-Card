@@ -53,7 +53,7 @@
           </twig:block>
           <twig:block name="dropdown_content">
             <div class="py-1">
-              <button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full hover:text-[#101828]!" @click="$refs.moveObjectModal.open=true">
+              <button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full hover:text-[#101828]!" @click="openMoveObjectModal">
                 <div class="w-5 h-5 text-inherit!">
                   {{ include('icons/move_folder.svg') }}
                 </div>
@@ -61,7 +61,7 @@
                   {{ 'action.move'|trans }}
                 </div>
               </button>
-              <button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full text-(--red)!" @click="$refs.deleteObjectModal.open=true">
+              <button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full text-(--red)!" @click="openDeleteObjectModal">
                 <div class="w-5 h-5 text-inherit!">
                   {{ include('icons/trash.svg') }}
                 </div>
