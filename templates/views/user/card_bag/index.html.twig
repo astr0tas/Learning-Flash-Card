@@ -4,8 +4,31 @@
   {{ 'card_bag.title'|trans }}
 {% endblock %}
 
+{% set card_bag_array = [] %}
+{% set card_array = [] %}
+
+{% for bag in bagList %}
+  {% set bagTemplate %}
+    <twig:CardBag bagId="{{ bag.id }}" bagName="{{ bag.name }}" bagDescription="{{ bag.description }}" model="selectedBags"/>
+  {% endset %}
+
+  {% set card_bag_array = card_bag_array|merge([bagTemplate]) %}
+{% endfor %}
+
+{% for card in cardList %}
+  {% set cardTemplate %}
+    <twig:Card cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubTitle="{{ card.subTitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" model="selectedCards"/>
+  {% endset %}
+
+  {% set card_array = card_array|merge([cardTemplate]) %}
+{% endfor %}
+
 {% block javascripts %}
   {{ parent() }}
+  <script>
+    const bagList = {{ card_bag_array|json_encode|raw }};
+    const cardList = {{ card_array|json_encode|raw }};
+  </script>
   <script src="{{ asset('scripts/templates/views/user/card_bag/index.js') }}"></script>
 {% endblock %}
 
@@ -74,7 +97,7 @@
         </twig:Dropdown>
       </div>
     </div>
-  {# Display body #}
+    {# Display body #}
   </div>
 {% endblock %}
 
