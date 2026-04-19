@@ -80,6 +80,8 @@ card_bag:
   card_type: "Loại thẻ"
   card_type_normal: "Thường"
   card_type_language: "Ngôn ngữ"
+  card_color: "Màu thẻ"
+  card_text_color: "Màu chữ"
 
 trash:
   title: "Thùng rác"
@@ -131,6 +133,8 @@ validation:
     title_not_blank: "Tiêu đề thẻ không được để trống"
     card_type_not_blank: "Loại thẻ không được để trống"
     card_type_invalid: "Loại thẻ không hợp lệ"
+  color:
+    invalid_color: "Mã màu không hợp lệ"
 
 general_error:
   system_error: "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau"

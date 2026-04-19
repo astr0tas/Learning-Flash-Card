@@ -11,6 +11,8 @@ class NewCardDTO extends BaseDTO
   private ?string $description = null;
   private ?int $bag = null;
   private string $cardType;
+  private string $cardColor = Constants::FLASH_CARD_DEFAULT_COLOR;
+  private string $cardTextColor = Constants::FLASH_CARD_DEFAULT_TEXT_COLOR;
 
   /**
    * Get the value of bag
@@ -128,6 +130,54 @@ class NewCardDTO extends BaseDTO
   public function setCardType(string $cardType): self
   {
     $this->cardType = $cardType;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of cardTextColor
+   *
+   * @return string
+   */
+  public function getCardTextColor(): string
+  {
+    return $this->cardTextColor;
+  }
+
+  /**
+   * Set the value of cardTextColor
+   *
+   * @param string $cardTextColor
+   *
+   * @return self
+   */
+  public function setCardTextColor(string $cardTextColor): self
+  {
+    $this->cardTextColor = $cardTextColor;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of cardColor
+   *
+   * @return string
+   */
+  public function getCardColor(): string
+  {
+    return $this->cardColor;
+  }
+
+  /**
+   * Set the value of cardColor
+   *
+   * @param string $cardColor
+   *
+   * @return self
+   */
+  public function setCardColor(string $cardColor): self
+  {
+    $this->cardColor = $cardColor;
 
     return $this;
   }

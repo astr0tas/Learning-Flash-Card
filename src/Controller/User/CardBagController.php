@@ -116,6 +116,12 @@ class CardBagController extends BaseController
       'cardType' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.new_card.card_type_not_blank')),
         new Assert\Choice(choices: Constants::FLASH_CARD_BAG_TYPES, message: $this->translator->trans('validation.new_card.card_type_invalid'))
+      ],
+      'cardColor' => [
+        new Assert\CssColor(message: $this->translator->trans('validation.color.invalid_color')),
+      ],
+      'cardTextColor' => [
+        new Assert\CssColor(message: $this->translator->trans('validation.color.invalid_color')),
       ]
     ];
     $error = ClassUtility::validateInputDTO($dto, $fields);

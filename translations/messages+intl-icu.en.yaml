@@ -80,6 +80,8 @@ card_bag:
   card_type: "Card type"
   card_type_normal: "Normal"
   card_type_language: "Language"
+  card_color: "Card color"
+  card_text_color: "Text color"
 
 trash:
   title: "Trash Bin"
@@ -131,6 +133,8 @@ validation:
     title_not_blank: "Card title must not be blank"
     card_type_not_blank: "Card type must not be blank"
     card_type_invalid: "Card type is invalid"
+  color:
+    invalid_color: "Color is invalid"
 
 general_error:
   system_error: "A system error has occurred. Please try again later"

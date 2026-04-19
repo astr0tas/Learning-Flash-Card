@@ -22,7 +22,13 @@ class CardEntity extends BaseEntity
   private ?string $description;
 
   #[ORM\Column(type: 'string', length: 10, options: ['default' => Constants::FLASH_CARD_DEFAULT_TYPE, 'comment' => 'Possible values: ' . Constants::FLASH_CARD_BAG_TYPES_STR])]
-  private string $cardType;
+  private string $cardType = Constants::FLASH_CARD_DEFAULT_TYPE;
+
+  #[ORM\Column(type: 'string', length: 10, options: ['default' => Constants::FLASH_CARD_DEFAULT_COLOR])]
+  private string $cardColor = Constants::FLASH_CARD_DEFAULT_COLOR;
+
+  #[ORM\Column(type: 'string', length: 10, options: ['default' => Constants::FLASH_CARD_DEFAULT_TEXT_COLOR])]
+  private string $cardTextColor = Constants::FLASH_CARD_DEFAULT_TEXT_COLOR;
 
   #[ORM\ManyToOne(targetEntity: CardBagEntity::class)]
   #[ORM\JoinColumn(name: 'card_bag_id', nullable: true)]
@@ -189,6 +195,54 @@ class CardEntity extends BaseEntity
   public function setUserEntity(?UserEntity $userEntity): self
   {
     $this->userEntity = $userEntity;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of cardColor
+   *
+   * @return string
+   */
+  public function getCardColor(): string
+  {
+    return $this->cardColor;
+  }
+
+  /**
+   * Set the value of cardColor
+   *
+   * @param string $cardColor
+   *
+   * @return self
+   */
+  public function setCardColor(string $cardColor): self
+  {
+    $this->cardColor = $cardColor;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of cardTextColor
+   *
+   * @return string
+   */
+  public function getCardTextColor(): string
+  {
+    return $this->cardTextColor;
+  }
+
+  /**
+   * Set the value of cardTextColor
+   *
+   * @param string $cardTextColor
+   *
+   * @return self
+   */
+  public function setCardTextColor(string $cardTextColor): self
+  {
+    $this->cardTextColor = $cardTextColor;
 
     return $this;
   }

@@ -26,6 +26,8 @@ document.addEventListener('alpine:init', () =>
       document.getElementById('sub_title').value = '';
       document.getElementById('description').value = '';
       document.getElementById('card_type').value = '';
+      document.getElementById('card_color').value = defaultCardColor;
+      document.getElementById('card_text_color').value = defaultCardTextColor;
     },
     openMoveObjectModal()
     {

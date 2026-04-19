@@ -63,6 +63,8 @@ class CardBagService extends BaseService
     $newCard->setDescription($dto->getDescription());
     $newCard->setUserEntity($user);
     $newCard->setCardBagEntity($parentCardBag);
+    $newCard->setCardColor($dto->getCardColor());
+    $newCard->setCardTextColor($dto->getCardTextColor());
 
     $this->entityManager->persist($newCard);
     $this->entityManager->flush();
