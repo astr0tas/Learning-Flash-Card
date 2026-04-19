@@ -8,6 +8,8 @@
 {% set size_class = "!text-base" %}
 {% set final_class = base_class ~ ' ' ~ error_class ~ ' ' ~ password_padding ~ ' ' ~ search_padding ~ ' ' ~ size_class %}
 {% set final_color_class = base_class ~ ' ' ~ error_class ~ ' h-12 cursor-pointer !w-20 !p-2' %}
+{% set normal_class = base_class ~ ' border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500 ' ~ password_padding ~ ' ' ~ search_padding ~ ' ' ~ size_class %}
+{% set normal_color_class = base_class ~ ' border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500 h-12 cursor-pointer !w-20 !p-2' %}
 
 {# If the input is "search", when clicking on the search icon, alpine will dispatch a "search" event. The parent component's container will need to catch that. Example in templates\views\user\card_bag\index.html.twig #}
 <div class="w-full flex flex-col component-input" {% if type == 'password' %} x-data="{ showPassword: false }" {% endif %} {% if type == 'search' %} x-data="{ hasValue: false }" {% endif %}>
@@ -32,11 +34,11 @@
     {% endif %}
 
     {% if type == 'textarea' %}
-      <textarea x-ref="{{ name|default(id) }}" name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class } ) }}>{{ value|default('') }}</textarea>
+      <textarea x-ref="{{ name|default(id) }}" name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class } ) }} x-on:reset="$refs.{{ name|default(id) }}.value = '{{ defaultValue }}'; $refs.{{ name|default(id) }}_error.remove(); $refs.{{ name|default(id) }}.className = '{{ normal_class }}'">{{ value|default('') }}</textarea>
     {% elseif type == 'color' %}
-      <input x-ref="{{ name|default(id) }}" type="color" name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_color_class } ) }} value="{{ value|default('') }}">
+      <input x-ref="{{ name|default(id) }}" type="color" name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_color_class } ) }} value="{{ value|default('') }}" x-on:reset="$refs.{{ name|default(id) }}.value = '{{ defaultValue }}'; $refs.{{ name|default(id) }}_error.remove(); $refs.{{ name|default(id) }}.className = '{{ normal_color_class }}'">
     {% else %}
-      <input @input="hasValue = $el.value.length > 0" x-ref="{{ name|default(id) }}" {% if type == 'password' %} x-bind:type="showPassword ? 'text' : 'password'" {% elseif type == 'search' %} type='text' {% else %} type="{{ type }}" {% endif %} name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class } ) }} value="{{ value|default('') }}">
+      <input @input="hasValue = $el.value.length > 0" x-ref="{{ name|default(id) }}" {% if type == 'password' %} x-bind:type="showPassword ? 'text' : 'password'" {% elseif type == 'search' %} type='text' {% else %} type="{{ type }}" {% endif %} name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class } ) }} value="{{ value|default('') }}" x-on:reset="$refs.{{ name|default(id) }}.value = '{{ defaultValue }}'; $refs.{{ name|default(id) }}_error.remove(); $refs.{{ name|default(id) }}.className = '{{ normal_class }}'">
     {% endif %}
 
     {% if error is not empty %}

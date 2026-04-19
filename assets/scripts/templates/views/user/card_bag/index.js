@@ -8,26 +8,18 @@ document.addEventListener('alpine:init', () =>
     {
       document.getElementById('addNewBagModal').open = true;
 
-      document.getElementById('new_bag_name_error')?.remove();
-      document.getElementById('new_bag_name').className = this.normalInputClass;
-
-      document.getElementById('new_bag_name').value = '';
-      document.getElementById('new_bag_description').value = '';
+      document.getElementById('new_bag_name').dispatchEvent(new Event('reset'));
+      document.getElementById('new_bag_description').dispatchEvent(new Event('reset'));
     },
     openNewCardModal() {
       document.getElementById('addNewCardModal').open = true;
 
-      document.getElementById('title_error')?.remove();
-      document.getElementById('title').className = this.normalInputClass;
-      document.getElementById('card_type_error')?.remove();
-      document.getElementById('card_type').className = this.normalInputClass;
-
-      document.getElementById('title').value = '';
-      document.getElementById('sub_title').value = '';
-      document.getElementById('description').value = '';
-      document.getElementById('card_type').value = '';
-      document.getElementById('card_color').value = defaultCardColor;
-      document.getElementById('card_text_color').value = defaultCardTextColor;
+      document.getElementById('title').dispatchEvent(new Event('reset'));
+      document.getElementById('sub_title').dispatchEvent(new Event('reset'));
+      document.getElementById('description').dispatchEvent(new Event('reset'));
+      document.getElementById('card_type').dispatchEvent(new Event('reset'));
+      document.getElementById('card_color').dispatchEvent(new Event('reset'));
+      document.getElementById('card_text_color').dispatchEvent(new Event('reset'));
     },
     openMoveObjectModal()
     {

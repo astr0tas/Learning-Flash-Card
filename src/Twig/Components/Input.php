@@ -14,4 +14,5 @@ final class Input
   public bool $required = false;
   public string $type = "text";
   public ?string $value = null;
+  public ?string $defaultValue = null;
 }

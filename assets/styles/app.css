@@ -24,6 +24,7 @@ select {
   -webkit-appearance: none;  /* Chrome, Safari, and newer Edge */
   -moz-appearance: none;     /* Firefox */
   appearance: none;          /* Modern standard */
+  color: var(--black);
 }
 
 /* Specifically for Internet Explorer and legacy Edge */

@@ -53,7 +53,7 @@
           </twig:block>
           <twig:block name="dropdown_content">
             <div class="py-1">
-              <button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full hover:text-[#101828]!" @click="openMoveObjectModal">
+              <button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full hover:text-[#101828]!" @click="openMoveObjectModal" x-bind:disabled="!selectedBags.length && !selectedCards.length" x-bind:class="!selectedBags.length && !selectedCards.length?'!hover:opacity:20 !active:opacity-25 opacity-25!':''">
                 <div class="w-5 h-5 text-inherit!">
                   {{ include('icons/move_folder.svg') }}
                 </div>
@@ -61,7 +61,7 @@
                   {{ 'action.move'|trans }}
                 </div>
               </button>
-              <button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full text-(--red)!" @click="openDeleteObjectModal">
+              <button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full text-(--red)!" @click="openDeleteObjectModal" x-bind:disabled="!selectedBags.length && !selectedCards.length" x-bind:class="!selectedBags.length && !selectedCards.length?'!hover:opacity:20 !active:opacity-25 opacity-25!':''">
                 <div class="w-5 h-5 text-inherit!">
                   {{ include('icons/trash.svg') }}
                 </div>
@@ -120,10 +120,10 @@
           <twig:Input type="textarea" name="description" label="{{ 'card_bag.card_description'|trans }}" aria-label="{{ 'card_bag.card_description'|trans }}" rows="3" />
         </div>
         <div>
-          <twig:Input type="color" name="card_color" label="{{ 'card_bag.card_color'|trans }}" aria-label="{{ 'card_bag.card_color'|trans }}" value="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR') }}"/>
+          <twig:Input type="color" name="card_color" label="{{ 'card_bag.card_color'|trans }}" aria-label="{{ 'card_bag.card_color'|trans }}" value="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR') }}" defaultValue="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR') }}"/>
         </div>
         <div>
-          <twig:Input type="color" name="card_text_color" label="{{ 'card_bag.card_text_color'|trans }}" aria-label="{{ 'card_bag.card_text_color'|trans }}" value="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR') }}"/>
+          <twig:Input type="color" name="card_text_color" label="{{ 'card_bag.card_text_color'|trans }}" aria-label="{{ 'card_bag.card_text_color'|trans }}" value="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR') }}" defaultValue="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR') }}"/>
         </div>
       </twig:Form>
     </twig:block>
