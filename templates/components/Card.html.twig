@@ -1,3 +1,12 @@
-<div{{ attributes }}>
-    <!-- component HTML -->
+<div class="w-50 flex flex-col items-center h-75 gap-3 relative p-3 rounded-md" style="background-color: {{ cardColor }}; color: {{ cardTextColor }};">
+  <h2 class="text-3xl">{{ cardTitle }}</h2>
+  <h5 class="text-xl">{{ cardSubTitle }}</h5>
+  <div>{{ cardDescription|raw }}</div>
+  <div class="absolute right-0 top-0">
+    {% if model is defined and model %}
+      <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ cardTitle }}_checkbox" @dblclick.stop x-model="{{ model }}" value="{{ cardId }}"></twig:ClickInput>
+    {% else %}
+      <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ cardTitle }}_checkbox" @dblclick.stop value="{{ cardId }}"></twig:ClickInput>
+    {% endif %}
+  </div>
 </div>
