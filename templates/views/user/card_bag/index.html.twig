@@ -33,7 +33,7 @@
 {% endblock %}
 
 {% block user_body %}
-  <div class="flex flex-col w-full h-full" x-data="cardBag" @reset-new-bag-modal.window='resetNewBagModal()' @reset-new-card-modal.window="resetNewCardModal()">
+  <div class="flex flex-col w-full h-full gap-3" x-data="cardBag" @reset-new-bag-modal.window='resetNewBagModal' @reset-new-card-modal.window="resetNewCardModal" @move-object.window="moveObject" @delete-object.window="deleteObject">
     {# Header panel #}
     <div class="flex items-center justify-between gap-2">
       {# Search bar #}
@@ -98,6 +98,26 @@
       </div>
     </div>
     {# Display body #}
+    <div class="flex flex-col flex-1 w-full gap-10">
+      {# List of bags #}
+      <div class="flex flex-col gap-5">
+        <h2 class="font-medium text-xl">{{ 'card_bag.bag_list'|trans }}</h2>
+        <div class="gap-4 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
+          <template x-for="bag in bagList">
+            <div class="w-full" x-html="bag"></div>
+          </template>
+        </div>
+      </div>
+      {# List of cards #}
+      <div class="flex flex-col gap-3">
+        <h2 class="font-medium text-xl">{{ 'card_bag.card_list'|trans }}</h2>
+        <div class="gap-4 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
+          <template x-for="card in cardList">
+            <div class="w-full h-75" x-html="card"></div>
+          </template>
+        </div>
+      </div>
+    </div>
   </div>
 {% endblock %}
 
@@ -151,6 +171,6 @@
       </twig:Form>
     </twig:block>
   </twig:Modal>
-  <twig:Modal modalTitle="{{ 'action.move'|trans }}" actionButtonText="{{ 'action.confirm'|trans }}" actionButtonVariant="primary" @modal-action="alert('move object')" x-ref="moveObjectModal"></twig:Modal>
-  <twig:Modal modalTitle="{{ 'action.delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="alert('delete object')" x-ref="deleteObjectModal"></twig:Modal>
+  <twig:Modal modalTitle="{{ 'action.move'|trans }}" actionButtonText="{{ 'action.confirm'|trans }}" actionButtonVariant="primary" @modal-action="$dispatch('move-object');" x-ref="moveObjectModal"></twig:Modal>
+  <twig:Modal modalTitle="{{ 'action.delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="$dispatch('delete-object');" x-ref="deleteObjectModal"></twig:Modal>
 {% endblock %}

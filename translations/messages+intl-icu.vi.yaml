@@ -82,6 +82,8 @@ card_bag:
   card_type_language: "Ngôn ngữ"
   card_color: "Màu thẻ"
   card_text_color: "Màu chữ"
+  bag_list: "Danh sách túi thẻ"
+  card_list: "Danh sách thẻ"
 
 trash:
   title: "Thùng rác"

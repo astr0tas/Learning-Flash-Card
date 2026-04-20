@@ -20,5 +20,13 @@ document.addEventListener('alpine:init', () =>
       document.getElementById('card_color').dispatchEvent(new Event('reset'));
       document.getElementById('card_text_color').dispatchEvent(new Event('reset'));
     },
+    moveObject()
+    {
+
+    },
+    deleteObject()
+    {
+      
+    },
   }));
 });

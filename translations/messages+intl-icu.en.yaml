@@ -82,6 +82,8 @@ card_bag:
   card_type_language: "Language"
   card_color: "Card color"
   card_text_color: "Text color"
+  bag_list: "Bag list"
+  card_list: "Card list"
 
 trash:
   title: "Trash Bin"
