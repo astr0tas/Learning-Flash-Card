@@ -21,22 +21,22 @@
           </div>
         </div>
         <hr :class="darkMode ? 'border-gray-600' : 'border-gray-300'">
-          <div class="pb-3 pt-2 flex flex-col sm:flex sm:flex-row-reverse gap-3">
+        <div class="pb-3 pt-2 flex flex-col sm:flex sm:flex-row-reverse gap-3">
+          <div class="inline-flex">
+            {# Action button (must have) #}
+            <twig:Button type="button" command="close" commandfor="{{ modalGeneratedId }}" class="text-sm" variant="{{ actionButtonVariant }}" title="{{ actionButtonText }}" @click="$dispatch('modal-action')">
+              {{ actionButtonText }}
+            </twig:Button>
+          </div>
+          {% if displayCancelButton %}
             <div class="inline-flex">
-              {# Action button (must have) #}
-              <twig:Button type="button" command="close" commandfor="{{ modalGeneratedId }}" class="text-sm" variant="{{ actionButtonVariant }}" title="{{ actionButtonText }}" @click="$dispatch('modal-action')">
-                {{ actionButtonText }}
+              <twig:Button type="button" command="close" commandfor="{{ modalGeneratedId }}" class="text-sm" variant="outline" title="{{ 'action.cancel'|trans }}">
+                {{ 'action.cancel'|trans }}
               </twig:Button>
             </div>
-            {% if displayCancelButton %}
-              <div class="inline-flex">
-                <twig:Button type="button" command="close" commandfor="{{ modalGeneratedId }}" class="text-sm" variant="outline" title="{{ 'action.cancel'|trans }}">
-                  {{ 'action.cancel'|trans }}
-                </twig:Button>
-              </div>
-            {% endif %}
-          </div>
-        </el-dialog-panel>
-      </div>
-    </dialog>
-  </el-dialog>
+          {% endif %}
+        </div>
+      </el-dialog-panel>
+    </div>
+  </dialog>
+</el-dialog>
