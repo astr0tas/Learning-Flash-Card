@@ -84,6 +84,7 @@ card_bag:
   card_text_color: "Màu chữ"
   bag_list: "Danh sách túi thẻ"
   card_list: "Danh sách thẻ"
+  delete_confirm: "Bạn có chắc chắn muốn xóa các mục đã chọn?"
 
 trash:
   title: "Thùng rác"

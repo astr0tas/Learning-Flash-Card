@@ -84,6 +84,7 @@ card_bag:
   card_text_color: "Text color"
   bag_list: "Bag list"
   card_list: "Card list"
+  delete_confirm: "Do you want to delete the selected items?"
 
 trash:
   title: "Trash Bin"

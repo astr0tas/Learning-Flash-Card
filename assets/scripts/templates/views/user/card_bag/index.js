@@ -67,5 +67,14 @@ document.addEventListener('alpine:init', () =>
         return searchKeywords.some(keyword => normalizedCardTitle.includes(keyword));
       });
     },
+    init()
+    {
+      this.$watch('selectedBags', () =>{
+        this.$dispatch('update-select-bag', this.selectedBags);
+      });
+      this.$watch('selectedCards', () =>{
+        this.$dispatch('update-select-card', this.selectedCards);
+      });
+    }
   }));
 });

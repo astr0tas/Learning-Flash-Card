@@ -6,6 +6,7 @@ use App\Config\Constants;
 use App\Config\Routes;
 use App\Config\TwigTemplate;
 use App\Controller\BaseController;
+use App\DTO\DeleteObjectDTO;
 use App\DTO\NewBagDTO;
 use App\DTO\NewCardDTO;
 use App\Service\CardBagService;
@@ -134,6 +135,25 @@ class CardBagController extends BaseController
     $this->service->addNewCard($dto);
 
     return $this->redirect($previousRoute);
+  }
+
+  #[Route(path: Routes::DELETE_OBJECT_ROUTE_URL, name: Routes::DELETE_OBJECT_ROUTE_NAME, methods: [Request::METHOD_GET, Request::METHOD_POST])]
+  public function deleteObject(Request $request) {
+    $flashBag = $this->getFlashBag();
+
+    // Get the previous route to redirect back to it
+    $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
+
+    if ($request->getMethod() === Request::METHOD_GET) {
+      return $this->redirect($previousRoute);
+    }
+
+    // Handle login submission
+    $postData = $request->request->all();
+
+    // Pass the form data to a DTO
+    $dto = new DeleteObjectDTO();
+    ClassUtility::mapArrayToDTO($postData, $dto);
   }
 
   /**

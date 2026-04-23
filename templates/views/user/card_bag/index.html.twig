@@ -212,5 +212,22 @@
     </twig:block>
   </twig:Modal>
   <twig:Modal modalTitle="{{ 'action.move'|trans }}" actionButtonText="{{ 'action.confirm'|trans }}" actionButtonVariant="primary" @modal-action="" id="moveObjectModal"></twig:Modal>
-  <twig:Modal modalTitle="{{ 'action.delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="$dispatch('delete-object');" x-ref="deleteObjectModal"></twig:Modal>
+  <twig:Modal x-data="{ selectedBags: [], selectedCards: [] }" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="$refs.deleteObjectFormRef.submit()" id="deleteObjectModal">
+    <twig:block name="modal_body">
+      <twig:Form x-ref="deleteObjectFormRef" action="{{ constant('App\\Config\\Routes::DELETE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
+        <template x-for="selectedBag in selectedBags">
+          <input type="hidden" name="bag[]" :value="selectedBag">
+        </template>
+        <template x-for="selectedCard in selectedCards">
+          <input type="hidden" name="card[]" :value="selectedCard">
+        </template>
+      </twig:Form>
+      <div>{{ 'card_bag.delete_confirm'|trans }}</div>
+    </twig:block>
+  </twig:Modal>
+  <twig:Modal x-data="{ selectedCard: '' }" id="card_detail_modal" @close="$dispatch('close-card-view-modal')">
+    {% block modal_content %}
+      <el-dialog-panel class="max-w-125 h-150" x-html="selectedCard" @set-selected-card-data.window="selectedCard = $event.detail.html" @edit-card="openEditCardModal(index)"></el-dialog-panel>
+    {% endblock %}
+  </twig:Modal>
 {% endblock %}
