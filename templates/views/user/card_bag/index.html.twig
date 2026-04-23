@@ -43,7 +43,7 @@
 {% endblock %}
 
 {% block user_body %}
-  <div class="flex flex-col w-full h-full gap-3" x-data="cardBag" @reset-new-bag-modal.window='resetNewBagModal' @reset-new-card-modal.window="resetNewCardModal" @move-object.window="moveObject" @delete-object.window="deleteObject">
+  <div class="flex flex-col w-full h-full gap-5" x-data="cardBag" @reset-new-bag-modal.window='resetNewBagModal' @reset-new-card-modal.window="resetNewCardModal" @move-object.window="moveObject" @delete-object.window="deleteObject">
     {# Header panel #}
     <div class="flex items-center justify-between gap-2">
       {# Search bar #}
@@ -76,7 +76,7 @@
         </twig:Dropdown>
         <twig:Dropdown>
           <twig:block name="dropdown_toggler">
-            <twig:Button variant="secondary" class="flex items-center px-1!" title="{{ 'card_bag.other_option'|trans }}">
+            <twig:Button variant="outline" class="flex items-center px-1!" title="{{ 'card_bag.other_option'|trans }}">
               <div class="w-5 h-5 flex items-center justify-center">
                 <div class="w-3 h-3 opacity-70">
                   {{ include('icons/option.svg') }}
@@ -107,6 +107,13 @@
         </twig:Dropdown>
       </div>
     </div>
+    {# Back button #}
+    <div class="w-[125px]">
+      <twig:Button variant="secondary" class="flex items-center gap-2" @click="history.back()">
+        <span class="w-4 h-4">{{ include('icons/go_back.svg') }}</span>
+        <span>{{ 'action.go_back'|trans }}</span>
+      </twig:Button>
+    </div>
     {# Display body #}
     <div class="flex flex-col flex-1 w-full gap-10">
       {# List of bags #}
@@ -118,6 +125,7 @@
           </template>
         </div>
       </div>
+      <hr class="border-gray-300"/>
       {# List of cards #}
       <div class="flex flex-col gap-3">
         <h2 class="font-medium text-xl">{{ 'card_bag.card_list'|trans }}</h2>

@@ -15,8 +15,8 @@ final class Button
   {
     $this->element_class = match ($variant) {
       "primary" => "bg-(--blue) text-white font-semibold py-2 px-4 $class",
-      "secondary" => "border-1 border-gray-500 font-semibold py-2 px-4 $class",
-      "outline" => "inset-ring inset-ring-gray-300 font-semibold py-2 px-4 $class",
+      "secondary" => "bg-(--gray) text-white font-semibold py-2 px-4 $class",
+      "outline" => "border-1 border-gray-400 font-semibold py-2 px-4 $class",
       "danger" => "bg-(--red) text-white font-semibold py-2 px-4 $class",
       default => "",
     };
