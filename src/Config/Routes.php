@@ -53,7 +53,7 @@ class Routes
   public const CREATE_NEW_BAG_ROUTE_URL = '/create-bag';
   public const CCREATE_NEW_BAG_ROUTE_NAME = 'create-bag';
   public const CREATE_NEW_CARD_ROUTE_URL = '/create-card';
-  public const CCREATE_NEW_CARD_ROUTE_NAME = 'create-card';
+  public const CREATE_NEW_CARD_ROUTE_NAME = 'create-card';
   public const TRASH_ROUTE_URL = '/trash';
   public const TRASH_ROUTE_NAME = 'trash';
   public const ACCOUNT_ROUTE_URL = '/account';

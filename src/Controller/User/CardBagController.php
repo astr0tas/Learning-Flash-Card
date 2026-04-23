@@ -89,7 +89,7 @@ class CardBagController extends BaseController
     return $this->redirect($redirectUrl);
   }
 
-  #[Route(path: Routes::CREATE_NEW_CARD_ROUTE_URL, name: Routes::CCREATE_NEW_CARD_ROUTE_NAME, methods: [Request::METHOD_GET, Request::METHOD_POST])]
+  #[Route(path: Routes::CREATE_NEW_CARD_ROUTE_URL, name: Routes::CREATE_NEW_CARD_ROUTE_NAME, methods: [Request::METHOD_GET, Request::METHOD_POST])]
   public function createNewCard(Request $request)
   {
     $flashBag = $this->getFlashBag();

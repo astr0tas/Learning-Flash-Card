@@ -52,7 +52,7 @@
 {% endblock %}
 
 {% block user_body %}
-  <div class="flex flex-col w-full h-full gap-5" x-data="cardBag" @reset-new-bag-modal.window='resetNewBagModal' @reset-new-card-modal.window="resetNewCardModal" @move-object.window="moveObject" @delete-object.window="deleteObject">
+  <div class="flex flex-col w-full h-full gap-5" x-data="cardBag" @reset-new-bag-modal.window='resetNewBagModal' @reset-new-card-modal.window="resetNewCardModal" @close-card-view-modal.window="closeCardDetailModal">
     {# Header panel #}
     <div class="flex items-center justify-between gap-2">
       {# Search bar #}
@@ -74,10 +74,10 @@
           </twig:block>
           <twig:block name="dropdown_content">
             <div class="py-1">
-              <button class="block px-4 py-2 cursor-pointer w-full text-start" @click="$refs.addNewBagModal.open=true;">
+              <button class="block px-4 py-2 cursor-pointer w-full text-start" @click="document.getElementById('addNewBagModal').setAttribute('open',true)">
                 {{ 'card_bag.create_options.new_bag'|trans }}
               </button>
-              <button class="block px-4 py-2 cursor-pointer w-full text-start" @click="$refs.addNewCardModal.open=true;">
+              <button class="block px-4 py-2 cursor-pointer w-full text-start" @click="document.getElementById('addNewCardModal').setAttribute('open',true)">
                 {{ 'card_bag.create_options.new_card'|trans }}
               </button>
             </div>
@@ -95,7 +95,7 @@
           </twig:block>
           <twig:block name="dropdown_content">
             <div class="py-1">
-              <button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full hover:text-[#101828]!" @click="$refs.moveObjectModal.open=true;" x-bind:disabled="!selectedBags.length && !selectedCards.length" x-bind:class="!selectedBags.length && !selectedCards.length?'!hover:opacity:20 !active:opacity-25 opacity-25!':''">
+              <button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full hover:text-[#101828]!" @click="document.getElementById('moveObjectModal').setAttribute('open',true)" x-bind:disabled="!selectedBags.length && !selectedCards.length" x-bind:class="!selectedBags.length && !selectedCards.length?'!hover:opacity:20 !active:opacity-25 opacity-25!':''">
                 <div class="w-5 h-5 text-inherit!">
                   {{ include('icons/move_folder.svg') }}
                 </div>
@@ -103,7 +103,7 @@
                   {{ 'action.move'|trans }}
                 </div>
               </button>
-              <button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full text-(--red)!" @click="$refs.deleteObjectModal.open=true;" x-bind:disabled="!selectedBags.length && !selectedCards.length" x-bind:class="!selectedBags.length && !selectedCards.length?'!hover:opacity:20 !active:opacity-25 opacity-25!':''">
+              <button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full text-(--red)!" @click="document.getElementById('deleteObjectModal').setAttribute('open',true)" x-bind:disabled="!selectedBags.length && !selectedCards.length" x-bind:class="!selectedBags.length && !selectedCards.length?'!hover:opacity:20 !active:opacity-25 opacity-25!':''">
                 <div class="w-5 h-5 text-inherit!">
                   {{ include('icons/trash.svg') }}
                 </div>
@@ -148,11 +148,6 @@
               <template x-for="(card,index) in filteredCardList">
                 <div class="w-full h-75" x-html="card.html" @click-on-card="openCardDetailModal(index)"></div>
               </template>
-              <twig:Modal x-ref="card_detail_modal" @close="closeCardDetailModal()">
-                {% block modal_content %}
-                  <el-dialog-panel class="max-w-125 h-150" x-html="selectCard" @close-card-view-modal="closeCardDetailModal()" @edit-card="openEditCardModal(index)"></el-dialog-panel>
-                {% endblock %}
-              </twig:Modal>
             </div>
           </div>
         </template>
@@ -167,7 +162,7 @@
 {% endblock %}
 
 {% block modals %}
-  <twig:Modal @close="$dispatch('reset-new-bag-modal')" open="{{ error.newBagError is defined }}" modalTitle="{{ 'card_bag.create_options.new_bag'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newBagFormRef.submit()" x-ref="addNewBagModal">
+  <twig:Modal @close="$dispatch('reset-new-bag-modal')" open="{{ error.newBagError is defined }}" modalTitle="{{ 'card_bag.create_options.new_bag'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newBagFormRef.submit()" id="addNewBagModal">
     <twig:block name="modal_body">
       <twig:Form x-ref="newBagFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_BAG_ROUTE_URL') }}" method="POST">
         {% if bag is defined %}
@@ -182,7 +177,7 @@
       </twig:Form>
     </twig:block>
   </twig:Modal>
-  <twig:Modal @close="$dispatch('reset-new-card-modal')" open="{{ error.newCardError is defined }}" modalTitle="{{ 'card_bag.create_options.new_card'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newCardFormRef.submit()" x-ref="addNewCardModal">
+  <twig:Modal @close="$dispatch('reset-new-card-modal')" open="{{ error.newCardError is defined }}" modalTitle="{{ 'card_bag.create_options.new_card'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newCardFormRef.submit()" id="addNewCardModal">
     <twig:block name="modal_body">
       <twig:Form x-ref="newCardFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_CARD_ROUTE_URL') }}" method="POST" class="flex flex-col gap-3">
         {% if bag is defined %}
@@ -216,6 +211,6 @@
       </twig:Form>
     </twig:block>
   </twig:Modal>
-  <twig:Modal modalTitle="{{ 'action.move'|trans }}" actionButtonText="{{ 'action.confirm'|trans }}" actionButtonVariant="primary" @modal-action="$dispatch('move-object');" x-ref="moveObjectModal"></twig:Modal>
+  <twig:Modal modalTitle="{{ 'action.move'|trans }}" actionButtonText="{{ 'action.confirm'|trans }}" actionButtonVariant="primary" @modal-action="" id="moveObjectModal"></twig:Modal>
   <twig:Modal modalTitle="{{ 'action.delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="$dispatch('delete-object');" x-ref="deleteObjectModal"></twig:Modal>
 {% endblock %}

@@ -25,23 +25,15 @@ document.addEventListener('alpine:init', () =>
       document.getElementById('card_color').dispatchEvent(new Event('reset'));
       document.getElementById('card_text_color').dispatchEvent(new Event('reset'));
     },
-    moveObject()
-    {
-
-    },
-    deleteObject()
-    {
-
-    },
     openCardDetailModal(index)
     {
-      this.selectCard = this.viewCardList[index];
-      this.$refs.card_detail_modal.open = true;
+      this.$dispatch('set-selected-card-data', this.viewCardList[index]);
+      document.getElementById('card_detail_modal').setAttribute('open',true);
     },
     closeCardDetailModal()
     {
-      this.selectCard = '';
-      this.$refs.card_detail_modal.open = false;
+      this.$dispatch('set-selected-card-data', '');
+      document.getElementById('card_detail_modal').removeAttribute('open');
     },
     openEditCardModal(index)
     {
