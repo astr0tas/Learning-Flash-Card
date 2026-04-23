@@ -5,7 +5,8 @@ document.addEventListener('alpine:init', () =>
     bagList,
     cardList,
     viewCardList,
-    selectCard : '',
+    selectCard: '',
+    search: '',
     selectedBags: [],
     selectedCards: [],
     resetNewBagModal()
@@ -43,6 +44,18 @@ document.addEventListener('alpine:init', () =>
     openEditCardModal(index)
     {
 
+    },
+    checkMatchingSearch(objectName)
+    {
+      if (!this.search) {
+        return true;
+      }
+
+      const normalizedObjectName = this.removeDiacritics(objectName.toLowerCase());
+      const normalizedSearch = this.removeDiacritics(this.search.toLowerCase());
+      const searchKeywords = normalizedSearch.split(/[~`!@#$%^&*()_+-=\[\]{}\\|;':"<>,./? ]+/);
+
+      return searchKeywords.filter(value => value).some(keyword => normalizedObjectName.includes(keyword));
     }
   }));
 });

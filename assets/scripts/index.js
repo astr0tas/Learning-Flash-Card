@@ -26,5 +26,9 @@ document.addEventListener('alpine:init', () =>
       document.cookie = "dark_mode=" + value + ";" + expires + ";path=/";
     },
     ...dropdownProcessor,
+    removeDiacritics(str)
+    {
+      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
   }));
 });

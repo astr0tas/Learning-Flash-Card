@@ -10,7 +10,9 @@
 
 {% for bag in bagList %}
   {% set bagTemplate %}
-    <twig:CardBag bagId="{{ bag.id }}" bagName="{{ bag.name }}" bagDescription="{{ bag.description }}" model="selectedBags"/>
+    <template x-if="checkMatchingSearch('{{ bag.name }}')">
+      <twig:CardBag bagId="{{ bag.id }}" bagName="{{ bag.name }}" bagDescription="{{ bag.description }}" model="selectedBags"/>
+    </template>
   {% endset %}
 
   {% set card_bag_array = card_bag_array|merge([bagTemplate]) %}
@@ -18,7 +20,9 @@
 
 {% for card in cardList %}
   {% set cardTemplate %}
-    <twig:Card cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubTitle="{{ card.subTitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" cardType="{{ card.cardType }}" model="selectedCards"/>
+    <template x-if="checkMatchingSearch('{{ card.title }}')">
+      <twig:Card cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubTitle="{{ card.subTitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" cardType="{{ card.cardType }}" model="selectedCards"/>
+    </template>
   {% endset %}
 
   {% set card_array = card_array|merge([cardTemplate]) %}
@@ -47,7 +51,7 @@
     {# Header panel #}
     <div class="flex items-center justify-between gap-2">
       {# Search bar #}
-      <div class="w-full max-w-[700px]" @search="">
+      <div class="w-full max-w-[700px]" @search="search = document.getElementById('search').value">
         <twig:Input type="search" name="search" placeholder="{{ 'card_bag.search_placeholder'|trans }}" size="9xl" />
       </div>
       {# Control buttons #}
@@ -131,7 +135,7 @@
         <h2 class="font-medium text-xl">{{ 'card_bag.card_list'|trans }}</h2>
         <div class="gap-4 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
           <template x-for="(card,index) in cardList">
-              <div class="w-full h-75" x-html="card" @click-on-card="openCardDetailModal(index)"></div>
+            <div class="w-full h-75" x-html="card" @click-on-card="openCardDetailModal(index)"></div>
           </template>
           <twig:Modal x-ref="card_detail_modal" @close="closeCardDetailModal()">
             {% block modal_content %}
