@@ -10,22 +10,24 @@
 
 {% for bag in bagList %}
   {% set bagTemplate %}
-    <template x-if="checkMatchingSearch('{{ bag.name }}')">
-      <twig:CardBag bagId="{{ bag.id }}" bagName="{{ bag.name }}" bagDescription="{{ bag.description }}" model="selectedBags"/>
-    </template>
+    <twig:CardBag bagId="{{ bag.id }}" bagName="{{ bag.name }}" bagDescription="{{ bag.description }}" model="selectedBags"/>
   {% endset %}
 
-  {% set card_bag_array = card_bag_array|merge([bagTemplate]) %}
+  {% set card_bag_array = card_bag_array|merge([{
+    'name': bag.name,
+    'html': bagTemplate
+  }]) %}
 {% endfor %}
 
 {% for card in cardList %}
   {% set cardTemplate %}
-    <template x-if="checkMatchingSearch('{{ card.title }}')">
-      <twig:Card cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubTitle="{{ card.subTitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" cardType="{{ card.cardType }}" model="selectedCards"/>
-    </template>
+    <twig:Card cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubTitle="{{ card.subTitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" cardType="{{ card.cardType }}" model="selectedCards"/>
   {% endset %}
 
-  {% set card_array = card_array|merge([cardTemplate]) %}
+  {% set card_array = card_array|merge([{
+    'title': card.title,
+    'html': cardTemplate
+  }]) %}
 {% endfor %}
 
 {% for card in cardList %}
@@ -33,7 +35,10 @@
     <twig:Card :viewMode="true" cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubTitle="{{ card.subTitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" cardType="{{ card.cardType }}" model="selectedCards"/>
   {% endset %}
 
-  {% set view_card_array = view_card_array|merge([viewCardTemplate]) %}
+  {% set view_card_array = view_card_array|merge([{
+    'title': card.title,
+    'html': viewCardTemplate
+  }]) %}
 {% endfor %}
 
 {% block javascripts %}
@@ -51,7 +56,7 @@
     {# Header panel #}
     <div class="flex items-center justify-between gap-2">
       {# Search bar #}
-      <div class="w-full max-w-[700px]" @search="search = document.getElementById('search').value">
+      <div class="w-full max-w-[700px]" @search="filterBagAndCard(document.getElementById('search').value)">
         <twig:Input type="search" name="search" placeholder="{{ 'card_bag.search_placeholder'|trans }}" size="9xl" />
       </div>
       {# Control buttons #}
@@ -119,32 +124,45 @@
       </twig:Button>
     </div>
     {# Display body #}
-    <div class="flex flex-col flex-1 w-full gap-10">
-      {# List of bags #}
-      <div class="flex flex-col gap-5">
-        <h2 class="font-medium text-xl">{{ 'card_bag.bag_list'|trans }}</h2>
-        <div class="gap-4 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
-          <template x-for="bag in bagList">
-            <div class="w-full" x-html="bag"></div>
-          </template>
-        </div>
+    <template x-if="filteredBagList.length || filteredCardList.length">
+      <div class="flex flex-col flex-1 w-full gap-10">
+        {# List of bags #}
+        <template x-if="filteredBagList.length">
+          <div class="flex flex-col gap-5">
+            <h2 class="font-medium text-xl">{{ 'card_bag.bag_list'|trans }}</h2>
+            <div class="gap-4 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
+              <template x-for="bag in filteredBagList">
+                <div class="w-full" x-html="bag.html"></div>
+              </template>
+            </div>
+          </div>
+        </template>
+        <template x-if="filteredBagList.length && filteredCardList.length">
+          <hr class="border-gray-300"/>
+        </template>
+        {# List of cards #}
+        <template x-if="filteredCardList.length">
+          <div class="flex flex-col gap-3">
+            <h2 class="font-medium text-xl">{{ 'card_bag.card_list'|trans }}</h2>
+            <div class="gap-4 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
+              <template x-for="(card,index) in filteredCardList">
+                <div class="w-full h-75" x-html="card.html" @click-on-card="openCardDetailModal(index)"></div>
+              </template>
+              <twig:Modal x-ref="card_detail_modal" @close="closeCardDetailModal()">
+                {% block modal_content %}
+                  <el-dialog-panel class="max-w-125 h-150" x-html="selectCard" @close-card-view-modal="closeCardDetailModal()" @edit-card="openEditCardModal(index)"></el-dialog-panel>
+                {% endblock %}
+              </twig:Modal>
+            </div>
+          </div>
+        </template>
       </div>
-      <hr class="border-gray-300"/>
-      {# List of cards #}
-      <div class="flex flex-col gap-3">
-        <h2 class="font-medium text-xl">{{ 'card_bag.card_list'|trans }}</h2>
-        <div class="gap-4 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
-          <template x-for="(card,index) in cardList">
-            <div class="w-full h-75" x-html="card" @click-on-card="openCardDetailModal(index)"></div>
-          </template>
-          <twig:Modal x-ref="card_detail_modal" @close="closeCardDetailModal()">
-            {% block modal_content %}
-              <el-dialog-panel class="max-w-125 h-150" x-html="selectCard" @close-card-view-modal="closeCardDetailModal()" @edit-card="openEditCardModal(index)"></el-dialog-panel>
-            {% endblock %}
-          </twig:Modal>
-        </div>
+    </template>
+    <template x-if="!filteredBagList.length && !filteredCardList.length">
+      <div class="flex-1 w-full">
+        <twig:NoContent></twig:NoContent>
       </div>
-    </div>
+    </template>
   </div>
 {% endblock %}
 

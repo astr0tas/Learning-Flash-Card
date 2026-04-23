@@ -3,10 +3,12 @@ document.addEventListener('alpine:init', () =>
   Alpine.data('cardBag', () => ({
     normalInputClass: "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer select-none border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500 !text-base",
     bagList,
+    filteredBagList: JSON.parse(JSON.stringify(bagList)),
     cardList,
+    filteredCardList: JSON.parse(JSON.stringify(cardList)),
     viewCardList,
+    viewFilteredCardList: JSON.parse(JSON.stringify(viewCardList)),
     selectCard: '',
-    search: '',
     selectedBags: [],
     selectedCards: [],
     resetNewBagModal()
@@ -45,17 +47,33 @@ document.addEventListener('alpine:init', () =>
     {
 
     },
-    checkMatchingSearch(objectName)
+    filterBagAndCard(search)
     {
-      if (!this.search) {
-        return true;
+      if (!search)
+      {
+        this.filteredBagList = JSON.parse(JSON.stringify(this.bagList));
+        this.filteredCardList = JSON.parse(JSON.stringify(this.cardList));
+        this.viewFilteredCardList = JSON.parse(JSON.stringify(this.viewCardList));
+        return;
       }
 
-      const normalizedObjectName = this.removeDiacritics(objectName.toLowerCase());
-      const normalizedSearch = this.removeDiacritics(this.search.toLowerCase());
-      const searchKeywords = normalizedSearch.split(/[~`!@#$%^&*()_+-=\[\]{}\\|;':"<>,./? ]+/);
+      const normalizedSearch = this.removeDiacritics(search.toLowerCase());
+      const searchKeywords = normalizedSearch.split(/[~`!@#$%^&*()_+\-\=\[\]{}\\|;':"<>,./? ]+/).filter(keyword => keyword);
 
-      return searchKeywords.filter(value => value).some(keyword => normalizedObjectName.includes(keyword));
-    }
+      this.filteredBagList = this.bagList.filter(bag => {
+        const normalizedBagName = this.removeDiacritics(bag.name.toLowerCase());
+        return searchKeywords.some(keyword => normalizedBagName.includes(keyword));
+      });
+
+      this.filteredCardList = this.cardList.filter(card => {
+        const normalizedCardTitle = this.removeDiacritics(card.title.toLowerCase());
+        return searchKeywords.some(keyword => normalizedCardTitle.includes(keyword));
+      });
+
+      this.viewFilteredCardList = this.viewCardList.filter(card => {
+        const normalizedCardTitle = this.removeDiacritics(card.title.toLowerCase());
+        return searchKeywords.some(keyword => normalizedCardTitle.includes(keyword));
+      });
+    },
   }));
 });

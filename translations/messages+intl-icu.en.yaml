@@ -157,3 +157,5 @@ action:
   create: "Create"
   add: "Add"
   go_back: "Go back"
+
+empty: "Empty"

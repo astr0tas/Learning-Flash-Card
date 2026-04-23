@@ -157,3 +157,5 @@ action:
   create: "Tạo"
   add: "Thêm"
   go_back: "Quay lại"
+
+empty: "Trống"
