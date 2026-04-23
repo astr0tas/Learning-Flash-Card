@@ -12,7 +12,9 @@ final class Card
   public string $cardTitle;
   public ?string $cardSubTitle = null;
   public ?string $cardDescription = null;
+  public string $cardType;
   public ?string $model = null;
   public string $cardColor = Constants::FLASH_CARD_DEFAULT_COLOR;
   public string $cardTextColor = Constants::FLASH_CARD_DEFAULT_TEXT_COLOR;
+  public bool $viewMode = false;
 }

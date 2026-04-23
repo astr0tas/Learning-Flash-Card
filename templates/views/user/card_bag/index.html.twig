@@ -6,6 +6,7 @@
 
 {% set card_bag_array = [] %}
 {% set card_array = [] %}
+{% set view_card_array = [] %}
 
 {% for bag in bagList %}
   {% set bagTemplate %}
@@ -17,10 +18,18 @@
 
 {% for card in cardList %}
   {% set cardTemplate %}
-    <twig:Card cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubTitle="{{ card.subTitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" model="selectedCards"/>
+    <twig:Card cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubTitle="{{ card.subTitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" cardType="{{ card.cardType }}" model="selectedCards"/>
   {% endset %}
 
   {% set card_array = card_array|merge([cardTemplate]) %}
+{% endfor %}
+
+{% for card in cardList %}
+  {% set viewCardTemplate %}
+    <twig:Card :viewMode="true" cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubTitle="{{ card.subTitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" cardType="{{ card.cardType }}" model="selectedCards"/>
+  {% endset %}
+
+  {% set view_card_array = view_card_array|merge([viewCardTemplate]) %}
 {% endfor %}
 
 {% block javascripts %}
@@ -28,6 +37,7 @@
   <script>
     const bagList = {{ card_bag_array|json_encode|raw }};
     const cardList = {{ card_array|json_encode|raw }};
+    const viewCardList = {{ view_card_array|json_encode|raw }};
   </script>
   <script src="{{ asset('scripts/templates/views/user/card_bag/index.js') }}"></script>
 {% endblock %}
@@ -112,9 +122,14 @@
       <div class="flex flex-col gap-3">
         <h2 class="font-medium text-xl">{{ 'card_bag.card_list'|trans }}</h2>
         <div class="gap-4 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
-          <template x-for="card in cardList">
-            <div class="w-full h-75" x-html="card"></div>
+          <template x-for="(card,index) in cardList">
+              <div class="w-full h-75" x-html="card" @click-on-card="openCardDetailModal(index)"></div>
           </template>
+          <twig:Modal x-ref="card_detail_modal" @close="closeCardDetailModal()">
+            {% block modal_content %}
+              <el-dialog-panel class="max-w-125 h-150" x-html="selectCard" @close-card-view-modal="closeCardDetailModal()" @edit-card="openEditCardModal(index)"></el-dialog-panel>
+            {% endblock %}
+          </twig:Modal>
         </div>
       </div>
     </div>

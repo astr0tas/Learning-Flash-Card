@@ -1,12 +1,25 @@
-<div class="w-full h-full flex flex-col items-center gap-3 relative p-3 rounded-md" style="background-color: {{ cardColor }}; color: {{ cardTextColor }};">
-  <h2 class="text-3xl">{{ cardTitle }}</h2>
-  <h5 class="text-xl">{{ cardSubTitle }}</h5>
-  <div>{{ cardDescription|raw }}</div>
-  <div class="absolute right-0 top-0">
-    {% if model is defined and model %}
-      <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ cardTitle }}_checkbox" @dblclick.stop x-model="{{ model }}" value="{{ cardId }}"></twig:ClickInput>
+<div class="w-full h-full flex flex-col gap-3 relative rounded-md {% if not viewMode %} cursor-pointer p-5 {% else %} py-10 px-3 {% endif %}" {% if not viewMode %} x-bind:class="darkMode?'hover:shadow-gray-700 hover:shadow-2xl':'hover:shadow-xl'" {% endif %} style="background-color: {{ cardColor }}; color: {{ cardTextColor }};" @click="$dispatch('click-on-card')">
+  <h2 class="{% if not viewMode %} text-3xl {% else %} text-5xl {% endif %} text-center">{{ cardTitle }}</h2>
+  <h5 class="text-center {% if not viewMode %} text-md {% else %} text-xl {% endif %}">{{ cardSubTitle }}</h5>
+  <div class="flex-1 text-start whitespace-pre-line {% if not viewMode %} text-xs overflow-hidden text-ellipsis break-words line-clamp-11 {% else %} text-md overflow-auto scroll-container {% endif %}">{{ cardDescription|raw }}</div>
+  <div class="absolute {% if not viewMode %} right-1 top-2 {% else %} right-5 top-5 {% endif %}">
+    {% if not viewMode %}
+      {% if model is defined and model %}
+        <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ cardTitle }}_checkbox" @click.stop x-model="{{ model }}" value="{{ cardId }}"></twig:ClickInput>
+      {% else %}
+        <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ cardTitle }}_checkbox" @click.stop value="{{ cardId }}"></twig:ClickInput>
+      {% endif %}
     {% else %}
-      <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ cardTitle }}_checkbox" @dblclick.stop value="{{ cardId }}"></twig:ClickInput>
+        <div class="text-gray-500 w-6 h-6 hover:opacity-80 active:opacity-60 cursor-pointer" @click="$dispatch('close-card-view-modal')">
+          {{ include('icons/close.svg') }}
+        </div>
     {% endif %}
   </div>
+  {% if viewMode %}
+    <div  class="absolute left-5 top-5">
+      <div class="text-gray-500 w-6 h-6 hover:opacity-80 active:opacity-60 cursor-pointer" @click="$dispatch('edit-card')">
+        {{ include('icons/edit.svg') }}
+      </div>
+    </div>
+  {% endif %}
 </div>
