@@ -49,6 +49,9 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
   #[ORM\OneToMany(targetEntity: CardBagEntity::class, mappedBy: 'userEntity')]
   private Collection $cardBagEntities;
 
+  #[ORM\OneToMany(targetEntity: CardEntity::class, mappedBy: 'userEntity')]
+  private Collection $cardEntities;
+
   public function getEmail(): string
   {
     return $this->email;
@@ -241,6 +244,30 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
         $bag->setUserEntity(null);
       }
     }
+
+    return $this;
+  }
+
+  /**
+   * Get the value of cardEntities
+   *
+   * @return Collection
+   */
+  public function getCardEntities(): Collection
+  {
+    return $this->cardEntities;
+  }
+
+  /**
+   * Set the value of cardEntities
+   *
+   * @param Collection $cardEntities
+   *
+   * @return self
+   */
+  public function setCardEntities(Collection $cardEntities): self
+  {
+    $this->cardEntities = $cardEntities;
 
     return $this;
   }

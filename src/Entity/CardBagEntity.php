@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Config\Constants;
 use App\Repository\CardBagRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -19,7 +20,7 @@ class CardBagEntity extends BaseEntity
   #[ORM\Column(type: 'string', length: 1000, nullable: true)]
   private ?string $description;
 
-  #[ORM\ManyToOne(targetEntity: UserEntity::class)]
+  #[ORM\ManyToOne(targetEntity: UserEntity::class, inversedBy: 'cardBagEntities')]
   #[ORM\JoinColumn(name: 'user_id', nullable: false)]
   private ?UserEntity $userEntity = null;
 
@@ -38,6 +39,12 @@ class CardBagEntity extends BaseEntity
 
   #[ORM\Column(type: 'datetime', nullable: true)]
   private ?\DateTimeInterface $deletedAt = null;
+
+  public function __construct()
+  {
+    $this->cardEntities = new ArrayCollection();
+    $this->childrenCardBagEntities = new ArrayCollection();
+  }
 
   /**
    * Set the value of deletedAt

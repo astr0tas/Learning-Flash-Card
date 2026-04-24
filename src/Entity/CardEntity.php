@@ -30,11 +30,11 @@ class CardEntity extends BaseEntity
   #[ORM\Column(type: 'string', length: 10, options: ['default' => Constants::FLASH_CARD_DEFAULT_TEXT_COLOR])]
   private string $cardTextColor = Constants::FLASH_CARD_DEFAULT_TEXT_COLOR;
 
-  #[ORM\ManyToOne(targetEntity: CardBagEntity::class)]
+  #[ORM\ManyToOne(targetEntity: CardBagEntity::class, inversedBy: 'cardEntities')]
   #[ORM\JoinColumn(name: 'card_bag_id', nullable: true)]
   private ?CardBagEntity $cardBagEntity = null;
 
-  #[ORM\ManyToOne(targetEntity: UserEntity::class)]
+  #[ORM\ManyToOne(targetEntity: UserEntity::class, inversedBy: 'cardEntities')]
   #[ORM\JoinColumn(name: 'user_id', nullable: false)]
   private ?UserEntity $userEntity = null;
 

@@ -45,7 +45,8 @@ class CardBagService extends BaseService
     return $newBag;
   }
 
-  public function addNewCard(NewCardDTO $dto){
+  public function addNewCard(NewCardDTO $dto)
+  {
     // Get user entity through security
     $user = $this->security->getUser();
     // Get card bag entity

@@ -35,11 +35,14 @@ class CardBagController extends BaseController
   public function bagDetail(int $id)
   {
     $error = $this->getErrorFlash();
+    $bag = $this->service->getBag($id);
+    $cards = $bag->getCardEntities();
+    $childrenBags = $bag->getChildrenCardBagEntities();
     return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG, parameters: [
       'error' => $error,
-      'bagList' => $this->service->getBagList($id),
-      'cardList' => $this->service->getCardList($id),
-      'bag' => $this->service->getBag($id)
+      'bagList' => $childrenBags,
+      'cardList' => $cards,
+      'bag' => $bag
     ]);
   }
 
@@ -138,7 +141,8 @@ class CardBagController extends BaseController
   }
 
   #[Route(path: Routes::DELETE_OBJECT_ROUTE_URL, name: Routes::DELETE_OBJECT_ROUTE_NAME, methods: [Request::METHOD_GET, Request::METHOD_POST])]
-  public function deleteObject(Request $request) {
+  public function deleteObject(Request $request)
+  {
     $flashBag = $this->getFlashBag();
 
     // Get the previous route to redirect back to it
