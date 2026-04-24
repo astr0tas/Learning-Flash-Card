@@ -29,6 +29,29 @@ document.addEventListener('alpine:init', () =>
     removeDiacritics(str)
     {
       return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    },
+    getContrastColor(hexColor) {
+      // Fallback if no color is provided
+      if (!hexColor) return '#000000';
+
+      // Strip the hash
+      let hex = hexColor.replace('#', '');
+
+      // Handle 3-character shorthand hexes (e.g., #fff -> ffffff)
+      if (hex.length === 3) {
+        hex = hex.split('').map(char => char + char).join('');
+      }
+
+      // Convert to RGB
+      const r = parseInt(hex.substr(0, 2), 16);
+      const g = parseInt(hex.substr(2, 2), 16);
+      const b = parseInt(hex.substr(4, 2), 16);
+
+      // YIQ Brightness Formula
+      const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
+      // 128 is the midway point of brightness
+      return (yiq >= 128) ? '#000000' : '#FFFFFF';
     }
   }));
 });

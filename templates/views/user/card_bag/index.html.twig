@@ -52,7 +52,7 @@
 {% endblock %}
 
 {% block user_body %}
-  <div class="flex flex-col w-full h-full gap-5" x-data="cardBag" @reset-new-bag-modal.window='resetNewBagModal' @reset-new-card-modal.window="resetNewCardModal" @close-card-view-modal.window="closeCardDetailModal">
+  <div class="flex flex-col w-full h-full gap-5" x-data="cardBag" @reset-new-bag-modal.window='resetNewBagModal' @close-card-view-modal.window="closeCardDetailModal">
     {# Header panel #}
     <div class="flex items-center justify-between gap-2">
       {# Search bar #}
@@ -174,38 +174,13 @@
       </twig:Form>
     </twig:block>
   </twig:Modal>
-  <twig:Modal @close="$dispatch('reset-new-card-modal')" open="{{ error.newCardError is defined }}" modalTitle="{{ 'card_bag.create_options.new_card'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newCardFormRef.submit()" id="addNewCardModal">
-    <twig:block name="modal_body">
-      <twig:Form x-ref="newCardFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_CARD_ROUTE_URL') }}" method="POST" class="flex flex-col gap-3">
-        {% if bag is defined %}
-          <twig:Input hidden name="bag" value="{{ bag.id }}"/>
-        {% endif %}
-        <div>
-          <twig:Input type="text" name="title" label="{{ 'card_bag.card_title'|trans }}" aria-label="{{ 'card_bag.card_title'|trans }}" required error="{{ error.newCardError is defined and error.newCardError.title is defined ? error.newCardError.title[0] : '' }}" />
-        </div>
-        <div>
-          <twig:Input type="text" name="sub_title" label="{{ 'card_bag.card_subtitle'|trans }}" aria-label="{{ 'card_bag.card_subtitle'|trans }}" />
-        </div>
-        <div>
-          <twig:Select name="card_type" label="{{ 'card_bag.card_type'|trans }}" aria-label="{{ 'card_bag.card_type'|trans }}" required error="{{ error.newCardError is defined and error.newCardError.card_type is defined ? error.newCardError.card_type[0] : '' }}" default="">
-            <twig:block name="options">
-              <option value="" class="hidden"></option>
-              {% for type in constant('App\\Config\\Constants::FLASH_CARD_BAG_TYPES') %}
-                <option value="{{ type }}">{{ ('card_bag.card_type_'~(type|lower))|trans }}</option>
-              {% endfor %}
-            </twig:block>
-          </twig:Select>
-        </div>
-        <div>
-          <twig:Input type="textarea" name="description" label="{{ 'card_bag.card_description'|trans }}" aria-label="{{ 'card_bag.card_description'|trans }}" rows="3" />
-        </div>
-        <div>
-          <twig:Input type="color" name="card_color" label="{{ 'card_bag.card_color'|trans }}" aria-label="{{ 'card_bag.card_color'|trans }}" value="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR') }}" defaultValue="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR') }}"/>
-        </div>
-        <div>
-          <twig:Input type="color" name="card_text_color" label="{{ 'card_bag.card_text_color'|trans }}" aria-label="{{ 'card_bag.card_text_color'|trans }}" value="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR') }}" defaultValue="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR') }}"/>
-        </div>
-      </twig:Form>
+  <twig:Modal @close="$dispatch('reset-new-card-modal')" open="{{ error.newCardError is defined }}" @submit-form="$refs.newCardFormRef.submit()" @close-create-new-card-modal="document.getElementById('addNewCardModal').removeAttribute('open'); setTimeout(()=>{$dispatch('close')},250)" id="addNewCardModal">
+    <twig:block name="modal_content">
+      <el-dialog-panel class="w-full max-w-125 h-150">
+        <twig:Form x-ref="newCardFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_CARD_ROUTE_URL') }}" method="POST" class="flex flex-col gap-3">
+          <twig:Card :createMode="true" :error="error"></twig:Card>
+        </twig:Form>
+      </el-dialog-panel>
     </twig:block>
   </twig:Modal>
   <twig:Modal modalTitle="{{ 'action.move'|trans }}" actionButtonText="{{ 'action.confirm'|trans }}" actionButtonVariant="primary" @modal-action="" id="moveObjectModal"></twig:Modal>
@@ -224,7 +199,7 @@
   </twig:Modal>
   <twig:Modal x-data="{ selectedCard: '' }" id="card_detail_modal" @close="$dispatch('close-card-view-modal')">
     {% block modal_content %}
-      <el-dialog-panel class="max-w-125 h-150" x-html="selectedCard" @set-selected-card-data.window="selectedCard = $event.detail.html" @edit-card="openEditCardModal(index)"></el-dialog-panel>
+      <el-dialog-panel class="w-full max-w-125 h-150" x-html="selectedCard" @set-selected-card-data.window="selectedCard = $event.detail.html" @edit-card="openEditCardModal(index)"></el-dialog-panel>
     {% endblock %}
   </twig:Modal>
 {% endblock %}

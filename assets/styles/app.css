@@ -116,7 +116,7 @@ input[type="checkbox"]{
 /* Style the checked state */
 input[type="checkbox"]:checked {
   background-color: var(--blue); /* Background color when checked */
-  border-color: var(--blue); /* Border color when checked */
+  border-color: var(--blue) !important; /* Border color when checked */
 }
 
 /* Create the checkmark using a pseudo-element */
@@ -192,4 +192,20 @@ input[type="checkbox"]:checked::after {
   /* IE and Edge */
   scrollbar-width: none;
   /* Firefox */
+}
+
+[contenteditable] {
+  outline: none;
+}
+
+[contenteditable]:empty::before {
+  cursor: text;
+  content: attr(data-placeholder);
+  color: var(--gray);
+  pointer-events: none; /* Allows clicking through the text to focus the div */
+  display: block; /* Ensures visibility in some browsers like Firefox */
+}
+
+input::placeholder {
+  color: var(--gray);
 }

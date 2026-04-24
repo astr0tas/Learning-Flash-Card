@@ -16,15 +16,6 @@ document.addEventListener('alpine:init', () =>
       document.getElementById('new_bag_name').dispatchEvent(new Event('reset'));
       document.getElementById('new_bag_description').dispatchEvent(new Event('reset'));
     },
-    resetNewCardModal()
-    {
-      document.getElementById('title').dispatchEvent(new Event('reset'));
-      document.getElementById('sub_title').dispatchEvent(new Event('reset'));
-      document.getElementById('description').dispatchEvent(new Event('reset'));
-      document.getElementById('card_type').dispatchEvent(new Event('reset'));
-      document.getElementById('card_color').dispatchEvent(new Event('reset'));
-      document.getElementById('card_text_color').dispatchEvent(new Event('reset'));
-    },
     openCardDetailModal(index)
     {
       this.$dispatch('set-selected-card-data', this.viewCardList[index]);

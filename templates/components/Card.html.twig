@@ -1,25 +1,103 @@
-<div class="w-full h-full flex flex-col gap-3 relative rounded-md {% if not viewMode %} cursor-pointer p-5 {% else %} py-10 px-3 {% endif %}" {% if not viewMode %} x-bind:class="darkMode?'hover:shadow-gray-700 hover:shadow-2xl':'hover:shadow-xl'" {% endif %} style="background-color: {{ cardColor }}; color: {{ cardTextColor }};" @click="$dispatch('click-on-card')">
-  <h2 class="{% if not viewMode %} text-3xl {% else %} text-5xl {% endif %} text-center">{{ cardTitle }}</h2>
-  <h5 class="text-center {% if not viewMode %} text-md {% else %} text-xl {% endif %}">{{ cardSubTitle }}</h5>
-  <div class="flex-1 text-start whitespace-pre-line {% if not viewMode %} text-xs overflow-hidden text-ellipsis break-words line-clamp-11 {% else %} text-md overflow-auto scroll-container {% endif %}">{{ cardDescription|raw }}</div>
-  <div class="absolute {% if not viewMode %} right-1 top-2 {% else %} right-5 top-5 {% endif %}">
-    {% if not viewMode %}
-      {% if model is defined and model %}
-        <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ cardTitle }}_checkbox" @click.stop x-model="{{ model }}" value="{{ cardId }}"></twig:ClickInput>
-      {% else %}
-        <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ cardTitle }}_checkbox" @click.stop value="{{ cardId }}"></twig:ClickInput>
-      {% endif %}
-    {% else %}
-        <div class="text-gray-500 w-6 h-6 hover:opacity-80 active:opacity-60 cursor-pointer" @click="$dispatch('close-card-view-modal')">
-          {{ include('icons/close.svg') }}
-        </div>
-    {% endif %}
-  </div>
-  {% if viewMode %}
-    <div  class="absolute left-5 top-5">
-      <div class="text-gray-500 w-6 h-6 hover:opacity-80 active:opacity-60 cursor-pointer" @click="$dispatch('edit-card')">
-        {{ include('icons/edit.svg') }}
+{% if createMode %}
+  <div class="flex flex-col gap-10 z-50 w-full h-full" x-data="{ title: '', subTitle: '', description: '', type: '', cardColor: '{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR') }}', textColor: '{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR') }}' }"
+  @reset-new-card-modal.window="document.getElementById('div_new_card_title').innerHTML = '';
+  document.getElementById('div_new_card_sub_title').innerHTML = '';
+  document.getElementById('div_new_card_description').innerHTML = '';
+  document.getElementById('card_type').dispatchEvent(new Event('reset'));
+  document.getElementById('card_color').dispatchEvent(new Event('reset'));
+  document.getElementById('card_text_color').dispatchEvent(new Event('reset'));
+  document.getElementById('new_card_title_error')?.remove();
+  document.getElementById('new_card_sub_title_error')?.remove();
+  document.getElementById('new_card_description_error')?.remove();">
+    <div class="w-full h-full flex flex-col gap-5 relative rounded-md py-10 px-3" x-bind:style="{ backgroundColor: cardColor, color: textColor }">
+      <input hidden name="title" :value="title">
+      <input hidden name="sub_title" :value="subTitle">
+      <input hidden name="description" :value="description">
+      <div class="flex flex-col gap-3 text-center">
+        <h2 class="text-5xl" id="div_new_card_title" contenteditable @input="if($el.innerHTML==='<br>'){$el.innerHTML=''};title = $el.innerHTML" data-placeholder="{{ 'card_bag.card_title'|trans }}"></h2>
+        {% if error.newCardError is defined and error.newCardError.title is defined %}
+          <div id="new_card_title_error" class="mt-1 text-xs text-(--red)">
+            {{ error.newCardError.title[0] }}
+          </div>
+        {% endif %}
+      </div>
+      <div class="flex flex-col gap-3 text-center">
+        <h5 class="text-xl" id="div_new_card_sub_title" contenteditable @input="if($el.innerHTML==='<br>'){$el.innerHTML=''};subTitle = $el.innerHTML" data-placeholder="{{ 'card_bag.card_subtitle'|trans }}"></h5>
+        {% if error.newCardError is defined and error.newCardError.sub_title is defined %}
+          <div id="new_card_sub_title_error" class="mt-1 text-xs text-(--red)">
+            {{ error.newCardError.sub_title[0] }}
+          </div>
+        {% endif %}
+      </div>
+      <div class="flex flex-col gap-3 text-start">
+        <div class="flex-1 whitespace-pre-line text-md overflow-auto scroll-container" id="div_new_card_description" contenteditable @input="if($el.innerHTML==='<br>'){$el.innerHTML=''};description = $el.innerHTML" data-placeholder="{{ 'card_bag.card_description'|trans }}"></div>
+        {% if error.newCardError is defined and error.newCardError.description is defined %}
+          <div id="new_card_description_error" class="mt-1 text-xs text-(--red)">
+            {{ error.newCardError.description[0] }}
+          </div>
+        {% endif %}
       </div>
     </div>
-  {% endif %}
-</div>
+    <div class="flex flex-col gap-5 w-full text-start p-5 rounded-md" :class="darkMode ? 'bg-(--dark-theme-bg-color) text-(--white)' : 'bg-(--white) text-(--black)'">
+      <div>
+        <twig:Select name="card_type" label="{{ 'card_bag.card_type'|trans }}" aria-label="{{ 'card_bag.card_type'|trans }}" required error="{{ error.newCardError is defined and error.newCardError.card_type is defined ? error.newCardError.card_type[0] : '' }}" default="">
+          <twig:block name="options">
+            <option value="" class="hidden"></option>
+            {% for type in constant('App\\Config\\Constants::FLASH_CARD_BAG_TYPES') %}
+              <option value="{{ type }}">{{ ('card_bag.card_type_'~(type|lower))|trans }}</option>
+            {% endfor %}
+          </twig:block>
+        </twig:Select>
+      </div>
+      <div>
+        <twig:Input type="color" name="card_color" label="{{ 'card_bag.card_color'|trans }}" aria-label="{{ 'card_bag.card_color'|trans }}" x-model="cardColor" defaultValue="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR') }}"/>
+      </div>
+      <div>
+        <twig:Input type="color" name="card_text_color" label="{{ 'card_bag.card_text_color'|trans }}" aria-label="{{ 'card_bag.card_text_color'|trans }}" x-model="textColor" defaultValue="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR') }}"/>
+      </div>
+      <div class="pb-3 pt-2 flex flex-row-reverse gap-3">
+        <div class="inline-flex">
+          <twig:Button type="button" class="text-sm" variant="primary" title="{{ 'action.add'|trans }}" @click="$dispatch('submit-form')">
+            {{ 'action.add'|trans }}
+          </twig:Button>
+        </div>
+        <div class="inline-flex">
+          <twig:Button type="button" class="text-sm" variant="outline" title="{{ 'action.cancel'|trans }}" @click="$dispatch('close-create-new-card-modal')">
+            {{ 'action.cancel'|trans }}
+          </twig:Button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% elseif editMode %}
+  <div class="w-full h-full flex flex-col gap-3 relative rounded-md py-10 px-3">
+    <h2 class="text-5xl text-center" contenteditable></h2>
+    <h5 class="text-xl text-center" contenteditable></h5>
+  </div>
+{% else %}
+  <div class="w-full h-full flex flex-col gap-3 relative rounded-md {% if not viewMode %} cursor-pointer p-5 {% else %} py-10 px-3 {% endif %}" {% if not viewMode %} x-bind:class="darkMode?'hover:shadow-gray-700 hover:shadow-2xl':'hover:shadow-xl'" {% endif %} style="background-color: {{ cardColor }}; color: {{ cardTextColor }};" @click="$dispatch('click-on-card')">
+    <h2 class="{% if not viewMode %} text-3xl {% else %} text-5xl {% endif %} text-center">{{ cardTitle }}</h2>
+    <h5 class="text-center {% if not viewMode %} text-md {% else %} text-xl {% endif %}">{{ cardSubTitle }}</h5>
+    <div class="flex-1 text-start whitespace-pre-line {% if not viewMode %} text-xs overflow-hidden text-ellipsis break-words line-clamp-11 {% else %} text-md overflow-auto scroll-container {% endif %}">{{ cardDescription|raw }}</div>
+    <div class="absolute {% if not viewMode %} right-1 top-2 {% else %} right-5 top-5 {% endif %}">
+      {% if not viewMode %}
+        {% if model is defined and model %}
+          <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ cardTitle }}_checkbox" @click.stop x-model="{{ model }}" value="{{ cardId }}" x-bind:style="{borderColor: getContrastColor('{{ cardColor }}')}"></twig:ClickInput>
+        {% else %}
+          <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ cardTitle }}_checkbox" @click.stop value="{{ cardId }}" x-bind:style="{borderColor: getContrastColor('{{ cardColor }}')}"></twig:ClickInput>
+        {% endif %}
+      {% else %}
+        <div class="w-6 h-6 hover:opacity-80 active:opacity-60 cursor-pointer" x-bind:style="{color: getContrastColor('{{ cardColor }}')}" @click="$dispatch('close-card-view-modal')">
+          {{ include('icons/close.svg') }}
+        </div>
+      {% endif %}
+    </div>
+    {% if viewMode %}
+      <div  class="absolute left-5 top-5">
+        <div class="w-6 h-6 hover:opacity-80 active:opacity-60 cursor-pointer" x-bind:style="{color: getContrastColor('{{ cardColor }}')}" @click="$dispatch('edit-card')">
+          {{ include('icons/edit.svg') }}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

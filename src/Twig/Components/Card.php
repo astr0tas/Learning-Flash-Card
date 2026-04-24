@@ -17,4 +17,7 @@ final class Card
   public string $cardColor = Constants::FLASH_CARD_DEFAULT_COLOR;
   public string $cardTextColor = Constants::FLASH_CARD_DEFAULT_TEXT_COLOR;
   public bool $viewMode = false;
+  public bool $createMode = false;
+  public bool $editMode = false;
+  public array $error = [];
 }
