@@ -38,11 +38,23 @@ class CardBagController extends BaseController
     $bag = $this->service->getBag($id);
     $cards = $bag->getCardEntities();
     $childrenBags = $bag->getChildrenCardBagEntities();
+    $bagTree = $this->service->getBagTree($id);
+
+    // Convert the bag tree to breadcrumbs array
+    $breadcrumbs = [['icon' => 'icons/folder.svg', 'label' => $this->translator->trans('menu.card_bag'), 'url' => Routes::CARD_BAG_ROUTE_URL]];
+    $runner = $bagTree;
+    while ($runner->getChild()) {
+      $breadcrumbs[] = ['label' => $bagTree->getBagName(), 'url' => str_replace('{id}', $bagTree->getBagId(), Routes::CARD_BAG_DETAIL_ROUTE_URL)];
+      $runner = $runner->getChild();
+    }
+    $breadcrumbs[] = ['label' => $runner->getBagName(), 'url' => str_replace('{id}', $runner->getBagId(), Routes::CARD_BAG_DETAIL_ROUTE_URL)];
+
     return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG, parameters: [
       'error' => $error,
       'bagList' => $childrenBags,
       'cardList' => $cards,
-      'bag' => $bag
+      'bag' => $bag,
+      'breadcrumbs' => $breadcrumbs
     ]);
   }
 

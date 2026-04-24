@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\DTO\BagNavigationTreeDTO;
 use App\DTO\NewBagDTO;
 use App\DTO\NewCardDTO;
 use App\Repository\CardBagRepository;
@@ -84,5 +85,21 @@ class CardBagService extends BaseService
   public function getBag(int $bagId)
   {
     return $this->cardBagRepository->find($bagId);
+  }
+
+  public function getBagTree(int $bagId): BagNavigationTreeDTO
+  {
+    $bag = $this->getBag($bagId);
+    $bagDTO = new BagNavigationTreeDTO();
+    $bagDTO->setBagId($bag->getId());
+    $bagDTO->setBagName($bag->getName());
+
+    $parentBag = $bag->getParentCardBagEntity();
+
+    if ($parentBag != null) {
+      return $this->getBagTree($parentBag->getId())->setChild($bagDTO);
+    } else {
+      return $bagDTO;
+    }
   }
 }

@@ -117,12 +117,9 @@
       </div>
     </div>
     {# Back button #}
-    <div class="w-[125px]">
-      <twig:Button variant="secondary" class="flex items-center gap-2" @click="if(document.referrer) { window.location.href = document.referrer; } else { history.back(); }">
-        <span class="w-4 h-4">{{ include('icons/go_back.svg') }}</span>
-        <span>{{ 'action.go_back'|trans }}</span>
-      </twig:Button>
-    </div>
+    {% if breadcrumbs is defined %}
+      <twig:Breadcrumb :items="breadcrumbs"></twig:Breadcrumb>
+    {% endif %}
     {# Display body #}
     <template x-if="filteredBagList.length || filteredCardList.length">
       <div class="flex flex-col flex-1 w-full gap-10">
