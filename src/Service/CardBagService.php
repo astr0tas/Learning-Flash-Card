@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\DTO\BagNavigationTreeDTO;
+use App\DTO\DeleteObjectDTO;
 use App\DTO\NewBagDTO;
 use App\DTO\NewCardDTO;
 use App\Repository\CardBagRepository;
@@ -101,5 +102,21 @@ class CardBagService extends BaseService
     } else {
       return $bagDTO;
     }
+  }
+
+  public function deleteObject(DeleteObjectDTO $dto)
+  {
+    // Delete bags
+    foreach ($dto->getBag() as $bagId) {
+      $bag = $this->cardBagRepository->find($bagId);
+      $this->entityManager->remove($bag);
+    }
+    // Delete cards
+    foreach ($dto->getCard() as $cardId) {
+      $card = $this->cardRepository->find($cardId);
+      $this->entityManager->remove($card);
+    }
+
+    $this->entityManager->flush();
   }
 }

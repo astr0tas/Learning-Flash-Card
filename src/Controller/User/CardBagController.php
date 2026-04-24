@@ -155,8 +155,6 @@ class CardBagController extends BaseController
   #[Route(path: Routes::DELETE_OBJECT_ROUTE_URL, name: Routes::DELETE_OBJECT_ROUTE_NAME, methods: [Request::METHOD_GET, Request::METHOD_POST])]
   public function deleteObject(Request $request)
   {
-    $flashBag = $this->getFlashBag();
-
     // Get the previous route to redirect back to it
     $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
 
@@ -170,6 +168,10 @@ class CardBagController extends BaseController
     // Pass the form data to a DTO
     $dto = new DeleteObjectDTO();
     ClassUtility::mapArrayToDTO($postData, $dto);
+
+    $this->service->deleteObject($dto);
+
+    return $this->redirect($previousRoute);
   }
 
   /**
