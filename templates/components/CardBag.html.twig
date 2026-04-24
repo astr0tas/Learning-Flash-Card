@@ -5,9 +5,9 @@
   <h2>{{ bagName }}</h2>
   <div class="ms-auto">
     {% if model is defined and model %}
-      <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ bagName }}_checkbox" @dblclick.stop x-model="{{ model }}" value="{{ bagId }}"></twig:ClickInput>
+      <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ bagName }}_checkbox" @dblclick.stop x-model="{{ model }}" value="{{ bagId }}" x-bind:style="{borderColor: darkMode?getContrastColor('#1e2022'):getContrastColor('#ebeef1')}"></twig:ClickInput>
     {% else %}
-      <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ bagName }}_checkbox" @dblclick.stop value="{{ bagId }}"></twig:ClickInput>
+      <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ bagName }}_checkbox" @dblclick.stop value="{{ bagId }}" x-bind:style="{borderColor: darkMode?getContrastColor('#1e2022'):getContrastColor('#ebeef1')}"></twig:ClickInput>
     {% endif %}
   </div>
 </div>
