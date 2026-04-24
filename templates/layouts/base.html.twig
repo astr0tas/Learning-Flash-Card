@@ -21,7 +21,7 @@
     {% block stylesheets %}{% endblock %}
     {% block head_javascripts %}{% endblock %}
   </head>
-  <body>
+  <body data-turbo="false">
     <div x-data="appData" class="w-screen h-screen flex flex-col" @click.window="checkAppClick($event)">
       <div class="flex-1 w-full" :class="darkMode ? 'dark_theme' : 'light_theme'">
         {# prettier-ignore #}
