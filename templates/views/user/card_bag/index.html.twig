@@ -10,7 +10,7 @@
 
 {% for bag in bagList %}
   {% set bagTemplate %}
-    <twig:CardBag bagId="{{ bag.id }}" bagName="{{ bag.name }}" bagDescription="{{ bag.description }}" model="selectedBags"/>
+    <twig:CardBag bagId="{{ bag.id }}" bagName="{{ bag.name }}" model="selectedBags"/>
   {% endset %}
 
   {% set card_bag_array = card_bag_array|merge([{
@@ -42,7 +42,6 @@
 {% endfor %}
 
 {% set new_bag_name = error.newBagName | default('') %}
-{% set new_bag_description = error.newBagDescription | default('') %}
 
 {% block javascripts %}
   {{ parent() }}
@@ -168,11 +167,8 @@
         {% if bag is defined %}
           <twig:Input hidden name="parent_bag" value="{{ bag.id }}"/>
         {% endif %}
-        <div>
+        <div class="mb-3">
           <twig:Input type="text" name="new_bag_name" label="{{ 'card_bag.bag_name'|trans }}" aria-label="{{ 'card_bag.bag_name'|trans }}" required value="{{ new_bag_name }}" error="{{ error.newBagError is defined and error.newBagError.new_bag_name is defined ? error.newBagError.new_bag_name[0] : '' }}" maxlength="{{ constant('App\\Config\\Constraints::CARD_BAG_NAME_MAX_LENGTH') }}"/>
-        </div>
-        <div class="my-3">
-          <twig:Input type="textarea" name="new_bag_description" label="{{ 'card_bag.bag_description'|trans }}" aria-label="{{ 'card_bag.bag_description'|trans }}" value="{{ new_bag_description }}" rows="3" error="{{ error.newBagError is defined and error.newBagError.new_bag_description is defined ? error.newBagError.new_bag_description[0] : '' }}" maxlength="{{ constant('App\\Config\\Constraints::CARD_BAG_DESCRIPTION_MAX_LENGTH') }}"/>
         </div>
       </twig:Form>
     </twig:block>

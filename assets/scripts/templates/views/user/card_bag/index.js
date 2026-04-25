@@ -14,7 +14,6 @@ document.addEventListener('alpine:init', () =>
     resetNewBagModal()
     {
       document.getElementById('new_bag_name').dispatchEvent(new Event('reset'));
-      document.getElementById('new_bag_description').dispatchEvent(new Event('reset'));
     },
     openCardDetailModal(index)
     {

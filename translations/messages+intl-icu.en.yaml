@@ -73,7 +73,6 @@ card_bag:
     new_card: "Create new card"
   other_option: "Other options"
   bag_name: "Bag name"
-  bag_description: "Bag description"
   card_title: "Card title"
   card_subtitle: "Card subtitle"
   card_description: "Card description"
@@ -133,7 +132,6 @@ validation:
     name_not_blank: "Bag name must not be blank"
     name_exist: "Bag name has already been used"
     name_too_long: "Bag name must not exceed {limit} characters"
-    description_too_long: "Bag description must not exceed {limit} characters"
   new_card:
     title_not_blank: "Card title must not be blank"
     card_type_not_blank: "Card type must not be blank"

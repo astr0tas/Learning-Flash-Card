@@ -73,7 +73,6 @@ card_bag:
     new_card: "Tạo thẻ mới"
   other_option: "Tùy chọn khác"
   bag_name: "Tên túi thẻ"
-  bag_description: "Mô tả"
   card_title: "Tiêu đề thẻ"
   card_subtitle: "Phụ đề thẻ"
   card_description: "Mô tả thẻ"
@@ -133,7 +132,6 @@ validation:
     name_not_blank: "Tên túi không được để trống"
     name_exist: "Tên túi đã được dùng"
     name_too_long: "Tên túi không được có độ dài quá {limit} ký tự"
-    description_too_long: "Mô tả của túi không được có độ dài quá {limit} ký tự"
   new_card:
     title_not_blank: "Tiêu đề thẻ không được để trống"
     card_type_not_blank: "Loại thẻ không được để trống"

@@ -83,9 +83,6 @@ class CardBagController extends BaseController
       'newBagName' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.new_bag.name_not_blank')),
         new Assert\Length(max: Constraints::CARD_BAG_NAME_MAX_LENGTH, maxMessage: $this->translator->trans('validation.new_bag.name_too_long', ['limit' => Constraints::CARD_BAG_NAME_MAX_LENGTH])),
-      ],
-      'newBagDescription' => [
-        new Assert\Length(max: Constraints::CARD_BAG_DESCRIPTION_MAX_LENGTH, maxMessage: $this->translator->trans('validation.new_bag.description_too_long', ['limit' => Constraints::CARD_BAG_DESCRIPTION_MAX_LENGTH])),
       ]
     ];
     $globals = [
@@ -102,7 +99,6 @@ class CardBagController extends BaseController
     if (count($error) > 0) {
       $flashBag->add('newBagError', $error);
       $flashBag->add('newBagName', $dto->getNewBagName());
-      $flashBag->add('newBagDescription', $dto->getNewBagDescription());
       return $this->redirect($previousRoute);
     }
 
@@ -208,9 +204,7 @@ class CardBagController extends BaseController
     if ($flashBag->has('newBagError')) {
       $flashErrors = $flashBag->get('newBagError')[0];
       $flashNewBagName = $flashBag->get('newBagName')[0];
-      $flashNewBagDescription = $flashBag->get('newBagDescription')[0];
       $errors['newBagName'] = $flashNewBagName;
-      $errors['newBagDescription'] = $flashNewBagDescription;
       $errors['newBagError'] = $flashErrors;
     }
 

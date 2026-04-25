@@ -18,9 +18,6 @@ class CardBagEntity extends BaseEntity
   #[ORM\Column(type: 'string', length: Constraints::CARD_BAG_NAME_MAX_LENGTH)]
   private string $name;
 
-  #[ORM\Column(type: 'string', length: Constraints::CARD_BAG_DESCRIPTION_MAX_LENGTH, nullable: true)]
-  private ?string $description;
-
   #[ORM\ManyToOne(targetEntity: UserEntity::class, inversedBy: 'cardBagEntities')]
   #[ORM\JoinColumn(name: 'user_id', nullable: false)]
   private ?UserEntity $userEntity = null;
@@ -57,30 +54,6 @@ class CardBagEntity extends BaseEntity
   public function setDeletedAt(?\DateTimeInterface $deletedAt): self
   {
     $this->deletedAt = $deletedAt;
-
-    return $this;
-  }
-
-  /**
-   * Get the value of description
-   *
-   * @return string
-   */
-  public function getDescription(): string
-  {
-    return $this->description;
-  }
-
-  /**
-   * Set the value of description
-   *
-   * @param string $description
-   *
-   * @return self
-   */
-  public function setDescription(string $description): self
-  {
-    $this->description = $description;
 
     return $this;
   }

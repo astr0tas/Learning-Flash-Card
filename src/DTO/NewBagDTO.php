@@ -5,7 +5,6 @@ namespace App\DTO;
 class NewBagDTO extends BaseDTO
 {
   private string $newBagName;
-  private ?string $newBagDescription = null;
   private ?int $parentBag = null;
 
   /**
@@ -22,24 +21,6 @@ class NewBagDTO extends BaseDTO
   public function setNewBagName($newBagName): self
   {
     $this->newBagName = $newBagName;
-
-    return $this;
-  }
-
-  /**
-   * Get the value of newBagDescription
-   */
-  public function getNewBagDescription()
-  {
-    return $this->newBagDescription;
-  }
-
-  /**
-   * Set the value of newBagDescription
-   */
-  public function setNewBagDescription($newBagDescription): self
-  {
-    $this->newBagDescription = $newBagDescription;
 
     return $this;
   }
