@@ -181,7 +181,7 @@
     <twig:block name="modal_content">
       <el-dialog-panel class="w-full max-w-125 h-150">
         <twig:Form x-ref="newCardFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_CARD_ROUTE_URL') }}" method="POST" class="flex flex-col gap-3">
-          <twig:Card :createMode="true" :error="error"></twig:Card>
+          <twig:Card :createMode="true" :error="error" :bagId="bag is defined ? bag.id : null"></twig:Card>
         </twig:Form>
       </el-dialog-panel>
     </twig:block>

@@ -19,5 +19,6 @@ final class Card
   public bool $viewMode = false;
   public bool $createMode = false;
   public bool $editMode = false;
+  public ?int $bagId = null;
   public array $error = [];
 }

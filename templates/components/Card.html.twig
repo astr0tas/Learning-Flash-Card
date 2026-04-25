@@ -17,6 +17,9 @@
   document.getElementById('new_card_subtitle_error')?.remove();
   document.getElementById('new_card_description_error')?.remove();">
     <div class="w-full h-full flex flex-col gap-5 relative rounded-md py-10 px-3" x-bind:style="{ backgroundColor: cardColor, color: textColor }">
+      {% if bagId is defined and bagId %}
+        <input hidden name="bag" value="{{ bagId }}"/>
+      {% endif %}
       <input hidden name="title" :value="title">
       <input hidden name="subtitle" :value="subtitle">
       <input hidden name="description" :value="description">
