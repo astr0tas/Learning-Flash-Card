@@ -13,14 +13,11 @@ use App\Repository\CardRepository;
 
 class CardBagService extends BaseService
 {
-
   public function __construct(private CardBagRepository $cardBagRepository, private CardRepository $cardRepository) {}
 
-  public function checkDuplicationBagName(string $name, ?int $id): bool
+  public function getBagByNameAndParentId(string $name, ?int $id): array
   {
-    $result = $this->cardBagRepository->findBy(['name' => $name, 'parentCardBagEntity' => $id]);
-
-    return count($result) > 0;
+    return $this->cardBagRepository->findBy(['name' => $name, 'parentCardBagEntity' => $id]);
   }
 
   public function addNewBag(NewBagDTO $newBagDTO): CardBagEntity
@@ -145,5 +142,16 @@ class CardBagService extends BaseService
     }
 
     $this->entityManager->flush();
+  }
+
+  public function parseBagTreeToBreadcrumb(BagNavigationTreeDTO $bagTree, array $breadcrumb = []): array
+  {
+    $runner = $bagTree;
+    while ($runner) {
+      $breadcrumb[] = ['label' => $runner->getBagName(), 'url' => str_replace('{id}', $runner->getBagId(), Routes::CARD_BAG_DETAIL_ROUTE_URL)];
+
+      $runner = $runner->getChild();
+    }
+    return $breadcrumb;
   }
 }

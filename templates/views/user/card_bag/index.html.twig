@@ -10,7 +10,7 @@
 
 {% for bag in bagList %}
   {% set bagTemplate %}
-    <twig:CardBag bagId="{{ bag.id }}" bagName="{{ bag.name }}" model="selectedBags"/>
+    <twig:CardBag bagId="{{ bag.id }}" bagName="{{ bag.name }}" model="selectedBags" href="{{ constant('App\\Config\\Routes::CARD_BAG_DETAIL_ROUTE_URL')|replace({'{id}': bag.id}) }}"/>
   {% endset %}
 
   {% set card_bag_array = card_bag_array|merge([{

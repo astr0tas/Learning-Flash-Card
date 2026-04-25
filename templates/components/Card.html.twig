@@ -98,8 +98,8 @@
         </div>
       {% endif %}
     </div>
-    {% if viewMode %}
-      <div  class="absolute left-5 top-5">
+    {% if viewMode and allowEdit %}
+      <div class="absolute left-5 top-5">
         <div class="w-6 h-6 hover:opacity-80 active:opacity-60 cursor-pointer" x-bind:style="{color: getContrastColor('{{ cardColor }}')}" @click="$dispatch('edit-card')">
           {{ include('icons/edit.svg') }}
         </div>

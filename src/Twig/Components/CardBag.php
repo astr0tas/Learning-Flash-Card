@@ -13,12 +13,11 @@ final class CardBag
   public string $href = "";
   public ?string $model = null;
 
-  public function mount(int $bagId, string $bagName, ?string $model = null): void
+  public function mount(int $bagId, string $bagName, ?string $model = null, string $href = ""): void
   {
     $this->bagId = $bagId;
     $this->bagName = $bagName;
     $this->model = $model;
-
-    $this->href = str_replace('{id}', $bagId, Routes::CARD_BAG_DETAIL_ROUTE_URL);
+    $this->href = $href;
   }
 }

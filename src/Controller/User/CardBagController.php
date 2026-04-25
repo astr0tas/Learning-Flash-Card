@@ -42,20 +42,15 @@ class CardBagController extends BaseController
     $bagTree = $this->service->getBagTree($id);
 
     // Convert the bag tree to breadcrumbs array
-    $breadcrumbs = [['icon' => 'icons/folder.svg', 'label' => $this->translator->trans('menu.card_bag'), 'url' => Routes::CARD_BAG_ROUTE_URL]];
-    $runner = $bagTree;
-    while ($runner->getChild()) {
-      $breadcrumbs[] = ['label' => $runner->getBagName(), 'url' => str_replace('{id}', $runner->getBagId(), Routes::CARD_BAG_DETAIL_ROUTE_URL)];
-      $runner = $runner->getChild();
-    }
-    $breadcrumbs[] = ['label' => $runner->getBagName(), 'url' => str_replace('{id}', $runner->getBagId(), Routes::CARD_BAG_DETAIL_ROUTE_URL)];
+    $breadcrumb = [['icon' => 'icons/folder.svg', 'label' => $this->translator->trans('menu.card_bag'), 'url' => Routes::CARD_BAG_ROUTE_URL]];
+    $breadcrumb = $this->service->parseBagTreeToBreadcrumb($bagTree, $breadcrumb);
 
     return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG, parameters: [
       'error' => $error,
       'bagList' => $childrenBags,
       'cardList' => $cards,
       'bag' => $bag,
-      'breadcrumbs' => $breadcrumbs
+      'breadcrumbs' => $breadcrumb
     ]);
   }
 
@@ -87,7 +82,7 @@ class CardBagController extends BaseController
     ];
     $globals = [
       new Assert\Callback(callback: function (array $data, ExecutionContextInterface $context) {
-        if ($this->service->checkDuplicationBagName($data['newBagName'], $data['parentBag'] ?? null)) {
+        if (count($this->service->getBagByNameAndParentId($data['newBagName'], $data['parentBag'] ?? null)) > 0) {
           $context->buildViolation($this->translator->trans('validation.new_bag.name_exist'))
             ->atPath('[newBagName]')
             ->addViolation();
