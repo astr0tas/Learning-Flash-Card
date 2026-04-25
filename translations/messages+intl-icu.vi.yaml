@@ -139,7 +139,7 @@ validation:
     card_type_not_blank: "Loại thẻ không được để trống"
     card_type_invalid: "Loại thẻ không hợp lệ"
     title_too_long: "Tiêu đề thẻ không được có độ dài quá {limit} ký tự"
-    sub_title_too_long: "Phụ đề thẻ không được có độ dài quá {limit} ký tự"
+    subtitle_too_long: "Phụ đề thẻ không được có độ dài quá {limit} ký tự"
     description_too_long: "Mô tả của thẻ không được có độ dài quá {limit} ký tự"
   color:
     invalid_color: "Mã màu không hợp lệ"

@@ -21,7 +21,7 @@
 
 {% for card in cardList %}
   {% set cardTemplate %}
-    <twig:Card cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubTitle="{{ card.subTitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" cardType="{{ card.cardType }}" model="selectedCards"/>
+    <twig:Card cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubtitle="{{ card.subtitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" cardType="{{ card.cardType }}" model="selectedCards"/>
   {% endset %}
 
   {% set card_array = card_array|merge([{
@@ -32,7 +32,7 @@
 
 {% for card in cardList %}
   {% set viewCardTemplate %}
-    <twig:Card :viewMode="true" cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubTitle="{{ card.subTitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" cardType="{{ card.cardType }}" model="selectedCards"/>
+    <twig:Card :viewMode="true" cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubtitle="{{ card.subtitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" cardType="{{ card.cardType }}"/>
   {% endset %}
 
   {% set view_card_array = view_card_array|merge([{

@@ -7,7 +7,7 @@ use App\Config\Constants;
 class NewCardDTO extends BaseDTO
 {
   private string $title;
-  private ?string $subTitle = null;
+  private ?string $subtitle = null;
   private ?string $description = null;
   private ?int $bag = null;
   private string $cardType;
@@ -63,25 +63,25 @@ class NewCardDTO extends BaseDTO
   }
 
   /**
-   * Get the value of subTitle
+   * Get the value of subtitle
    *
    * @return string
    */
-  public function getSubTitle(): ?string
+  public function getSubtitle(): ?string
   {
-    return $this->subTitle;
+    return $this->subtitle;
   }
 
   /**
-   * Set the value of subTitle
+   * Set the value of subtitle
    *
-   * @param string $subTitle
+   * @param string $subtitle
    *
    * @return self
    */
-  public function setSubTitle(?string $subTitle): self
+  public function setSubtitle(?string $subtitle): self
   {
-    $this->subTitle = $subTitle;
+    $this->subtitle = $subtitle;
 
     return $this;
   }

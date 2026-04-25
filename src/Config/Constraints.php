@@ -7,7 +7,7 @@ class Constraints{
   public const CARD_BAG_NAME_MAX_LENGTH = 255;
   public const CARD_BAG_DESCRIPTION_MAX_LENGTH = 1000;
   public const CARD_TITLE_MAX_LENGTH = 255;
-  public const CARD_SUB_TITLE_MAX_LENGTH = 255;
+  public const CARD_SUBTITLE_MAX_LENGTH = 255;
   public const CARD_DESCRIPTION_MAX_LENGTH = 1000;
 }
 

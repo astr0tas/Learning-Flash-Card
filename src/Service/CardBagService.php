@@ -61,7 +61,7 @@ class CardBagService extends BaseService
 
     $newCard = new CardEntity();
     $newCard->setTitle($dto->getTitle());
-    $newCard->setSubTitle($dto->getSubTitle());
+    $newCard->setSubtitle($dto->getSubtitle());
     $newCard->setCardType($dto->getCardType());
     $newCard->setDescription($dto->getDescription());
     $newCard->setUserEntity($user);

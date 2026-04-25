@@ -10,7 +10,7 @@ final class Card
 {
   public int $cardId;
   public string $cardTitle;
-  public ?string $cardSubTitle = null;
+  public ?string $cardSubtitle = null;
   public ?string $cardDescription = null;
   public string $cardType;
   public ?string $model = null;

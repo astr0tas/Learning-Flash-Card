@@ -137,8 +137,8 @@ class CardBagController extends BaseController
         new Assert\NotBlank(message: $this->translator->trans('validation.new_card.title_not_blank')),
         new Assert\Length(max: Constraints::CARD_TITLE_MAX_LENGTH, maxMessage: $this->translator->trans('validation.new_card.title_too_long', ['limit' => Constraints::CARD_TITLE_MAX_LENGTH])),
       ],
-      'subTitle' => [
-        new Assert\Length(max: Constraints::CARD_SUB_TITLE_MAX_LENGTH, maxMessage: $this->translator->trans('validation.new_card.sub_title_too_long', ['limit' => Constraints::CARD_SUB_TITLE_MAX_LENGTH]))
+      'subtitle' => [
+        new Assert\Length(max: Constraints::CARD_SUBTITLE_MAX_LENGTH, maxMessage: $this->translator->trans('validation.new_card.subtitle_too_long', ['limit' => Constraints::CARD_SUBTITLE_MAX_LENGTH]))
       ],
       'description' => [
         new Assert\Length(max: Constraints::CARD_DESCRIPTION_MAX_LENGTH, maxMessage: $this->translator->trans('validation.new_card.description_too_long', ['limit' => Constraints::CARD_DESCRIPTION_MAX_LENGTH])),
@@ -159,7 +159,7 @@ class CardBagController extends BaseController
     if (count($error) > 0) {
       $flashBag->add('newCardError', $error);
       $flashBag->add('title', $dto->getTitle());
-      $flashBag->add('subTitle', $dto->getSubTitle());
+      $flashBag->add('subtitle', $dto->getSubtitle());
       $flashBag->add('description', $dto->getDescription());
       $flashBag->add('cardType', $dto->getCardType());
       $flashBag->add('cardColor', $dto->getCardColor());
@@ -218,13 +218,13 @@ class CardBagController extends BaseController
     if ($flashBag->has('newCardError')) {
       $flashErrors = $flashBag->get('newCardError')[0];
       $flashTitle = $flashBag->get('title')[0];
-      $flashSubTitle = $flashBag->get('subTitle')[0];
+      $flashSubtitle = $flashBag->get('subtitle')[0];
       $flashDescription = $flashBag->get('description')[0];
       $flashCardType = $flashBag->get('cardType')[0];
       $flashCardColor = $flashBag->get('cardColor')[0];
       $flashCardTextColor = $flashBag->get('cardTextColor')[0];
       $errors['newCardTitle'] = $flashTitle;
-      $errors['newCardSubTitle'] = $flashSubTitle;
+      $errors['newCardSubtitle'] = $flashSubtitle;
       $errors['newCardDescription'] = $flashDescription;
       $errors['newCardType'] = $flashCardType;
       $errors['newCardColor'] = $flashCardColor;

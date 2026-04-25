@@ -1,24 +1,24 @@
 {% set new_card_title = error.newCardTitle|default('') %}
-{% set new_card_subtitle = error.newCardSubTitle|default('') %}
+{% set new_card_subtitle = error.newCardSubtitle|default('') %}
 {% set new_card_description = error.newCardDescription|default('') %}
 {% set new_card_type = error.newCardType|default('') %}
 {% set new_card_color = error.newCardColor|default(constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR')) %}
 {% set new_card_text_color = error.newCardTextColor|default(constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR')) %}
 
 {% if createMode %}
-  <div class="flex flex-col gap-10 z-50 w-full h-full" x-data="{ title: '{{ new_card_title }}', subTitle: '{{ new_card_subtitle }}', description: '{{ new_card_description }}', type: '{{ new_card_type }}', cardColor: '{{ new_card_color }}', textColor: '{{ new_card_text_color }}' }"
+  <div class="flex flex-col gap-10 z-50 w-full h-full" x-data="{ title: '{{ new_card_title }}', subtitle: '{{ new_card_subtitle }}', description: '{{ new_card_description }}', type: '{{ new_card_type }}', cardColor: '{{ new_card_color }}', textColor: '{{ new_card_text_color }}' }"
   @reset-new-card-modal.window="document.getElementById('div_new_card_title').innerHTML = ''; title = '';
-  document.getElementById('div_new_card_sub_title').innerHTML = ''; subTitle = '';
+  document.getElementById('div_new_card_subtitle').innerHTML = ''; subtitle = '';
   document.getElementById('div_new_card_description').innerHTML = ''; description = '';
   document.getElementById('card_type').dispatchEvent(new Event('reset'));
   document.getElementById('card_color').dispatchEvent(new Event('reset'));
   document.getElementById('card_text_color').dispatchEvent(new Event('reset'));
   document.getElementById('new_card_title_error')?.remove();
-  document.getElementById('new_card_sub_title_error')?.remove();
+  document.getElementById('new_card_subtitle_error')?.remove();
   document.getElementById('new_card_description_error')?.remove();">
     <div class="w-full h-full flex flex-col gap-5 relative rounded-md py-10 px-3" x-bind:style="{ backgroundColor: cardColor, color: textColor }">
       <input hidden name="title" :value="title">
-      <input hidden name="sub_title" :value="subTitle">
+      <input hidden name="subtitle" :value="subtitle">
       <input hidden name="description" :value="description">
       <div class="flex flex-col gap-3 text-center">
         <h2 class="text-5xl" id="div_new_card_title" contenteditable @input="if($el.innerHTML==='<br>'){$el.innerHTML=''};title = $el.innerHTML" data-placeholder="{{ 'card_bag.card_title'|trans }}">{{ new_card_title }}</h2>
@@ -29,10 +29,10 @@
         {% endif %}
       </div>
       <div class="flex flex-col gap-3 text-center">
-        <h5 class="text-xl" id="div_new_card_sub_title" contenteditable @input="if($el.innerHTML==='<br>'){$el.innerHTML=''};subTitle = $el.innerHTML" data-placeholder="{{ 'card_bag.card_subtitle'|trans }}">{{ new_card_subtitle }}</h5>
-        {% if error.newCardError is defined and error.newCardError.sub_title is defined %}
-          <div id="new_card_sub_title_error" class="mt-1 text-xs text-(--red)">
-            {{ error.newCardError.sub_title[0] }}
+        <h5 class="text-xl" id="div_new_card_subtitle" contenteditable @input="if($el.innerHTML==='<br>'){$el.innerHTML=''};subtitle = $el.innerHTML" data-placeholder="{{ 'card_bag.card_subtitle'|trans }}">{{ new_card_subtitle }}</h5>
+        {% if error.newCardError is defined and error.newCardError.subtitle is defined %}
+          <div id="new_card_subtitle_error" class="mt-1 text-xs text-(--red)">
+            {{ error.newCardError.subtitle[0] }}
           </div>
         {% endif %}
       </div>
@@ -84,15 +84,11 @@
 {% else %}
   <div class="w-full h-full flex flex-col gap-3 relative rounded-md {% if not viewMode %} cursor-pointer p-5 {% else %} py-10 px-3 {% endif %}" {% if not viewMode %} x-bind:class="darkMode?'hover:shadow-gray-700 hover:shadow-2xl':'hover:shadow-xl'" {% endif %} style="background-color: {{ cardColor }}; color: {{ cardTextColor }};" @click="$dispatch('click-on-card')">
     <h2 class="{% if not viewMode %} text-3xl {% else %} text-5xl {% endif %} text-center">{{ cardTitle }}</h2>
-    <h5 class="text-center {% if not viewMode %} text-md {% else %} text-xl {% endif %}">{{ cardSubTitle }}</h5>
+    <h5 class="text-center {% if not viewMode %} text-md {% else %} text-xl {% endif %}">{{ cardSubtitle }}</h5>
     <div class="flex-1 text-start whitespace-pre-line {% if not viewMode %} text-xs overflow-hidden text-ellipsis break-words line-clamp-11 {% else %} text-md overflow-auto scroll-container {% endif %}">{{ cardDescription|raw }}</div>
     <div class="absolute {% if not viewMode %} right-1 top-2 {% else %} right-5 top-5 {% endif %}">
       {% if not viewMode %}
-        {% if model is defined and model %}
-          <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ cardTitle }}_checkbox" @click.stop x-model="{{ model }}" value="{{ cardId }}" x-bind:style="{borderColor: getContrastColor('{{ cardColor }}')}"></twig:ClickInput>
-        {% else %}
-          <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ cardTitle }}_checkbox" @click.stop value="{{ cardId }}" x-bind:style="{borderColor: getContrastColor('{{ cardColor }}')}"></twig:ClickInput>
-        {% endif %}
+        <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ cardTitle }}_checkbox" @click.stop x-model="{{ model is defined ? model : null }}" value="{{ cardId }}" x-bind:style="{borderColor: getContrastColor('{{ cardColor }}')}"></twig:ClickInput>
       {% else %}
         <div class="w-6 h-6 hover:opacity-80 active:opacity-60 cursor-pointer" x-bind:style="{color: getContrastColor('{{ cardColor }}')}" @click="$dispatch('close-card-view-modal')">
           {{ include('icons/close.svg') }}
