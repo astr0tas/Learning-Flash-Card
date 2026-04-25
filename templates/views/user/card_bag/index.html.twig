@@ -41,6 +41,9 @@
   }]) %}
 {% endfor %}
 
+{% set new_bag_name = error.newBagName | default('') %}
+{% set new_bag_description = error.newBagDescription | default('') %}
+
 {% block javascripts %}
   {{ parent() }}
   <script>
@@ -166,10 +169,10 @@
           <twig:Input hidden name="parent_bag" value="{{ bag.id }}"/>
         {% endif %}
         <div>
-          <twig:Input type="text" name="new_bag_name" label="{{ 'card_bag.bag_name'|trans }}" aria-label="{{ 'card_bag.bag_name'|trans }}" required error="{{ error.newBagError is defined and error.newBagError.new_bag_name is defined ? error.newBagError.new_bag_name[0] : '' }}" />
+          <twig:Input type="text" name="new_bag_name" label="{{ 'card_bag.bag_name'|trans }}" aria-label="{{ 'card_bag.bag_name'|trans }}" required value="{{ new_bag_name }}" error="{{ error.newBagError is defined and error.newBagError.new_bag_name is defined ? error.newBagError.new_bag_name[0] : '' }}" maxlength="{{ constant('App\\Config\\Constraints::CARD_BAG_NAME_MAX_LENGTH') }}"/>
         </div>
         <div class="my-3">
-          <twig:Input type="textarea" name="new_bag_description" label="{{ 'card_bag.bag_description'|trans }}" aria-label="{{ 'card_bag.bag_description'|trans }}" rows="3" />
+          <twig:Input type="textarea" name="new_bag_description" label="{{ 'card_bag.bag_description'|trans }}" aria-label="{{ 'card_bag.bag_description'|trans }}" value="{{ new_bag_description }}" rows="3" error="{{ error.newBagError is defined and error.newBagError.new_bag_description is defined ? error.newBagError.new_bag_description[0] : '' }}" maxlength="{{ constant('App\\Config\\Constraints::CARD_BAG_DESCRIPTION_MAX_LENGTH') }}"/>
         </div>
       </twig:Form>
     </twig:block>

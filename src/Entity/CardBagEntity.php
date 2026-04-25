@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Config\Constants;
+use App\Config\Constraints;
 use App\Repository\CardBagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,10 +15,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
 class CardBagEntity extends BaseEntity
 {
-  #[ORM\Column(type: 'string', length: 255)]
+  #[ORM\Column(type: 'string', length: Constraints::CARD_BAG_NAME_MAX_LENGTH)]
   private string $name;
 
-  #[ORM\Column(type: 'string', length: 1000, nullable: true)]
+  #[ORM\Column(type: 'string', length: Constraints::CARD_BAG_DESCRIPTION_MAX_LENGTH, nullable: true)]
   private ?string $description;
 
   #[ORM\ManyToOne(targetEntity: UserEntity::class, inversedBy: 'cardBagEntities')]

@@ -3,6 +3,7 @@
 namespace App\Controller\User;
 
 use App\Config\Constants;
+use App\Config\Constraints;
 use App\Config\Routes;
 use App\Config\TwigTemplate;
 use App\Controller\BaseController;
@@ -81,6 +82,10 @@ class CardBagController extends BaseController
     $fields = [
       'newBagName' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.new_bag.name_not_blank')),
+        new Assert\Length(max: Constraints::CARD_BAG_NAME_MAX_LENGTH, maxMessage: $this->translator->trans('validation.new_bag.name_too_long', ['limit' => Constraints::CARD_BAG_NAME_MAX_LENGTH])),
+      ],
+      'newBagDescription' => [
+        new Assert\Length(max: Constraints::CARD_BAG_DESCRIPTION_MAX_LENGTH, maxMessage: $this->translator->trans('validation.new_bag.description_too_long', ['limit' => Constraints::CARD_BAG_DESCRIPTION_MAX_LENGTH])),
       ]
     ];
     $globals = [
@@ -96,6 +101,8 @@ class CardBagController extends BaseController
 
     if (count($error) > 0) {
       $flashBag->add('newBagError', $error);
+      $flashBag->add('newBagName', $dto->getNewBagName());
+      $flashBag->add('newBagDescription', $dto->getNewBagDescription());
       return $this->redirect($previousRoute);
     }
 
@@ -128,6 +135,13 @@ class CardBagController extends BaseController
     $fields = [
       'title' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.new_card.title_not_blank')),
+        new Assert\Length(max: Constraints::CARD_TITLE_MAX_LENGTH, maxMessage: $this->translator->trans('validation.new_card.title_too_long', ['limit' => Constraints::CARD_TITLE_MAX_LENGTH])),
+      ],
+      'subTitle' => [
+        new Assert\Length(max: Constraints::CARD_SUB_TITLE_MAX_LENGTH, maxMessage: $this->translator->trans('validation.new_card.sub_title_too_long', ['limit' => Constraints::CARD_SUB_TITLE_MAX_LENGTH]))
+      ],
+      'description' => [
+        new Assert\Length(max: Constraints::CARD_DESCRIPTION_MAX_LENGTH, maxMessage: $this->translator->trans('validation.new_card.description_too_long', ['limit' => Constraints::CARD_DESCRIPTION_MAX_LENGTH])),
       ],
       'cardType' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.new_card.card_type_not_blank')),
@@ -144,6 +158,12 @@ class CardBagController extends BaseController
 
     if (count($error) > 0) {
       $flashBag->add('newCardError', $error);
+      $flashBag->add('title', $dto->getTitle());
+      $flashBag->add('subTitle', $dto->getSubTitle());
+      $flashBag->add('description', $dto->getDescription());
+      $flashBag->add('cardType', $dto->getCardType());
+      $flashBag->add('cardColor', $dto->getCardColor());
+      $flashBag->add('cardTextColor', $dto->getCardTextColor());
       return $this->redirect($previousRoute);
     }
 
@@ -187,12 +207,28 @@ class CardBagController extends BaseController
     // Get flash errors when creating new bag
     if ($flashBag->has('newBagError')) {
       $flashErrors = $flashBag->get('newBagError')[0];
+      $flashNewBagName = $flashBag->get('newBagName')[0];
+      $flashNewBagDescription = $flashBag->get('newBagDescription')[0];
+      $errors['newBagName'] = $flashNewBagName;
+      $errors['newBagDescription'] = $flashNewBagDescription;
       $errors['newBagError'] = $flashErrors;
     }
 
     // Get flash errors when creating new card
     if ($flashBag->has('newCardError')) {
       $flashErrors = $flashBag->get('newCardError')[0];
+      $flashTitle = $flashBag->get('title')[0];
+      $flashSubTitle = $flashBag->get('subTitle')[0];
+      $flashDescription = $flashBag->get('description')[0];
+      $flashCardType = $flashBag->get('cardType')[0];
+      $flashCardColor = $flashBag->get('cardColor')[0];
+      $flashCardTextColor = $flashBag->get('cardTextColor')[0];
+      $errors['newCardTitle'] = $flashTitle;
+      $errors['newCardSubTitle'] = $flashSubTitle;
+      $errors['newCardDescription'] = $flashDescription;
+      $errors['newCardType'] = $flashCardType;
+      $errors['newCardColor'] = $flashCardColor;
+      $errors['newCardTextColor'] = $flashCardTextColor;
       $errors['newCardError'] = $flashErrors;
     }
 

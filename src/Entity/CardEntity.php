@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Config\Constants;
+use App\Config\Constraints;
 use App\Repository\CardRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -12,13 +13,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
 class CardEntity extends BaseEntity
 {
-  #[ORM\Column(type: 'string', length: 255)]
+  #[ORM\Column(type: 'string', length: Constraints::CARD_TITLE_MAX_LENGTH)]
   private string $title;
 
-  #[ORM\Column(type: 'string', length: 255, nullable: true)]
+  #[ORM\Column(type: 'string', length: Constraints::CARD_SUB_TITLE_MAX_LENGTH, nullable: true)]
   private ?string $subTitle;
 
-  #[ORM\Column(type: 'string', length: 1000, nullable: true)]
+  #[ORM\Column(type: 'string', length: Constraints::CARD_DESCRIPTION_MAX_LENGTH, nullable: true)]
   private ?string $description;
 
   #[ORM\Column(type: 'string', length: 10, options: ['default' => Constants::FLASH_CARD_DEFAULT_TYPE, 'comment' => 'Possible values: ' . Constants::FLASH_CARD_BAG_TYPES_STR])]

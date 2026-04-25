@@ -1,8 +1,15 @@
+{% set new_card_title = error.newCardTitle|default('') %}
+{% set new_card_subtitle = error.newCardSubTitle|default('') %}
+{% set new_card_description = error.newCardDescription|default('') %}
+{% set new_card_type = error.newCardType|default('') %}
+{% set new_card_color = error.newCardColor|default(constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR')) %}
+{% set new_card_text_color = error.newCardTextColor|default(constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR')) %}
+
 {% if createMode %}
-  <div class="flex flex-col gap-10 z-50 w-full h-full" x-data="{ title: '', subTitle: '', description: '', type: '', cardColor: '{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR') }}', textColor: '{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR') }}' }"
-  @reset-new-card-modal.window="document.getElementById('div_new_card_title').innerHTML = '';
-  document.getElementById('div_new_card_sub_title').innerHTML = '';
-  document.getElementById('div_new_card_description').innerHTML = '';
+  <div class="flex flex-col gap-10 z-50 w-full h-full" x-data="{ title: '{{ new_card_title }}', subTitle: '{{ new_card_subtitle }}', description: '{{ new_card_description }}', type: '{{ new_card_type }}', cardColor: '{{ new_card_color }}', textColor: '{{ new_card_text_color }}' }"
+  @reset-new-card-modal.window="document.getElementById('div_new_card_title').innerHTML = ''; title = '';
+  document.getElementById('div_new_card_sub_title').innerHTML = ''; subTitle = '';
+  document.getElementById('div_new_card_description').innerHTML = ''; description = '';
   document.getElementById('card_type').dispatchEvent(new Event('reset'));
   document.getElementById('card_color').dispatchEvent(new Event('reset'));
   document.getElementById('card_text_color').dispatchEvent(new Event('reset'));
@@ -14,7 +21,7 @@
       <input hidden name="sub_title" :value="subTitle">
       <input hidden name="description" :value="description">
       <div class="flex flex-col gap-3 text-center">
-        <h2 class="text-5xl" id="div_new_card_title" contenteditable @input="if($el.innerHTML==='<br>'){$el.innerHTML=''};title = $el.innerHTML" data-placeholder="{{ 'card_bag.card_title'|trans }}"></h2>
+        <h2 class="text-5xl" id="div_new_card_title" contenteditable @input="if($el.innerHTML==='<br>'){$el.innerHTML=''};title = $el.innerHTML" data-placeholder="{{ 'card_bag.card_title'|trans }}">{{ new_card_title }}</h2>
         {% if error.newCardError is defined and error.newCardError.title is defined %}
           <div id="new_card_title_error" class="mt-1 text-xs text-(--red)">
             {{ error.newCardError.title[0] }}
@@ -22,7 +29,7 @@
         {% endif %}
       </div>
       <div class="flex flex-col gap-3 text-center">
-        <h5 class="text-xl" id="div_new_card_sub_title" contenteditable @input="if($el.innerHTML==='<br>'){$el.innerHTML=''};subTitle = $el.innerHTML" data-placeholder="{{ 'card_bag.card_subtitle'|trans }}"></h5>
+        <h5 class="text-xl" id="div_new_card_sub_title" contenteditable @input="if($el.innerHTML==='<br>'){$el.innerHTML=''};subTitle = $el.innerHTML" data-placeholder="{{ 'card_bag.card_subtitle'|trans }}">{{ new_card_subtitle }}</h5>
         {% if error.newCardError is defined and error.newCardError.sub_title is defined %}
           <div id="new_card_sub_title_error" class="mt-1 text-xs text-(--red)">
             {{ error.newCardError.sub_title[0] }}
@@ -30,7 +37,7 @@
         {% endif %}
       </div>
       <div class="flex flex-col gap-3 text-start">
-        <div class="flex-1 whitespace-pre-line text-md overflow-auto scroll-container" id="div_new_card_description" contenteditable @input="if($el.innerHTML==='<br>'){$el.innerHTML=''};description = $el.innerHTML" data-placeholder="{{ 'card_bag.card_description'|trans }}"></div>
+        <div class="flex-1 whitespace-pre-line text-md overflow-auto scroll-container" id="div_new_card_description" contenteditable @input="if($el.innerHTML==='<br>'){$el.innerHTML=''};description = $el.innerHTML" data-placeholder="{{ 'card_bag.card_description'|trans }}">{{ new_card_description }}</div>
         {% if error.newCardError is defined and error.newCardError.description is defined %}
           <div id="new_card_description_error" class="mt-1 text-xs text-(--red)">
             {{ error.newCardError.description[0] }}
@@ -50,10 +57,10 @@
         </twig:Select>
       </div>
       <div>
-        <twig:Input type="color" name="card_color" label="{{ 'card_bag.card_color'|trans }}" aria-label="{{ 'card_bag.card_color'|trans }}" x-model="cardColor" defaultValue="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR') }}"/>
+        <twig:Input type="color" name="card_color" label="{{ 'card_bag.card_color'|trans }}" aria-label="{{ 'card_bag.card_color'|trans }}" x-model="cardColor" defaultValue="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR') }}" error="{{ error.newCardError is defined and error.newCardError.card_color is defined ? error.newCardError.card_color[0] : '' }}"/>
       </div>
       <div>
-        <twig:Input type="color" name="card_text_color" label="{{ 'card_bag.card_text_color'|trans }}" aria-label="{{ 'card_bag.card_text_color'|trans }}" x-model="textColor" defaultValue="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR') }}"/>
+        <twig:Input type="color" name="card_text_color" label="{{ 'card_bag.card_text_color'|trans }}" aria-label="{{ 'card_bag.card_text_color'|trans }}" x-model="textColor" defaultValue="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR') }}" error="{{ error.newCardError is defined and error.newCardError.card_text_color is defined ? error.newCardError.card_text_color[0] : '' }}"/>
       </div>
       <div class="pb-3 pt-2 flex flex-row-reverse gap-3">
         <div class="inline-flex">
