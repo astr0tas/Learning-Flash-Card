@@ -106,17 +106,42 @@ class CardBagService extends BaseService
     return $currentDTO;
   }
 
+  public function deleteBag(int $bagId, bool $flushAfterFinish = false)
+  {
+    $bag = $this->getBag($bagId);
+    if ($bag) {
+      // Delete the card itself
+      $this->entityManager->remove($bag);
+
+      // Delete cards in the bag
+      $cards = $bag->getCardEntities();
+      foreach ($cards as $card) {
+        $this->entityManager->remove($card);
+      }
+
+      // Delete children bags recursively
+      $childrenBags = $bag->getChildrenCardBagEntities();
+      foreach ($childrenBags as $childBag) {
+        $this->deleteBag($childBag->getId());
+      }
+
+      if ($flushAfterFinish) {
+        $this->entityManager->flush();
+      }
+    }
+  }
+
   public function deleteObject(DeleteObjectDTO $dto)
   {
-    // Delete bags
-    foreach ($dto->getBag() as $bagId) {
-      $bag = $this->cardBagRepository->find($bagId);
-      $this->entityManager->remove($bag);
-    }
     // Delete cards
     foreach ($dto->getCard() as $cardId) {
       $card = $this->cardRepository->find($cardId);
       $this->entityManager->remove($card);
+    }
+
+    // Delete bags
+    foreach ($dto->getBag() as $bagId) {
+      $this->deleteBag($bagId);
     }
 
     $this->entityManager->flush();
