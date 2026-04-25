@@ -10,7 +10,7 @@
 {% set success = success | default(false) %}
 {% block auth_body %}
   {% if success %}
-    <div class="flex flex-col items-center" data-turbo="false">
+    <div class="flex flex-col items-center">
       <div class="w-[50px] h-[50px]">
         {{ include('icons/success.svg') }}
       </div>
@@ -27,7 +27,7 @@
       </p>
     </div>
   {% else %}
-    <div data-turbo="false">
+    <div>
       <h1 class="font-bold text-2xl text-center">
         {{ 'register.header'|trans }}
       </h1>
