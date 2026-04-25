@@ -45,7 +45,7 @@ class CardBagController extends BaseController
     $breadcrumbs = [['icon' => 'icons/folder.svg', 'label' => $this->translator->trans('menu.card_bag'), 'url' => Routes::CARD_BAG_ROUTE_URL]];
     $runner = $bagTree;
     while ($runner->getChild()) {
-      $breadcrumbs[] = ['label' => $bagTree->getBagName(), 'url' => str_replace('{id}', $bagTree->getBagId(), Routes::CARD_BAG_DETAIL_ROUTE_URL)];
+      $breadcrumbs[] = ['label' => $runner->getBagName(), 'url' => str_replace('{id}', $runner->getBagId(), Routes::CARD_BAG_DETAIL_ROUTE_URL)];
       $runner = $runner->getChild();
     }
     $breadcrumbs[] = ['label' => $runner->getBagName(), 'url' => str_replace('{id}', $runner->getBagId(), Routes::CARD_BAG_DETAIL_ROUTE_URL)];

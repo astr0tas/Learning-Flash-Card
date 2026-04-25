@@ -89,18 +89,21 @@ class CardBagService extends BaseService
 
   public function getBagTree(int $bagId): BagNavigationTreeDTO
   {
-    $bag = $this->getBag($bagId);
-    $bagDTO = new BagNavigationTreeDTO();
-    $bagDTO->setBagId($bag->getId());
-    $bagDTO->setBagName($bag->getName());
+    $currentBag = $this->getBag($bagId);
+    $previousDTO = null;
 
-    $parentBag = $bag->getParentCardBagEntity();
+    while ($currentBag) {
+      $currentDTO = new BagNavigationTreeDTO();
+      $currentDTO->setBagId($currentBag->getId());
+      $currentDTO->setBagName($currentBag->getName());
+      $currentDTO->setChild($previousDTO);
 
-    if ($parentBag != null) {
-      return $this->getBagTree($parentBag->getId())->setChild($bagDTO);
-    } else {
-      return $bagDTO;
+      $previousDTO = $currentDTO;
+      $parent = $currentBag->getParentCardBagEntity();
+      $currentBag = $parent ? $this->getBag($parent->getId()) : null;
     }
+
+    return $currentDTO;
   }
 
   public function deleteObject(DeleteObjectDTO $dto)
