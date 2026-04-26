@@ -112,6 +112,8 @@ class CardBagService extends BaseService
       $bag = $card->getCardBagEntity();
       if ($bag) {
         $card->setRestorePath($this->parseBagTreeToRestorePath($this->getBagTree($bag->getId())));
+      } else {
+        $card->setRestorePath('/');
       }
 
       // Move the card to root if needed
@@ -147,6 +149,8 @@ class CardBagService extends BaseService
       $parentBag = $bag->getParentCardBagEntity();
       if ($parentBag) {
         $bag->setRestorePath($this->parseBagTreeToRestorePath($this->getBagTree($parentBag->getId())));
+      } else {
+        $bag->setRestorePath('/');
       }
 
       // Move the bag to root if needed

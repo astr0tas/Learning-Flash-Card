@@ -59,7 +59,7 @@
     <div class="flex items-center justify-between gap-2">
       {# Search bar #}
       <div class="w-full max-w-[700px]" @search="filterBagAndCard(document.getElementById('search').value)">
-        <twig:Input type="search" name="search" placeholder="{{ 'card_bag.search_placeholder'|trans }}" size="9xl" />
+        <twig:Input type="search" name="search" placeholder="{{ 'card_bag.search_placeholder'|trans }}" size="9xl" @keyup.enter="filterBagAndCard(document.getElementById('search').value)"/>
       </div>
       {# Control buttons #}
       <div class="flex items-center gap-2">
@@ -119,8 +119,8 @@
       </div>
     </div>
     {# Back button #}
-    {% if breadcrumbs is defined %}
-      <twig:Breadcrumb :items="breadcrumbs"></twig:Breadcrumb>
+    {% if breadcrumb is defined %}
+      <twig:Breadcrumb :items="breadcrumb"></twig:Breadcrumb>
     {% endif %}
     {# Display body #}
     <template x-if="filteredBagList.length || filteredCardList.length">

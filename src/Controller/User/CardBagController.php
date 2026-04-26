@@ -50,7 +50,7 @@ class CardBagController extends BaseController
       'bagList' => $childrenBags,
       'cardList' => $cards,
       'bag' => $bag,
-      'breadcrumbs' => $breadcrumb
+      'breadcrumb' => $breadcrumb
     ]);
   }
 

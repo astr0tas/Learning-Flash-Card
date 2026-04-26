@@ -4,6 +4,6 @@
   </div>
   <h2 class="overflow-hidden whitespace-nowrap text-ellipsis">{{ bagName }}</h2>
   <div class="ms-auto">
-    <twig:ClickInput type="checkbox" class="cursor-default!" name="{{ bagName }}_checkbox" @dblclick.stop x-model="{{ model is defined ? model : null }}" value="{{ bagId }}" x-bind:style="{borderColor: darkMode?getContrastColor('#1e2022'):getContrastColor('#ebeef1')}"></twig:ClickInput>
+    <twig:ClickInput type="checkbox" class="cursor-default!" name="bag_{{ bagId }}_checkbox" @dblclick.stop x-model="{{ model is defined ? model : null }}" value="{{ bagId }}" x-bind:style="{borderColor: darkMode?getContrastColor('#1e2022'):getContrastColor('#ebeef1')}"></twig:ClickInput>
   </div>
 </div>

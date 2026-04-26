@@ -224,4 +224,14 @@ class CardBagEntity extends BaseEntity
 
     return $this;
   }
+
+  /**
+   * Get the value of deletedAt
+   *
+   * @return ?\DateTimeInterface
+   */
+  public function getDeletedAt(): ?\DateTimeInterface
+  {
+    return $this->deletedAt;
+  }
 }
