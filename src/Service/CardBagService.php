@@ -10,6 +10,7 @@ use App\Repository\CardBagRepository;
 use App\Entity\CardBagEntity;
 use App\Entity\CardEntity;
 use App\Repository\CardRepository;
+use App\Config\Routes;
 
 class CardBagService extends BaseService
 {
@@ -103,24 +104,58 @@ class CardBagService extends BaseService
     return $currentDTO;
   }
 
-  public function deleteBag(int $bagId, bool $flushAfterFinish = false)
+  public function deleteCard(int $cardId, \DateTimeInterface $deleteTime = new \DateTime(), bool $moveToRoot = false,  bool $flushAfterFinish = false)
+  {
+    $card = $this->cardRepository->find($cardId);
+    if ($card) {
+      // Update the card restore path
+      $bag = $card->getCardBagEntity();
+      if ($bag) {
+        $card->setRestorePath($this->parseBagTreeToRestorePath($this->getBagTree($bag->getId())));
+      }
+
+      // Move the card to root if needed
+      if ($moveToRoot) {
+        $card->setCardBagEntity(null);
+      }
+
+      // Soft delete the card
+      $card->setDeletedAt($deleteTime);
+      if ($flushAfterFinish) {
+        $this->entityManager->flush();
+      }
+    }
+  }
+
+  public function deleteBag(int $bagId, \DateTimeInterface $deleteTime = new \DateTime(), bool $moveToRoot = false, $flushAfterFinish = false)
   {
     $bag = $this->getBag($bagId);
     if ($bag) {
-      // Delete the card itself
-      $this->entityManager->remove($bag);
-
       // Delete cards in the bag
       $cards = $bag->getCardEntities();
       foreach ($cards as $card) {
-        $this->entityManager->remove($card);
+        $this->deleteCard($card->getId(), $deleteTime);
       }
 
       // Delete children bags recursively
       $childrenBags = $bag->getChildrenCardBagEntities();
       foreach ($childrenBags as $childBag) {
-        $this->deleteBag($childBag->getId());
+        $this->deleteBag($childBag->getId(), $deleteTime);
       }
+
+      // Update the bag restore path
+      $parentBag = $bag->getParentCardBagEntity();
+      if ($parentBag) {
+        $bag->setRestorePath($this->parseBagTreeToRestorePath($this->getBagTree($parentBag->getId())));
+      }
+
+      // Move the bag to root if needed
+      if ($moveToRoot) {
+        $bag->setParentCardBagEntity(null);
+      }
+
+      // Delete the bag itself
+      $bag->setDeletedAt($deleteTime);
 
       if ($flushAfterFinish) {
         $this->entityManager->flush();
@@ -130,15 +165,16 @@ class CardBagService extends BaseService
 
   public function deleteObject(DeleteObjectDTO $dto)
   {
+    $deleteTime = new \DateTime();
+
     // Delete cards
     foreach ($dto->getCard() as $cardId) {
-      $card = $this->cardRepository->find($cardId);
-      $this->entityManager->remove($card);
+      $this->deleteCard($cardId, $deleteTime, true);
     }
 
     // Delete bags
     foreach ($dto->getBag() as $bagId) {
-      $this->deleteBag($bagId);
+      $this->deleteBag($bagId, $deleteTime, true);
     }
 
     $this->entityManager->flush();
@@ -153,5 +189,15 @@ class CardBagService extends BaseService
       $runner = $runner->getChild();
     }
     return $breadcrumb;
+  }
+
+  public function parseBagTreeToRestorePath(BagNavigationTreeDTO $bagTree, string $str = ''): string
+  {
+    $runner = $bagTree;
+    while ($runner) {
+      $str = $str . '/' . $runner->getBagName();
+      $runner = $runner->getChild();
+    }
+    return $str;
   }
 }

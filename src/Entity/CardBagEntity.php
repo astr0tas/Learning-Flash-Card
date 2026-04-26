@@ -35,6 +35,9 @@ class CardBagEntity extends BaseEntity
   #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parentCardBagEntity')]
   private Collection $childrenCardBagEntities;
 
+  #[ORM\Column(type: 'string', nullable: true)]
+  private ?string $restorePath = null;
+
   #[ORM\Column(type: 'datetime', nullable: true)]
   private ?\DateTimeInterface $deletedAt = null;
 
@@ -194,6 +197,30 @@ class CardBagEntity extends BaseEntity
   public function setName(string $name): self
   {
     $this->name = $name;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of restorePath
+   *
+   * @return ?string
+   */
+  public function getRestorePath(): ?string
+  {
+    return $this->restorePath;
+  }
+
+  /**
+   * Set the value of restorePath
+   *
+   * @param ?string $restorePath
+   *
+   * @return self
+   */
+  public function setRestorePath(?string $restorePath): self
+  {
+    $this->restorePath = $restorePath;
 
     return $this;
   }

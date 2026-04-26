@@ -39,6 +39,9 @@ class CardEntity extends BaseEntity
   #[ORM\JoinColumn(name: 'user_id', nullable: false)]
   private ?UserEntity $userEntity = null;
 
+  #[ORM\Column(type: 'string', nullable: true)]
+  private ?string $restorePath = null;
+
   #[ORM\Column(type: 'datetime', nullable: true)]
   private ?\DateTimeInterface $deletedAt = null;
 
@@ -244,6 +247,30 @@ class CardEntity extends BaseEntity
   public function setCardTextColor(string $cardTextColor): self
   {
     $this->cardTextColor = $cardTextColor;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of restorePath
+   *
+   * @return ?string
+   */
+  public function getRestorePath(): ?string
+  {
+    return $this->restorePath;
+  }
+
+  /**
+   * Set the value of restorePath
+   *
+   * @param ?string $restorePath
+   *
+   * @return self
+   */
+  public function setRestorePath(?string $restorePath): self
+  {
+    $this->restorePath = $restorePath;
 
     return $this;
   }
