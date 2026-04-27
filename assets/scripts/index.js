@@ -52,6 +52,19 @@ document.addEventListener('alpine:init', () =>
 
       // 128 is the midway point of brightness
       return (yiq >= 128) ? '#000000' : '#FFFFFF';
+    },
+    init()
+    {
+      this.$watch('darkMode', (value) => {
+        // If value is true, remove the dark_theme class from the body tag and add light_theme class to it, else do the opposite
+        if (value) {
+          document.body.classList.remove('light_theme');
+          document.body.classList.add('dark_theme');
+        } else {
+          document.body.classList.remove('dark_theme');
+          document.body.classList.add('light_theme');
+        }
+      });
     }
   }));
 });
