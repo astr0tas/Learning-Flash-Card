@@ -60,6 +60,12 @@ class Routes
   public const MOVE_OBJECT_ROUTE_NAME = 'move-object';
   public const TRASH_ROUTE_URL = '/trash';
   public const TRASH_ROUTE_NAME = 'trash';
+  public const TRASH_BAG_ROUTE_URL = '/trash/bag/{id}';
+  public const TRASH_BAG_ROUTE_NAME = 'trash-bag';
+  public const PERMANENT_DELETE_OBJECT_ROUTE_URL = '/permanent-delete-object';
+  public const PERMANENT_DELETE_OBJECT_ROUTE_NAME = 'permanent-delete-object';
+  public const RESTORE_OBJECT_ROUTE_URL = '/restore-object';
+  public const RESTORE_OBJECT_ROUTE_NAME = 'restore-object';
   public const ACCOUNT_ROUTE_URL = '/account';
   public const ACCOUNT_ROUTE_NAME = 'account';
 

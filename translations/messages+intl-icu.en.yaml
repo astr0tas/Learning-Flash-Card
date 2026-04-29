@@ -90,6 +90,19 @@ card_bag:
 
 trash:
   title: "Trash Bin"
+  search_placeholder: "Search card bags or cards"
+  name_or_title: "Name or title"
+  type: "Type"
+  type_bag: "Card bag"
+  type_card: "Card"
+  restore_path: "Restore path"
+  deleted_at: "Deleted at"
+  permanent_delete: "Permanent delete"
+  restore: "Restore"
+  permanent_delete_confirm: "Are you sure you want to permanently delete the selected items? This action can not be undone"
+  restore_confirm: "Are you sure you want to restore the selected items?"
+  permanent_delete_success: "The selected items have been deleted permanently"
+  restore_success: "The selected items have been restored successfully"
 
 feature_in_development: "Feature in Development"
 
@@ -163,5 +176,6 @@ action:
   move: "Move"
   create: "Create"
   add: "Add"
+  restore: "Restore"
 
 empty: "Empty"

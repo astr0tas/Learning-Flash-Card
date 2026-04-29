@@ -38,6 +38,16 @@ class BaseService
     throw new InternalErrorException(Constants::NO_SESSION_FLASH_BAG);
   }
 
+  public function enableSoftDeleteFilter()
+  {
+    $this->entityManager->getFilters()->enable('softdeleteable');
+  }
+
+  public function disableSoftDeleteFilter()
+  {
+    $this->entityManager->getFilters()->disable('softdeleteable');
+  }
+
   // /**
   //  * Check if the user sent too many requests for tokens (e.g., recovery tokens, verification tokens, etc.)
   //  * @param string $entityClass The entity class to check (e.g., UserEntity::class)
