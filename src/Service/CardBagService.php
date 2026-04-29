@@ -89,6 +89,7 @@ class CardBagService extends BaseService
   {
     $currentBag = $this->getBag($bagId);
     $previousDTO = null;
+    $currentDTO = null;
 
     while ($currentBag) {
       $currentDTO = new BagNavigationTreeDTO();
@@ -129,7 +130,7 @@ class CardBagService extends BaseService
     }
   }
 
-  public function deleteBag(int $bagId, \DateTimeInterface $deleteTime = new \DateTime(), bool $moveToRoot = false, $flushAfterFinish = false)
+  public function deleteBag(int $bagId, \DateTimeInterface $deleteTime = new \DateTime(), bool $moveToRoot = false, bool $flushAfterFinish = false)
   {
     $bag = $this->getBag($bagId);
     if ($bag) {

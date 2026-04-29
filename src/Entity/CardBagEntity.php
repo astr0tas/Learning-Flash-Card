@@ -19,20 +19,20 @@ class CardBagEntity extends BaseEntity
   private string $name;
 
   #[ORM\ManyToOne(targetEntity: UserEntity::class, inversedBy: 'cardBagEntities')]
-  #[ORM\JoinColumn(name: 'user_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
   private ?UserEntity $userEntity = null;
 
-  #[ORM\OneToMany(targetEntity: CardEntity::class, mappedBy: 'cardBagEntity')]
+  #[ORM\OneToMany(targetEntity: CardEntity::class, mappedBy: 'cardBagEntity', cascade: ['remove'], orphanRemoval: true)]
   private Collection $cardEntities;
 
   // 1. THE OWNING SIDE (Who is my parent?)
   // nullable: true is important here! A top-level item won't have a parent.
   #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'childrenCardBagEntities')]
-  #[ORM\JoinColumn(name: 'parent_card_bag_id', referencedColumnName: 'id', nullable: true)]
+  #[ORM\JoinColumn(name: 'parent_card_bag_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
   private ?self $parentCardBagEntity = null;
 
   // 2. THE INVERSE SIDE (Who are my children?)
-  #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parentCardBagEntity')]
+  #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parentCardBagEntity', cascade: ['remove'], orphanRemoval: true)]
   private Collection $childrenCardBagEntities;
 
   #[ORM\Column(type: 'string', nullable: true)]
