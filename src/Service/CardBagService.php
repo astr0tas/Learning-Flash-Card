@@ -105,7 +105,7 @@ class CardBagService extends BaseService
     return $currentDTO;
   }
 
-  public function deleteCard(int $cardId, \DateTimeInterface $deleteTime = new \DateTime(), bool $moveToRoot = false,  bool $flushAfterFinish = false)
+  private function deleteCard(int $cardId, \DateTimeInterface $deleteTime = new \DateTime(), bool $moveToRoot = false)
   {
     $card = $this->cardRepository->find($cardId);
     if ($card) {
@@ -124,13 +124,10 @@ class CardBagService extends BaseService
 
       // Soft delete the card
       $card->setDeletedAt($deleteTime);
-      if ($flushAfterFinish) {
-        $this->entityManager->flush();
-      }
     }
   }
 
-  public function deleteBag(int $bagId, \DateTimeInterface $deleteTime = new \DateTime(), bool $moveToRoot = false, bool $flushAfterFinish = false)
+  private function deleteBag(int $bagId, \DateTimeInterface $deleteTime = new \DateTime(), bool $moveToRoot = false)
   {
     $bag = $this->getBag($bagId);
     if ($bag) {
@@ -161,10 +158,6 @@ class CardBagService extends BaseService
 
       // Delete the bag itself
       $bag->setDeletedAt($deleteTime);
-
-      if ($flushAfterFinish) {
-        $this->entityManager->flush();
-      }
     }
   }
 
@@ -196,7 +189,7 @@ class CardBagService extends BaseService
     return $breadcrumb;
   }
 
-  public function parseBagTreeToRestorePath(BagNavigationTreeDTO $bagTree, string $str = ''): string
+  private function parseBagTreeToRestorePath(BagNavigationTreeDTO $bagTree, string $str = ''): string
   {
     $runner = $bagTree;
     while ($runner) {

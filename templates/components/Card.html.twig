@@ -89,7 +89,7 @@
     <h2 class="{% if not viewMode %} text-3xl {% else %} text-5xl {% endif %} text-center">{{ cardTitle }}</h2>
     <h5 class="text-center {% if not viewMode %} text-md {% else %} text-xl {% endif %}">{{ cardSubtitle }}</h5>
     <div class="flex-1 text-start whitespace-pre-line {% if not viewMode %} text-xs overflow-hidden text-ellipsis break-words line-clamp-11 {% else %} text-md overflow-auto scroll-container {% endif %}">{{ cardDescription|raw }}</div>
-    <div class="absolute {% if not viewMode %} right-1 top-2 {% else %} right-5 top-5 {% endif %}">
+    <div class="absolute {% if not viewMode %} right-2 top-2 {% else %} right-5 top-5 {% endif %}">
       {% if not viewMode %}
         <twig:ClickInput type="checkbox" class="cursor-default!" name="card_{{ cardId }}_checkbox" @click.stop x-model="{{ model is defined ? model : null }}" value="{{ cardId }}" x-bind:style="{borderColor: getContrastColor('{{ cardColor }}')}"></twig:ClickInput>
       {% else %}
