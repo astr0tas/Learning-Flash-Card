@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-class DeleteObjectDTO extends BaseDTO
+class SelectObjectDTO extends BaseDTO
 {
   private array $bag = [];
   private array $card = [];

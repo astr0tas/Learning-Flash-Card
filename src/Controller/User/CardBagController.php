@@ -7,7 +7,7 @@ use App\Config\Constraints;
 use App\Config\Routes;
 use App\Config\TwigTemplate;
 use App\Controller\BaseController;
-use App\DTO\DeleteObjectDTO;
+use App\DTO\SelectObjectDTO;
 use App\DTO\NewBagDTO;
 use App\DTO\NewCardDTO;
 use App\Service\CardBagService;
@@ -177,7 +177,7 @@ class CardBagController extends BaseController
     $postData = $request->request->all();
 
     // Pass the form data to a DTO
-    $dto = new DeleteObjectDTO();
+    $dto = new SelectObjectDTO();
     ClassUtility::mapArrayToDTO($postData, $dto);
 
     $this->service->deleteObject($dto);
@@ -187,7 +187,7 @@ class CardBagController extends BaseController
 
   /**
    * This function will focus on getting flash error data emitted from other functions in this controller
-   * @return void
+   * @return array
    */
   private function getErrorFlash(): array
   {

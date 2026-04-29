@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\DTO\BagNavigationTreeDTO;
-use App\DTO\DeleteObjectDTO;
+use App\DTO\SelectObjectDTO;
 use App\DTO\NewBagDTO;
 use App\DTO\NewCardDTO;
 use App\Repository\CardBagRepository;
@@ -167,7 +167,7 @@ class CardBagService extends BaseService
     }
   }
 
-  public function deleteObject(DeleteObjectDTO $dto)
+  public function deleteObject(SelectObjectDTO $dto)
   {
     $deleteTime = new \DateTime();
 

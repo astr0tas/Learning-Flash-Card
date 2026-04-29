@@ -11,7 +11,7 @@ final class Button
   public string $class = "text-base";
   public string $element_class;
 
-  public function mount(string $variant, string $class): void
+  public function mount(string $variant, string $class = ""): void
   {
     $this->element_class = match ($variant) {
       "primary" => "bg-(--blue) text-white font-semibold py-2 px-4 $class",

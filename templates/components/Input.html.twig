@@ -57,7 +57,7 @@
       </div>
     {% endif %}
     {% if type == 'search' %}
-      <div x-show="hasValue" class="w-10 h-10 absolute right-2 top-1 cursor-pointer rounded-full p-4 flex items-center justify-center" x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'hover:bg-gray-100 active:bg-gray-200'" @click="$refs.{{ name|default(id) }}.value = ''; hasValue = false;">
+      <div x-show="hasValue" class="w-10 h-10 absolute right-2 top-1 cursor-pointer rounded-full p-4 flex items-center justify-center" x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'hover:bg-gray-100 active:bg-gray-200'" @click="$refs.{{ name|default(id) }}.value = ''; hasValue = false; $dispatch('search', '')">
         <div class="w-4 h-4 absolute">
           {{ include('icons/close.svg') }}
         </div>
