@@ -84,6 +84,9 @@ card_bag:
   bag_list: "Bag list"
   card_list: "Card list"
   delete_confirm: "Do you want to delete the selected items?"
+  new_card_created: "New card has been created successfully"
+  new_bag_created: "New bag has been created successfully"
+  object_deleted: "The selected items have been deleted successfully"
 
 trash:
   title: "Trash Bin"

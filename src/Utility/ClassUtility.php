@@ -6,7 +6,6 @@ use App\DTO\BaseDTO;
 use ReflectionObject;
 use function Symfony\Component\String\u;
 
-
 class ClassUtility
 {
   /**

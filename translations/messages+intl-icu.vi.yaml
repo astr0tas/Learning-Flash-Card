@@ -84,6 +84,9 @@ card_bag:
   bag_list: "Danh sách túi thẻ"
   card_list: "Danh sách thẻ"
   delete_confirm: "Bạn có chắc chắn muốn xóa các mục đã chọn?"
+  new_card_created: "Thẻ mới đã được tạo thành công"
+  new_bag_created: "Túi thẻ mới đã được tạo thành công"
+  object_deleted: "Các mục được chọn đã được xóa thành công"
 
 trash:
   title: "Thùng rác"

@@ -7,11 +7,12 @@ use App\Config\Constraints;
 use App\Config\Routes;
 use App\Config\TwigTemplate;
 use App\Controller\BaseController;
-use App\DTO\SelectObjectDTO;
 use App\DTO\NewBagDTO;
 use App\DTO\NewCardDTO;
+use App\DTO\SelectObjectDTO;
 use App\Service\CardBagService;
 use App\Utility\ClassUtility;
+use App\Utility\Utility;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -99,6 +100,8 @@ class CardBagController extends BaseController
 
     $newBag = $this->service->addNewBag($dto);
 
+    Utility::addNoticeToSessionFlash($this->session, 'success', $this->translator->trans('card_bag.new_bag_created'));
+
     $redirectUrl = str_replace('{id}', $newBag->getId(), Routes::CARD_BAG_DETAIL_ROUTE_URL);
     return $this->redirect($redirectUrl);
   }
@@ -160,6 +163,8 @@ class CardBagController extends BaseController
 
     $this->service->addNewCard($dto);
 
+    Utility::addNoticeToSessionFlash($this->session, 'success', $this->translator->trans('card_bag.new_card_created'));
+
     return $this->redirect($previousRoute);
   }
 
@@ -181,6 +186,8 @@ class CardBagController extends BaseController
     ClassUtility::mapArrayToDTO($postData, $dto);
 
     $this->service->deleteObject($dto);
+
+    Utility::addNoticeToSessionFlash($this->session, 'info', $this->translator->trans('card_bag.object_deleted'));
 
     return $this->redirect($previousRoute);
   }
