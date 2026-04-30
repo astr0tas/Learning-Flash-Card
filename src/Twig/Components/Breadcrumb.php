@@ -9,17 +9,25 @@ final class Breadcrumb
 {
   /**
    * @var array
+   * Required key: label
+   * Optional key: url, icon (HTML string), action
    * Example:
    * [
    *   [
    *     'label' => 'Home',
    *     'url' => '/',
-   *     'icon' => 'icons/example.svg', (use for `include` function)
+   *     'icon' => '<svg></svg>'
    *   ],
    *   [
    *     'label' => 'Products',
    *     'url' => '/products'
+   *   ],
+   *   [
+   *    'label' => 'Product Name',
+   *    'action' => 'javascript:void(0);' (if no url, use action for click event)
    *   ]
+   * ]
    */
   public array $items = [];
+  public int $maximumDisplayableItems = 3;
 }

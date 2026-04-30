@@ -43,7 +43,7 @@ class CardBagController extends BaseController
     $bagTree = $this->service->getBagTree($id);
 
     // Convert the bag tree to breadcrumbs array
-    $breadcrumb = [['icon' => 'icons/folder.svg', 'label' => $this->translator->trans('menu.card_bag'), 'url' => Routes::CARD_BAG_ROUTE_URL]];
+    $breadcrumb = [['icon' => $this->renderView('icons/folder.svg'), 'label' => $this->translator->trans('menu.card_bag'), 'url' => Routes::CARD_BAG_ROUTE_URL]];
     $breadcrumb = $this->service->parseBagTreeToBreadcrumb($bagTree, $breadcrumb);
 
     return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG, parameters: [

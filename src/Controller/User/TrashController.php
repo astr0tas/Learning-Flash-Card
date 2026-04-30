@@ -49,7 +49,7 @@ class TrashController extends BaseController
     $this->service->enableSoftDeleteFilter();
 
     // Convert the bag tree to breadcrumbs array
-    $breadcrumb = [['icon' => 'icons/trash.svg', 'label' => $this->translator->trans('menu.trash'), 'url' => Routes::CARD_BAG_ROUTE_URL]];
+    $breadcrumb = [['icon' => $this->renderView('icons/folder.svg'), 'label' => $this->translator->trans('menu.trash'), 'url' => Routes::CARD_BAG_ROUTE_URL]];
     $breadcrumb = $this->cardBagService->parseBagTreeToBreadcrumb($bagTree, $breadcrumb);
 
     return $this->render(view: TwigTemplate::PAGE_USER_TRASH, parameters: [
