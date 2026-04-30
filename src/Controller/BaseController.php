@@ -6,7 +6,6 @@ use App\Config\Constants;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -17,14 +16,12 @@ class BaseController extends AbstractController
 {
   public TranslatorInterface $translator;
   public SessionInterface $session;
-  public Response $unprocessableEntityResponse;
 
   #[Required]
   public function initProperties(TranslatorInterface $translator, RequestStack $requestStack)
   {
     $this->translator = $translator;
     $this->session = $requestStack->getSession();
-    $this->unprocessableEntityResponse = new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
   }
 
   public function getFlashBag(): FlashBagInterface

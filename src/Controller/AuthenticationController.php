@@ -73,13 +73,13 @@ class AuthenticationController extends BaseController
 
     if (count($error) > 0) {
       $data['error'] = $error;
-      return $this->renderLogin(data: $data, response: $this->unprocessableEntityResponse);
+      return $this->renderLogin(data: $data);
     }
 
     $data = $this->service->login($dto, $data);
 
     if (!empty($data['error'])) {
-      return $this->renderLogin(data: $data, response: $this->unprocessableEntityResponse);
+      return $this->renderLogin(data: $data);
     }
 
     return $this->redirectUserToHome();
@@ -194,13 +194,13 @@ class AuthenticationController extends BaseController
 
     if (count($error) > 0) {
       $data['error'] = $error;
-      return $this->render(view: TwigTemplate::PAGE_REGISTER, parameters: $data, response: $this->unprocessableEntityResponse);
+      return $this->render(view: TwigTemplate::PAGE_REGISTER, parameters: $data);
     }
 
     $data = $this->service->register($dto, $data);
 
     if (!empty($data['error'])) {
-      return $this->render(view: TwigTemplate::PAGE_REGISTER, parameters: $data, response: $this->unprocessableEntityResponse);
+      return $this->render(view: TwigTemplate::PAGE_REGISTER, parameters: $data);
     }
 
     $data['success'] = true;
@@ -248,13 +248,13 @@ class AuthenticationController extends BaseController
 
     if (count($error) > 0) {
       $data['error'] = $error;
-      return $this->render(view: TwigTemplate::PAGE_FORGOT_PASSWORD, parameters: $data, response: $this->unprocessableEntityResponse);
+      return $this->render(view: TwigTemplate::PAGE_FORGOT_PASSWORD, parameters: $data);
     }
 
     $data = $this->service->forgotPassword($dto, $data);
 
     if (!empty($data['error'])) {
-      return $this->render(view: TwigTemplate::PAGE_FORGOT_PASSWORD, parameters: $data, response: $this->unprocessableEntityResponse);
+      return $this->render(view: TwigTemplate::PAGE_FORGOT_PASSWORD, parameters: $data);
     }
 
     $data['success'] = true;
@@ -382,12 +382,12 @@ class AuthenticationController extends BaseController
     return $this->redirectToRoute(Routes::HOME_ROUTE_NAME);
   }
 
-  private function renderLogin(array $data = [], ?Response $response = null)
+  private function renderLogin(array $data = [])
   {
     $authUrl = $this->service->getGoogleOauthAuthorizationUrl();
     $data['google_oauth_url'] = $authUrl;
     $this->session->set(Constants::SESSION_OAUTH2STATE, $this->service->getGoogleOauthState());
 
-    return $this->render(view: TwigTemplate::PAGE_LOGIN, parameters: $data, response: $response);
+    return $this->render(view: TwigTemplate::PAGE_LOGIN, parameters: $data);
   }
 }
