@@ -5,7 +5,6 @@ import { dropdownProcessor } from './dropdown.js';
 document.addEventListener('alpine:init', () =>
 {
   Alpine.data('appData', () => ({
-    isLoading: false,
     darkMode: (function ()
     {
       // Get the dark_mode cookie
