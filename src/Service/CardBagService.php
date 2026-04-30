@@ -18,13 +18,13 @@ class CardBagService extends BaseService
 
   public function getBagByNameAndParentId(string $name, ?int $id): array
   {
-    return $this->cardBagRepository->findBy(['name' => $name, 'parentCardBagEntity' => $id]);
+    return $this->cardBagRepository->findBy(['name' => $name, 'parentCardBagEntity' => $id, 'userEntity' => $this->user->getId()]);
   }
 
   public function addNewBag(NewBagDTO $newBagDTO): CardBagEntity
   {
     // Get user entity through security
-    $user = $this->security->getUser();
+    $user = $this->user;
     // Get parent card bag entity
     $queryResult = $this->cardBagRepository->findBy(['id' => $newBagDTO->getParentBag()]);
     if (count($queryResult) > 0) {
@@ -47,7 +47,7 @@ class CardBagService extends BaseService
   public function addNewCard(NewCardDTO $dto)
   {
     // Get user entity through security
-    $user = $this->security->getUser();
+    $user = $this->user;
     // Get card bag entity
     $queryResult = $this->cardBagRepository->findBy(['id' => $dto->getBag()]);
     if (count($queryResult) > 0) {
@@ -72,17 +72,17 @@ class CardBagService extends BaseService
 
   public function getBagList(?int $bagId): array
   {
-    return $this->cardBagRepository->findBy(['parentCardBagEntity' => $bagId]);
+    return $this->cardBagRepository->findBy(['parentCardBagEntity' => $bagId, 'userEntity' => $this->user->getId()]);
   }
 
   public function getCardList(?int $bagId): array
   {
-    return $this->cardRepository->findBy(['cardBagEntity' => $bagId]);
+    return $this->cardRepository->findBy(['cardBagEntity' => $bagId, 'userEntity' => $this->user->getId()]);
   }
 
   public function getBag(int $bagId)
   {
-    return $this->cardBagRepository->find($bagId);
+    return $this->cardBagRepository->findOneBy(['id' => $bagId, 'userEntity' => $this->user->getId()]);
   }
 
   public function getBagTree(int $bagId): BagNavigationTreeDTO

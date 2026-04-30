@@ -18,7 +18,9 @@ class TrashService extends BaseService
     $query = $this->cardBagRepository->createQueryBuilder('cb')
       ->where('cb.deletedAt IS NULL')
       ->andWhere('cb.name = :name')
-      ->setParameter('name', $name);
+      ->setParameter('name', $name)
+      ->andWhere('cb.userEntity = :userId')
+      ->setParameter('userId', $this->user->getId());
 
     if ($id !== null) {
       $query->andWhere('cb.parentCardBagEntity = :bagId')
@@ -33,7 +35,9 @@ class TrashService extends BaseService
   public function getBagList(?int $bagId): array
   {
     $query = $this->cardBagRepository->createQueryBuilder('cb')
-      ->where('cb.deletedAt IS NOT NULL');
+      ->where('cb.deletedAt IS NOT NULL')
+      ->andWhere('cb.userEntity = :userId')
+      ->setParameter('userId', $this->user->getId());
 
     if ($bagId !== null) {
       $query->andWhere('cb.parentCardBagEntity = :bagId')
@@ -48,7 +52,9 @@ class TrashService extends BaseService
   public function getCardList(?int $bagId): array
   {
     $query = $this->cardRepository->createQueryBuilder('c')
-      ->where('c.deletedAt IS NOT NULL');
+      ->where('c.deletedAt IS NOT NULL')
+      ->andWhere('c.userEntity = :userId')
+      ->setParameter('userId', $this->user->getId());
 
     if ($bagId !== null) {
       $query->andWhere('c.cardBagEntity = :bagId')
@@ -65,7 +71,9 @@ class TrashService extends BaseService
     $query = $this->cardBagRepository->createQueryBuilder('cb')
       ->where('cb.deletedAt IS NOT NULL')
       ->andWhere('cb.id = :bagId')
-      ->setParameter('bagId', $bagId);
+      ->setParameter('bagId', $bagId)
+      ->andWhere('cb.userEntity = :userId')
+      ->setParameter('userId', $this->user->getId());
 
     return $query->getQuery()->getOneOrNullResult();
   }
@@ -75,7 +83,9 @@ class TrashService extends BaseService
     $query = $this->cardRepository->createQueryBuilder('c')
       ->where('c.deletedAt IS NOT NULL')
       ->andWhere('c.id = :cardId')
-      ->setParameter('cardId', $cardId);
+      ->setParameter('cardId', $cardId)
+      ->andWhere('c.userEntity = :userId')
+      ->setParameter('userId', $this->user->getId());
 
     return $query->getQuery()->getOneOrNullResult();
   }
@@ -144,7 +154,7 @@ class TrashService extends BaseService
 
     // If not exist (soft deleted or complete deletion from DB), recreate it and then continue to the next level of `restorePath`
     // Get user entity through security
-    $user = $this->security->getUser();
+    $user = $this->user;
 
     $newBag = new CardBagEntity();
     $newBag->setName($bagName);

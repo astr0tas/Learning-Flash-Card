@@ -3,15 +3,16 @@
 namespace App\Service;
 
 use App\Config\Constants;
+use App\Entity\UserEntity;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
-use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Contracts\Service\Attribute\Required;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BaseService
 {
@@ -19,6 +20,7 @@ class BaseService
   public SessionInterface $session;
   public EntityManagerInterface $entityManager;
   public Security $security;
+  public ?UserEntity $user = null;
 
   #[Required]
   public function initProperties(TranslatorInterface $translator, RequestStack $requestStack, EntityManagerInterface $entityManager, Security $security)
@@ -27,6 +29,7 @@ class BaseService
     $this->session = $requestStack->getSession();
     $this->entityManager = $entityManager;
     $this->security = $security;
+    $this->user = $this->security->getUser();
   }
 
   public function getFlashBag(): FlashBagInterface|null
