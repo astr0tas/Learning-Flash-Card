@@ -87,6 +87,7 @@ card_bag:
   new_card_created: "New card has been created successfully"
   new_bag_created: "New bag has been created successfully"
   object_deleted: "The selected items have been deleted successfully"
+  bag_not_found: "Card bag not found"
 
 trash:
   title: "Trash Bin"
@@ -103,6 +104,7 @@ trash:
   restore_confirm: "Are you sure you want to restore the selected items?"
   permanent_delete_success: "The selected items have been deleted permanently"
   restore_success: "The selected items have been restored successfully"
+  bag_not_found: "Card bag not found"
 
 feature_in_development: "Feature in Development"
 

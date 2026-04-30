@@ -87,6 +87,7 @@ card_bag:
   new_card_created: "Thẻ mới đã được tạo thành công"
   new_bag_created: "Túi thẻ mới đã được tạo thành công"
   object_deleted: "Các mục được chọn đã được xóa thành công"
+  bag_not_found: "Không tìm thấy túi thẻ"
 
 trash:
   title: "Thùng rác"
@@ -103,6 +104,7 @@ trash:
   restore_confirm: "Bạn có chắc chắn muốn khôi phục các mục đã chọn?"
   permanent_delete_success: "Các mục được chọn đã được xóa thành công"
   restore_success: "Các mục được chọn đã được khôi phục thành công"
+  bag_not_found: "Không tìm thấy túi thẻ"
 
 feature_in_development: "Tính năng đang phát triển"
 

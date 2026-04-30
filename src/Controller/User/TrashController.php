@@ -38,6 +38,11 @@ class TrashController extends BaseController
     $this->service->disableSoftDeleteFilter();
 
     $bag = $this->service->getBag($id);
+
+    if ($bag === null) {
+      throw $this->createNotFoundException($this->translator->trans('trash.bag_not_found'));
+    }
+
     $cards = $bag->getCardEntities();
     $childrenBags = $bag->getChildrenCardBagEntities();
     $bagTree = $this->service->getBagTree($id);
