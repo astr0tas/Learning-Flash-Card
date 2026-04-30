@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Config\Routes;
 use App\DTO\BagNavigationTreeDTO;
 use App\DTO\SelectObjectDTO;
 use App\Entity\CardBagEntity;
@@ -265,5 +266,16 @@ class TrashService extends BaseService
     $this->entityManager->flush();
 
     $this->enableSoftDeleteFilter();
+  }
+
+  public function parseBagTreeToBreadcrumb(BagNavigationTreeDTO $bagTree, array $breadcrumb = []): array
+  {
+    $runner = $bagTree;
+    while ($runner) {
+      $breadcrumb[] = ['label' => $runner->getBagName(), 'url' => str_replace('{id}', $runner->getBagId(), Routes::TRASH_BAG_ROUTE_URL)];
+
+      $runner = $runner->getChild();
+    }
+    return $breadcrumb;
   }
 }

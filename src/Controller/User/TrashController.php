@@ -6,7 +6,6 @@ use App\Config\Routes;
 use App\Config\TwigTemplate;
 use App\Controller\BaseController;
 use App\DTO\SelectObjectDTO;
-use App\Service\CardBagService;
 use App\Service\TrashService;
 use App\Utility\ClassUtility;
 use App\Utility\Utility;
@@ -15,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class TrashController extends BaseController
 {
-  public function __construct(private TrashService $service, private CardBagService $cardBagService) {}
+  public function __construct(private TrashService $service) {}
 
   #[Route(path: Routes::TRASH_ROUTE_URL, name: Routes::TRASH_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function index()
@@ -49,8 +48,8 @@ class TrashController extends BaseController
     $this->service->enableSoftDeleteFilter();
 
     // Convert the bag tree to breadcrumbs array
-    $breadcrumb = [['icon' => $this->renderView('icons/folder.svg'), 'label' => $this->translator->trans('menu.trash'), 'url' => Routes::CARD_BAG_ROUTE_URL]];
-    $breadcrumb = $this->cardBagService->parseBagTreeToBreadcrumb($bagTree, $breadcrumb);
+    $breadcrumb = [['icon' => $this->renderView('icons/folder.svg'), 'label' => $this->translator->trans('menu.trash'), 'url' => Routes::TRASH_ROUTE_URL]];
+    $breadcrumb = $this->service->parseBagTreeToBreadcrumb($bagTree, $breadcrumb);
 
     return $this->render(view: TwigTemplate::PAGE_USER_TRASH, parameters: [
       'bagList' => $childrenBags,
