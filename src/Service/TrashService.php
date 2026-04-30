@@ -156,12 +156,12 @@ class TrashService extends BaseService
     return $this->processRestorePath(implode('/', $bagNames), $newBag);
   }
 
-  private function restoreBag(CardBagEntity $bag, bool $requireRestorePathProcess = false, ?CardBagEntity $substituteBag = null): void
+  private function restoreBag(CardBagEntity $bag, bool $requireRestorePathProcess = false): void
   {
     $bagName = $bag->getName();
     $restorePath = $bag->getRestorePath();
     $restorePath = substr($restorePath, 1);
-    $bagParent = $substituteBag ?? $this->processRestorePath($restorePath);
+    $bagParent = $this->processRestorePath($restorePath);
 
     $activeBags = $this->getActiveBagByNameAndParent($bagName, $bagParent ? $bagParent->getId() : null);
 
@@ -182,7 +182,7 @@ class TrashService extends BaseService
 
         $targetActiveBag->addChildCardBagEntity($childBag);
 
-        $this->restoreBag($childBag, false, $targetActiveBag);
+        $this->restoreBag($childBag);
       }
 
       foreach ($childrenCards as $childCard) {
