@@ -4,25 +4,16 @@ document.addEventListener('alpine:init', () =>
     normalInputClass: "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer select-none border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500 !text-base",
     filteredBagList: JSON.parse(JSON.stringify(bagList)),
     filteredCardList: JSON.parse(JSON.stringify(cardList)),
-    viewFilteredCardList: JSON.parse(JSON.stringify(viewCardList)),
     selectCard: '',
     selectedBags: [],
     selectedCards: [],
-    resetNewBagModal()
+    openCardDetailModal(id)
     {
-      document.getElementById('new_bag_name').dispatchEvent(new Event('reset'));
-    },
-    openCardDetailModal(index)
-    {
-      this.$dispatch('set-selected-card-data', this.viewFilteredCardList[index]);
+      const card = this.filteredCardList.find(c => c.id === id);
+      this.$dispatch('set-view-card-data', card);
       document.getElementById('card_detail_modal').setAttribute('open',true);
     },
-    closeCardDetailModal()
-    {
-      this.$dispatch('set-selected-card-data', '');
-      document.getElementById('card_detail_modal').removeAttribute('open');
-    },
-    openEditCardModal(index)
+    openEditCardModal(id)
     {
 
     },
@@ -32,7 +23,6 @@ document.addEventListener('alpine:init', () =>
       {
         this.filteredBagList = JSON.parse(JSON.stringify(bagList));
         this.filteredCardList = JSON.parse(JSON.stringify(cardList));
-        this.viewFilteredCardList = JSON.parse(JSON.stringify(viewCardList));
         return;
       }
 
@@ -45,11 +35,6 @@ document.addEventListener('alpine:init', () =>
       });
 
       this.filteredCardList = cardList.filter(card => {
-        const normalizedCardTitle = this.removeDiacritics(card.title.toLowerCase());
-        return searchKeywords.some(keyword => normalizedCardTitle.includes(keyword));
-      });
-
-      this.viewFilteredCardList = viewCardList.filter(card => {
         const normalizedCardTitle = this.removeDiacritics(card.title.toLowerCase());
         return searchKeywords.some(keyword => normalizedCardTitle.includes(keyword));
       });

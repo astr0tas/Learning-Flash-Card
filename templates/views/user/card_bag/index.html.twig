@@ -6,7 +6,6 @@
 
 {% set card_bag_array = [] %}
 {% set card_array = [] %}
-{% set view_card_array = [] %}
 
 {% for bag in bagList %}
   {% set bagTemplate %}
@@ -21,23 +20,18 @@
 
 {% for card in cardList %}
   {% set cardTemplate %}
-    <twig:Card cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubtitle="{{ card.subtitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" cardType="{{ card.cardType }}" model="selectedCards"/>
+    <twig:Card :listMode="true" cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubtitle="{{ card.subtitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" cardType="{{ card.cardType }}" model="selectedCards"/>
   {% endset %}
 
   {% set card_array = card_array|merge([{
     'title': card.title,
+    'id': card.id,
+    'subtitle': card.subtitle,
+    'description': card.description,
+    'color': card.cardColor,
+    'textColor': card.cardTextColor,
+    'type': card.cardType,
     'html': cardTemplate
-  }]) %}
-{% endfor %}
-
-{% for card in cardList %}
-  {% set viewCardTemplate %}
-    <twig:Card :viewMode="true" cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubtitle="{{ card.subtitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" cardType="{{ card.cardType }}"/>
-  {% endset %}
-
-  {% set view_card_array = view_card_array|merge([{
-    'title': card.title,
-    'html': viewCardTemplate
   }]) %}
 {% endfor %}
 
@@ -48,13 +42,12 @@
   <script>
     const bagList = {{ card_bag_array|json_encode|raw }};
     const cardList = {{ card_array|json_encode|raw }};
-    const viewCardList = {{ view_card_array|json_encode|raw }};
   </script>
   <script src="{{ asset('scripts/templates/views/user/card_bag/index.js') }}"></script>
 {% endblock %}
 
 {% block user_body %}
-  <div class="flex flex-col w-full h-full gap-5" x-data="cardBag" @reset-new-bag-modal.window='resetNewBagModal' @close-card-view-modal.window="closeCardDetailModal">
+  <div class="flex flex-col w-full h-full gap-5" x-data="cardBag" @reset-new-bag-input.window="document.getElementById('new_bag_name').dispatchEvent(new Event('reset'))" @edit-card="openEditCardModal($event.detail)">
     {# Header panel #}
     <div class="flex items-center justify-between gap-2">
       {# Search bar #}
@@ -145,7 +138,7 @@
             <h2 class="font-medium text-xl">{{ 'card_bag.card_list'|trans }}</h2>
             <div class="gap-4 grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))]">
               <template x-for="(card,index) in filteredCardList">
-                <div class="w-full h-75" x-html="card.html" @click-on-card="openCardDetailModal(index)"></div>
+                <div class="w-full h-75" x-html="card.html" @click-on-card="openCardDetailModal($event.detail)"></div>
               </template>
             </div>
           </div>
@@ -161,7 +154,7 @@
 {% endblock %}
 
 {% block modals %}
-  <twig:Modal @close="$dispatch('reset-new-bag-modal')" open="{{ error.newBagError is defined }}" modalTitle="{{ 'card_bag.create_options.new_bag'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newBagFormRef.submit()" id="addNewBagModal">
+  <twig:Modal @close="$dispatch('reset-new-bag-input')" open="{{ error.newBagError is defined }}" modalTitle="{{ 'card_bag.create_options.new_bag'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newBagFormRef.submit()" id="addNewBagModal">
     <twig:block name="modal_body">
       <twig:Form x-ref="newBagFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_BAG_ROUTE_URL') }}" method="POST">
         {% if bag is defined %}
@@ -173,7 +166,7 @@
       </twig:Form>
     </twig:block>
   </twig:Modal>
-  <twig:Modal @close="$dispatch('reset-new-card-modal')" open="{{ error.newCardError is defined }}" @submit-form="$refs.newCardFormRef.submit()" @close-create-new-card-modal="document.getElementById('addNewCardModal').removeAttribute('open'); setTimeout(()=>{$dispatch('close')},250)" id="addNewCardModal">
+  <twig:Modal @close="$dispatch('reset-new-card-inputs')" open="{{ error.newCardError is defined }}" @submit-form="$refs.newCardFormRef.submit()" @close-create-new-card-modal="document.getElementById('addNewCardModal').removeAttribute('open'); setTimeout(()=>{$dispatch('close')},250)" id="addNewCardModal">
     <twig:block name="modal_content">
       <el-dialog-panel class="w-full max-w-125 h-150">
         <twig:Form x-ref="newCardFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_CARD_ROUTE_URL') }}" method="POST" class="flex flex-col gap-3">
@@ -196,9 +189,11 @@
       <div>{{ 'card_bag.delete_confirm'|trans }}</div>
     </twig:block>
   </twig:Modal>
-  <twig:Modal x-data="{ selectedCard: '' }" id="card_detail_modal" @close="$dispatch('close-card-view-modal')">
-    {% block modal_content %}
-      <el-dialog-panel class="w-full max-w-125 h-150" x-html="selectedCard" @set-selected-card-data.window="selectedCard = $event.detail.html" @edit-card="openEditCardModal(index)"></el-dialog-panel>
-    {% endblock %}
+  <twig:Modal id="card_detail_modal" @close-view-card-modal="$el.removeAttribute('open')">
+    <twig:block name="modal_content">
+      <el-dialog-panel class="w-full max-w-125 h-150">
+        <twig:Card :viewMode="true"></twig:Card>
+      </el-dialog-panel>
+    </twig:block>
   </twig:Modal>
 {% endblock %}

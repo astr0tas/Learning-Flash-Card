@@ -16,22 +16,18 @@ document.addEventListener('alpine:init', () =>
     },
     COLUMNS: {
       NAME_OR_TITLE: 'name',
-      TYPE: 'type',
+      TYPE: 'record_type',
       DELETED_AT: 'deleted_at',
     },
     DIRECTIONS: {
       ASC: 'asc',
       DESC: 'desc',
     },
-    openCardDetailModal(content)
+    openCardDetailModal(id)
     {
-      this.$dispatch('set-selected-card-data', content);
+      const card = this.records.find(c => c.id === id && c.record_type === this.RECORD_TYPE_CARD);
+      this.$dispatch('set-view-card-data', card);
       document.getElementById('card_detail_modal').setAttribute('open',true);
-    },
-    closeCardDetailModal()
-    {
-      this.$dispatch('set-selected-card-data', '');
-      document.getElementById('card_detail_modal').removeAttribute('open');
     },
     filterRecords(search)
     {
@@ -47,11 +43,11 @@ document.addEventListener('alpine:init', () =>
 
       this.filteredRecords = this.records.filter(record =>
       {
-        if (record.type === this.RECORD_TYPE_BAG)
+        if (record.record_type === this.RECORD_TYPE_BAG)
         {
           const normalizedBagName = this.removeDiacritics(record.name.toLowerCase());
           return searchKeywords.some(keyword => normalizedBagName.includes(keyword));
-        } else if (record.type === this.RECORD_TYPE_CARD) {
+        } else if (record.record_type === this.RECORD_TYPE_CARD) {
           const normalizedCardTitle = this.removeDiacritics(record.title.toLowerCase());
           return searchKeywords.some(keyword => normalizedCardTitle.includes(keyword));
         }
@@ -64,9 +60,9 @@ document.addEventListener('alpine:init', () =>
     checkAllRecords() {
       this.$refs.check_all_records.checked = this.filteredRecords.length && this.filteredRecords.every(record =>
       {
-        if (record.type === this.RECORD_TYPE_BAG) {
+        if (record.record_type === this.RECORD_TYPE_BAG) {
           return this.selectedBags.some(id => id == record.id);
-        } else if (record.type === this.RECORD_TYPE_CARD) {
+        } else if (record.record_type === this.RECORD_TYPE_CARD) {
           return this.selectedCards.some(id => id == record.id);
         }
       });
@@ -75,8 +71,8 @@ document.addEventListener('alpine:init', () =>
     {
       const value = event.target.checked;
 
-      const filteredBags = this.filteredRecords.filter(r => r.type === this.RECORD_TYPE_BAG);
-      const filteredCards = this.filteredRecords.filter(r => r.type === this.RECORD_TYPE_CARD);
+      const filteredBags = this.filteredRecords.filter(r => r.record_type === this.RECORD_TYPE_BAG);
+      const filteredCards = this.filteredRecords.filter(r => r.record_type === this.RECORD_TYPE_CARD);
 
       if (value) {
         this.selectedBags = filteredBags.map(r => r.id);
@@ -113,7 +109,7 @@ document.addEventListener('alpine:init', () =>
             break;
 
           case this.COLUMNS.TYPE:
-            result = a.type - b.type;
+            result = a.record_type - b.record_type;
             break;
 
           case this.COLUMNS.DELETED_AT:
