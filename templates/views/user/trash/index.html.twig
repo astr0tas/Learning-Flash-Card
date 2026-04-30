@@ -221,7 +221,7 @@
 {% endblock %}
 
 {% block modals %}
-  <twig:Modal x-data="{ selectedBags: [], selectedCards: [] }" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="$refs.permanentDeleteObjectFormRef.submit()" id="permanentDeleteObjectModal">
+  <twig:Modal x-data="{ selectedBags: [], selectedCards: [] }" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'trash.permanent_delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="$refs.permanentDeleteObjectFormRef.submit()" id="permanentDeleteObjectModal">
     <twig:block name="modal_body">
       <twig:Form x-ref="permanentDeleteObjectFormRef" action="{{ constant('App\\Config\\Routes::PERMANENT_DELETE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
         <template x-for="selectedBag in selectedBags">
