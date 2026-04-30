@@ -14,7 +14,7 @@ document.addEventListener('alpine:init', () =>
     },
     openCardDetailModal(index)
     {
-      this.$dispatch('set-selected-card-data', viewCardList[index]);
+      this.$dispatch('set-selected-card-data', this.viewFilteredCardList[index]);
       document.getElementById('card_detail_modal').setAttribute('open',true);
     },
     closeCardDetailModal()
