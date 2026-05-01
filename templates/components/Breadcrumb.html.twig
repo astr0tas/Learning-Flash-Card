@@ -1,4 +1,4 @@
-<div x-data='{ items: {{ items|json_encode|raw }} }' @set-breadcrumb-items="items = $event.detail" {{ attributes }}>
+<div x-data="{ items: {{ items|json_encode }} }" @set-breadcrumb-items="items = $event.detail" {{ attributes }}>
   <template x-if="items.length > {{ maximumDisplayableItems }}">
     <div class="flex items-center gap-2" x-data="{ get displayedItems() { return items.slice(-{{ maximumDisplayableItems }}) }, get hiddenItems() { return items.slice(0, -{{ maximumDisplayableItems }}).reverse() } }">
       <div class="flex items-center gap-2">
