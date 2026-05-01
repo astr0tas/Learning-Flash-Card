@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Config\Constants;
 use App\Config\Routes;
 use App\DTO\BagNavigationTreeDTO;
 use App\DTO\EditCardDTO;
@@ -61,7 +62,7 @@ class CardBagService extends BaseService
     $newCard->setTitle($dto->getTitle());
     $newCard->setSubtitle($dto->getSubtitle() ?: null);
     $newCard->setCardType($dto->getCardType());
-    $newCard->setDescription($dto->getDescription() ?: null);
+    $newCard->setDescription($dto->getDescription() ? strip_tags($dto->getDescription(), Constants::FLASH_CARD_DESCRIPTTION_ALLOW_TAGS) : null);
     $newCard->setUserEntity($user);
     $newCard->setCardBagEntity($parentCardBag);
     $newCard->setCardColor($dto->getCardColor());
@@ -71,13 +72,14 @@ class CardBagService extends BaseService
     $this->entityManager->flush();
   }
 
-  public function editCard(EditCardDTO $dto){
+  public function editCard(EditCardDTO $dto)
+  {
     $card = $this->getCard($dto->getCard());
 
     $card->setTitle($dto->getTitle());
     $card->setSubtitle($dto->getSubtitle() ?: null);
     $card->setCardType($dto->getCardType());
-    $card->setDescription($dto->getDescription() ?: null);
+    $card->setDescription($dto->getDescription() ? strip_tags($dto->getDescription(), Constants::FLASH_CARD_DESCRIPTTION_ALLOW_TAGS) : null);
     $card->setCardColor($dto->getCardColor());
     $card->setCardTextColor($dto->getCardTextColor());
 

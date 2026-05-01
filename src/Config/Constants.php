@@ -39,6 +39,8 @@ class Constants
   public const FLASH_CARD_BAG_TYPES_STR = 'NORMAL, LANGUAGE';
   public const FLASH_CARD_DEFAULT_COLOR = '#FFDE21';
   public const FLASH_CARD_DEFAULT_TEXT_COLOR = '#000000';
+  // Since the card description can store raw HTML tags, it needs to define which tags are allowed to be in the database
+  public const FLASH_CARD_DESCRIPTTION_ALLOW_TAGS = ['<br>', '<br/>'];
 
   // Session keys
   public const SESSION_OAUTH2STATE = 'oauth2state';
