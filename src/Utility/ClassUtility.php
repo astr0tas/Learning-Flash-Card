@@ -31,7 +31,9 @@ class ClassUtility
           $method = self::getPropertySetterFunctionName($propertyName);
 
           if ($reflection->hasMethod($method)) {
-            $instance->{$method}($value);
+            // Convert &nbsp; (\xC2\xA0) to whitespace
+            $value = str_replace("\xC2\xA0", ' ', $value);
+            $instance->{$method}(trim($value));
           }
         }
       }
@@ -56,7 +58,9 @@ class ClassUtility
       if ($reflection->hasMethod($method)) {
         $value = $instance->{$method}();
 
-        $dtoData[$name] = $value;
+        // Convert &nbsp; (\xC2\xA0) to whitespace
+        $value = str_replace("\xC2\xA0", ' ', $value);
+        $dtoData[$name] = trim($value);
       }
     }
 
