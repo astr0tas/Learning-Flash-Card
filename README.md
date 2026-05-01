@@ -1,2 +1,2 @@
-# Learning-Flash-Card
-Just a website to help learners.
+# Learning Flash Card
+Just a website to store flash cards
