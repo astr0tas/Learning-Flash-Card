@@ -138,7 +138,7 @@
             <h2 class="font-medium text-xl">{{ 'card_bag.card_list'|trans }}</h2>
             <div class="gap-4 grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))]">
               <template x-for="(card,index) in filteredCardList">
-                <div class="w-full h-75" x-html="card.html" @click-on-card="openCardDetailModal($event.detail)"></div>
+                <div class="w-full h-75" x-bind:class="darkMode?'hover:shadow-gray-700 hover:shadow-2xl':'hover:shadow-xl'" x-html="card.html" @click="openCardDetailModal(card.id)"></div>
               </template>
             </div>
           </div>

@@ -87,7 +87,7 @@ Please follow the rule bellow to ensure there will be no bugs and errors:
   </div>
 {% elseif editMode %}
 {% elseif listMode %}
-  <div class="w-full h-full flex flex-col gap-3 relative rounded-md cursor-pointer p-5" x-bind:class="darkMode?'hover:shadow-gray-700 hover:shadow-2xl':'hover:shadow-xl'" style="background-color: {{ cardColor }}; color: {{ cardTextColor }};" @click="$dispatch('click-on-card', {{ cardId }})">
+  <div class="w-full h-full flex flex-col gap-3 relative rounded-md cursor-pointer p-5" style="background-color: {{ cardColor }}; color: {{ cardTextColor }};">
     <h2 class="text-3xl text-center">{{ cardTitle }}</h2>
     <h5 class="text-center text-md">{{ cardSubtitle }}</h5>
     <div class="flex-1 text-start whitespace-pre-line text-xs overflow-hidden text-ellipsis break-words line-clamp-11">{{ cardDescription|raw }}</div>
