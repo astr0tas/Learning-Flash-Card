@@ -7,6 +7,7 @@ use App\Config\Constraints;
 use App\Config\Routes;
 use App\Config\TwigTemplate;
 use App\Controller\BaseController;
+use App\DTO\EditCardDTO;
 use App\DTO\NewBagDTO;
 use App\DTO\NewCardDTO;
 use App\DTO\SelectObjectDTO;
@@ -185,6 +186,70 @@ class CardBagController extends BaseController
     return $this->redirect($previousRoute);
   }
 
+  #[Route(path: Routes::UPDATE_CARD_ROUTE_URL, name: Routes::UPDATE_CARD_ROUTE_NAME, methods: [Request::METHOD_POST])]
+  public function editCard(Request $request)
+  {
+    $flashBag = $this->getFlashBag();
+
+    // Get the previous route to redirect back to it
+    $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
+
+    // Handle login submission
+    $postData = $request->request->all();
+
+    // Pass the form data to a DTO
+    $dto = new EditCardDTO();
+    ClassUtility::mapArrayToDTO($postData, $dto);
+
+    if($this->service->getCard($dto->getCard()) === null){
+      Utility::addNoticeToSessionFlash($this->session, 'error', $this->translator->trans('card_bag.no_card_found'));
+      return $this->redirect($previousRoute);
+    }
+
+    // Validate post data
+    $fields = [
+      'title' => [
+        new Assert\NotBlank(message: $this->translator->trans('validation.card.title_not_blank')),
+        new Assert\Length(max: Constraints::CARD_TITLE_MAX_LENGTH, maxMessage: $this->translator->trans('validation.card.title_too_long', ['limit' => Constraints::CARD_TITLE_MAX_LENGTH])),
+      ],
+      'subtitle' => [
+        new Assert\Length(max: Constraints::CARD_SUBTITLE_MAX_LENGTH, maxMessage: $this->translator->trans('validation.card.subtitle_too_long', ['limit' => Constraints::CARD_SUBTITLE_MAX_LENGTH]))
+      ],
+      'description' => [
+        new Assert\Length(max: Constraints::CARD_DESCRIPTION_MAX_LENGTH, maxMessage: $this->translator->trans('validation.card.description_too_long', ['limit' => Constraints::CARD_DESCRIPTION_MAX_LENGTH])),
+      ],
+      'cardType' => [
+        new Assert\NotBlank(message: $this->translator->trans('validation.card.card_type_not_blank')),
+        new Assert\Choice(choices: Constants::FLASH_CARD_BAG_TYPES, message: $this->translator->trans('validation.card.card_type_invalid'))
+      ],
+      'cardColor' => [
+        new Assert\CssColor(message: $this->translator->trans('validation.color.invalid_color')),
+      ],
+      'cardTextColor' => [
+        new Assert\CssColor(message: $this->translator->trans('validation.color.invalid_color')),
+      ]
+    ];
+    $error = ClassUtility::validateInputDTO($dto, $fields);
+
+    if (count($error) > 0) {
+      $flashBag->add('editCardError', $error);
+      $flashBag->add('card', $dto->getCard());
+      $flashBag->add('title', $dto->getTitle());
+      $flashBag->add('subtitle', $dto->getSubtitle());
+      $flashBag->add('description', $dto->getDescription());
+      $flashBag->add('cardType', $dto->getCardType());
+      $flashBag->add('cardColor', $dto->getCardColor());
+      $flashBag->add('cardTextColor', $dto->getCardTextColor());
+      return $this->redirect($previousRoute);
+    }
+
+    $this->service->editCard($dto);
+
+    Utility::addNoticeToSessionFlash($this->session, 'success', $this->translator->trans('card_bag.card_edit_success'));
+
+    return $this->redirect($previousRoute);
+  }
+
   /**
    * This function will focus on getting flash error data emitted from other functions in this controller
    * @return array
@@ -219,6 +284,26 @@ class CardBagController extends BaseController
       $errors['newCardColor'] = $flashCardColor;
       $errors['newCardTextColor'] = $flashCardTextColor;
       $errors['newCardError'] = $flashErrors;
+    }
+
+    // Get flash errors when editing existing card
+    if ($flashBag->has('editCardError')) {
+      $flashErrors = $flashBag->get('editCardError')[0];
+      $flashId = $flashBag->get('card')[0];
+      $flashTitle = $flashBag->get('title')[0];
+      $flashSubtitle = $flashBag->get('subtitle')[0];
+      $flashDescription = $flashBag->get('description')[0];
+      $flashCardType = $flashBag->get('cardType')[0];
+      $flashCardColor = $flashBag->get('cardColor')[0];
+      $flashCardTextColor = $flashBag->get('cardTextColor')[0];
+      $errors['editCardId'] = $flashId;
+      $errors['editCardTitle'] = $flashTitle;
+      $errors['editCardSubtitle'] = $flashSubtitle;
+      $errors['editCardDescription'] = $flashDescription;
+      $errors['editCardType'] = $flashCardType;
+      $errors['editCardColor'] = $flashCardColor;
+      $errors['editCardTextColor'] = $flashCardTextColor;
+      $errors['editCardError'] = $flashErrors;
     }
 
     return $errors;

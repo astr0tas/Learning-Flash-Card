@@ -196,4 +196,13 @@
       </el-dialog-panel>
     </twig:block>
   </twig:Modal>
+  <twig:Modal @close="$dispatch('set-edit-card-inputs')" open="{{ error.editCardError is defined }}" @submit-form="$refs.editCardFormRef.submit()" @close-edit-card-modal="document.getElementById('editCardModal').removeAttribute('open'); setTimeout(()=>{$dispatch('close')},250)" id="editCardModal">
+    <twig:block name="modal_content">
+      <el-dialog-panel class="w-full max-w-125 h-150">
+        <twig:Form x-ref="editCardFormRef" action="{{ constant('App\\Config\\Routes::UPDATE_CARD_ROUTE_URL') }}" method="POST" class="flex flex-col gap-3">
+          <twig:Card :editMode="true" :error="error"></twig:Card>
+        </twig:Form>
+      </el-dialog-panel>
+    </twig:block>
+  </twig:Modal>
 {% endblock %}

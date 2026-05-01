@@ -15,7 +15,10 @@ document.addEventListener('alpine:init', () =>
     },
     openEditCardModal(id)
     {
-
+      const card = this.filteredCardList.find(c => c.id == id);
+      this.$dispatch('set-edit-card-inputs', card);
+      document.getElementById('editCardModal').setAttribute('open',true);
+      this.$dispatch('close-view-card-modal');
     },
     filterBagAndCard(search)
     {

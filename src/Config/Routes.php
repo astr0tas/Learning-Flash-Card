@@ -54,6 +54,8 @@ class Routes
   public const CREATE_NEW_BAG_ROUTE_NAME = 'create-bag';
   public const CREATE_NEW_CARD_ROUTE_URL = '/create-card';
   public const CREATE_NEW_CARD_ROUTE_NAME = 'create-card';
+  public const UPDATE_CARD_ROUTE_URL = '/update-card';
+  public const UPDATE_CARD_ROUTE_NAME = 'update-card';
   public const DELETE_OBJECT_ROUTE_URL = '/delete-object';
   public const DELETE_OBJECT_ROUTE_NAME = 'delete-object';
   public const MOVE_OBJECT_ROUTE_URL = '/move-object';

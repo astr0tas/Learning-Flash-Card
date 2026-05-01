@@ -88,6 +88,8 @@ card_bag:
   new_bag_created: "Túi thẻ mới đã được tạo thành công"
   object_deleted: "Các mục được chọn đã được xóa thành công"
   bag_not_found: "Không tìm thấy túi thẻ"
+  no_card_found: "Thẻ không tồn tại"
+  card_edit_success: "Thẻ đã được cập nhật thành công"
 
 trash:
   title: "Thùng rác"

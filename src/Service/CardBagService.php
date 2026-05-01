@@ -2,15 +2,16 @@
 
 namespace App\Service;
 
+use App\Config\Routes;
 use App\DTO\BagNavigationTreeDTO;
-use App\DTO\SelectObjectDTO;
+use App\DTO\EditCardDTO;
 use App\DTO\NewBagDTO;
 use App\DTO\NewCardDTO;
-use App\Repository\CardBagRepository;
+use App\DTO\SelectObjectDTO;
 use App\Entity\CardBagEntity;
 use App\Entity\CardEntity;
+use App\Repository\CardBagRepository;
 use App\Repository\CardRepository;
-use App\Config\Routes;
 
 class CardBagService extends BaseService
 {
@@ -70,6 +71,20 @@ class CardBagService extends BaseService
     $this->entityManager->flush();
   }
 
+  public function editCard(EditCardDTO $dto){
+    $card = $this->getCard($dto->getCard());
+
+    $card->setTitle($dto->getTitle());
+    $card->setSubtitle($dto->getSubtitle() ?: null);
+    $card->setCardType($dto->getCardType());
+    $card->setDescription($dto->getDescription() ?: null);
+    $card->setCardColor($dto->getCardColor());
+    $card->setCardTextColor($dto->getCardTextColor());
+
+    $this->entityManager->persist($card);
+    $this->entityManager->flush();
+  }
+
   public function getBagList(?int $bagId): array
   {
     return $this->cardBagRepository->findBy(['parentCardBagEntity' => $bagId, 'userEntity' => $this->user->getId()]);
@@ -83,6 +98,11 @@ class CardBagService extends BaseService
   public function getBag(int $bagId)
   {
     return $this->cardBagRepository->findOneBy(['id' => $bagId, 'userEntity' => $this->user->getId()]);
+  }
+
+  public function getCard(int $cardId)
+  {
+    return $this->cardRepository->findOneBy(['id' => $cardId, 'userEntity' => $this->user->getId()]);
   }
 
   public function getBagTree(int $bagId): BagNavigationTreeDTO

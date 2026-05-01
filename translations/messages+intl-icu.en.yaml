@@ -88,6 +88,8 @@ card_bag:
   new_bag_created: "New bag has been created successfully"
   object_deleted: "The selected items have been deleted successfully"
   bag_not_found: "Card bag not found"
+  no_card_found: "Card does not exist"
+  card_edit_success: "Card has been updated successfully"
 
 trash:
   title: "Trash Bin"
