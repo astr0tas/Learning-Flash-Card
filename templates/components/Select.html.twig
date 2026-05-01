@@ -24,7 +24,7 @@
     placeholder="" default="{{ defaultValue }}"
     x-on:change="$refs.{{ id|default(name) }}_select_display_div.innerHTML = ($event.target.options[$event.target.selectedIndex].text || '&nbsp;')"
     x-on:reset="$refs.{{ name|default(id) }}_error?.remove(); $el.className = '{{ normal_class ~ " absolute z-20 opacity-0" }}'; $refs.{{ id|default(name) }}_select_display_div.className = '{{ normal_class }}'; $el.value = '{{ defaultValue }}'; $dispatch('change');"
-    x-on:set="$refs.{{ name|default(id) }}_error?.remove(); $el.className = '{{ normal_class ~ " absolute z-20 opacity-0" }}'; $refs.{{ id|default(name) }}_select_display_div.className = '{{ normal_class }}'; $el.value = $event.detail || '{{ defaultValue }}'; $dispatch('change');">
+    x-on:set="$el.value = $event.detail || '{{ defaultValue }}'; $dispatch('change');">
       <option value="" class="hidden"></option>
       {% block options %}{% endblock %}
     </select>
