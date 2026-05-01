@@ -1,2 +1,2 @@
-# Personal-Spending-Assistant
-Just a website to track the author personal spending
+# Learning Flash Card
+Just a website to store flash cards
