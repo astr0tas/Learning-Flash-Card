@@ -20,10 +20,10 @@ Please follow the rule bellow to ensure there will be no bugs and errors:
 {% set edit_card_text_color = error.editCardTextColor|default(constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR')) %}
 
 {% if createMode %}
-  <div class="flex flex-col gap-5 z-50 w-full h-full" x-data="{ title: '{{ new_card_title }}', subtitle: '{{ new_card_subtitle }}', description: '{{ new_card_description }}', type: '{{ new_card_type }}', cardColor: '{{ new_card_color }}', textColor: '{{ new_card_text_color }}' }"
+  <div class="flex flex-col gap-5 z-50 w-full h-full" x-data="{ title: '{{ new_card_title }}', subtitle: '{{ new_card_subtitle }}', description: '{{ new_card_description }}', cardColor: '{{ new_card_color }}', textColor: '{{ new_card_text_color }}' }"
   x-init="$nextTick(() => {
     // Trigger change event in the case of new card creation validation error to update the select display div with the correct selected option text
-    document.getElementById('card_type').options[document.getElementById('card_type').selectedIndex]; document.getElementById('card_type_select_display_div').innerHTML = document.getElementById('card_type').options[document.getElementById('card_type').selectedIndex].text || '&nbsp;';
+    document.getElementById('card_type').dispatchEvent(new CustomEvent('set', { detail: '{{ new_card_type }}' }));
   })"
   @reset-new-card-inputs.window="document.getElementById('div_new_card_title').innerHTML = ''; title = '';
   document.getElementById('div_new_card_subtitle').innerHTML = ''; subtitle = '';
@@ -68,7 +68,7 @@ Please follow the rule bellow to ensure there will be no bugs and errors:
     </div>
     <div class="flex flex-col gap-5 w-full text-start p-5 rounded-md" :class="darkMode ? 'bg-(--dark-theme-bg-color) text-(--white)' : 'bg-(--white) text-(--black)'">
       <div>
-        <twig:Select name="card_type" label="{{ 'card_bag.card_type'|trans }}" aria-label="{{ 'card_bag.card_type'|trans }}" required error="{{ error.newCardError is defined and error.newCardError.card_type is defined ? error.newCardError.card_type[0] : '' }}" defaultValue="" x-model="type">
+        <twig:Select name="card_type" label="{{ 'card_bag.card_type'|trans }}" aria-label="{{ 'card_bag.card_type'|trans }}" required error="{{ error.newCardError is defined and error.newCardError.card_type is defined ? error.newCardError.card_type[0] : '' }}" defaultValue="">
           <twig:block name="options">
             {% for type in constant('App\\Config\\Constants::FLASH_CARD_BAG_TYPES') %}
               <option value="{{ type }}">{{ ('card_bag.card_type_'~(type|lower))|trans }}</option>
@@ -98,16 +98,16 @@ Please follow the rule bellow to ensure there will be no bugs and errors:
   </div>
 {% elseif editMode %}
   <div class="flex flex-col gap-5 z-50 w-full h-full"
-  x-data="{ id: {{ edit_card_id ? edit_card_id : 'null' }}, title: '{{ edit_card_title }}', subtitle: '{{ edit_card_subtitle }}', description: '{{ edit_card_description }}', type: '{{ edit_card_type }}', cardColor: '{{ edit_card_color }}', textColor: '{{ edit_card_text_color }}' }"
+  x-data="{ id: {{ edit_card_id ? edit_card_id : 'null' }}, title: '{{ edit_card_title }}', subtitle: '{{ edit_card_subtitle }}', description: '{{ edit_card_description }}', cardColor: '{{ edit_card_color }}', textColor: '{{ edit_card_text_color }}' }"
   x-init="$nextTick(() => {
     // Trigger change event in the case of edit card validation error to update the select display div with the correct selected option text
-    document.getElementById('edit_card_type').options[document.getElementById('edit_card_type').selectedIndex]; document.getElementById('edit_card_type_select_display_div').innerHTML = document.getElementById('edit_card_type').options[document.getElementById('edit_card_type').selectedIndex].text || '&nbsp;';
+    document.getElementById('edit_card_type').dispatchEvent(new CustomEvent('set', { detail: '{{ edit_card_type }}' }));
   })"
   @set-edit-card-inputs.window="id = $event.detail.id ?? null;
   document.getElementById('div_edit_card_title').innerHTML = title = $event.detail.title ?? ''; title = $event.detail.title ?? '';
   document.getElementById('div_edit_card_subtitle').innerHTML = subtitle = $event.detail.subtitle ?? ''; subtitle = $event.detail.subtitle ?? null;
   document.getElementById('div_edit_card_description').innerHTML = description = $event.detail.description ?? ''; description = $event.detail.description ?? null;
-  document.getElementById('edit_card_type').dispatchEvent(new CustomEvent('set', { detail: $event.detail.type ?? '' })); type = $event.detail.type ?? '';
+  document.getElementById('edit_card_type').dispatchEvent(new CustomEvent('set', { detail: $event.detail.type ?? '' }));
   document.getElementById('edit_card_color').dispatchEvent(new CustomEvent('set', { detail: $event.detail.color ?? '{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR') }}' })); cardColor = $event.detail.color ?? '{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR') }}';
   document.getElementById('edit_card_text_color').dispatchEvent(new CustomEvent('set', { detail: $event.detail.textColor ?? '{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR') }}' })); textColor = $event.detail.textColor ?? '{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR') }}';
   document.getElementById('edit_card_title_error')?.remove();
@@ -145,7 +145,7 @@ Please follow the rule bellow to ensure there will be no bugs and errors:
     </div>
     <div class="flex flex-col gap-5 w-full text-start p-5 rounded-md" :class="darkMode ? 'bg-(--dark-theme-bg-color) text-(--white)' : 'bg-(--white) text-(--black)'">
       <div>
-        <twig:Select name="card_type" id="edit_card_type" label="{{ 'card_bag.card_type'|trans }}" aria-label="{{ 'card_bag.card_type'|trans }}" required error="{{ error.editCardError is defined and error.editCardError.card_type is defined ? error.editCardError.card_type[0] : '' }}" defaultValue="" x-model="type">
+        <twig:Select name="card_type" id="edit_card_type" label="{{ 'card_bag.card_type'|trans }}" aria-label="{{ 'card_bag.card_type'|trans }}" required error="{{ error.editCardError is defined and error.editCardError.card_type is defined ? error.editCardError.card_type[0] : '' }}" defaultValue="">
           <twig:block name="options">
             {% for type in constant('App\\Config\\Constants::FLASH_CARD_BAG_TYPES') %}
               <option value="{{ type }}">{{ ('card_bag.card_type_'~(type|lower))|trans }}</option>
