@@ -12,4 +12,5 @@ final class Select
   public ?string $label = null;
   public ?string $error = null;
   public bool $required = false;
+  public string $defaultValue = "";
 }

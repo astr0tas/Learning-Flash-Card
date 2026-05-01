@@ -150,7 +150,7 @@ validation:
     name_not_blank: "Bag name must not be blank"
     name_exist: "Bag name has already been used"
     name_too_long: "Bag name must not exceed {limit} characters"
-  new_card:
+  card:
     title_not_blank: "Card title must not be blank"
     card_type_not_blank: "Card type must not be blank"
     card_type_invalid: "Card type is invalid"

@@ -27,7 +27,7 @@ document.addEventListener('alpine:init', () =>
     {
       const card = this.records.find(c => c.id === id && c.record_type === this.RECORD_TYPE_CARD);
       this.$dispatch('set-view-card-data', card);
-      document.getElementById('card_detail_modal').setAttribute('open',true);
+      document.getElementById('cardDetailModal').setAttribute('open',true);
     },
     filterRecords(search)
     {

@@ -20,12 +20,14 @@
   {% endif %}
 
   <div class="w-full relative">
-    <select x-ref="{{ name|default(id) }}" name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class ~ " absolute z-20 opacity-0" } ) }} placeholder=""
-    x-on:change="$refs.{{ name|default(id) }}_select_display_div.innerHTML = $event.target.options[$event.target.selectedIndex].text || '&nbsp;'"
-    x-on:reset="$refs.{{ name|default(id) }}_error?.remove(); $refs.{{ name|default(id) }}.className = '{{ normal_class ~ " absolute z-20 opacity-0" }}'; $refs.{{ name|default(id) }}_select_display_div.className = '{{ normal_class }}'; $refs.{{ name|default(id) }}.value = ''; $dispatch('change');">
+    <select x-ref="{{ name|default(id) }}" name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class ~ " absolute z-20 opacity-0" } ) }}
+    placeholder="" default="{{ defaultValue }}"
+    x-on:change="$refs.{{ name|default(id) }}_select_display_div.innerHTML = ($event.target.options[$event.target.selectedIndex].text || '&nbsp;')"
+    x-on:reset="$refs.{{ name|default(id) }}_error?.remove(); $el.className = '{{ normal_class ~ " absolute z-20 opacity-0" }}'; $refs.{{ name|default(id) }}_select_display_div.className = '{{ normal_class }}'; $el.value = '{{ defaultValue }}'; $dispatch('change');">
+      <option value="" class="hidden"></option>
       {% block options %}{% endblock %}
     </select>
-    <div class="{{ final_class }}" x-ref="{{ name|default(id) }}_select_display_div" id=""{{ name|default(id) }}_select_display_div"">
+    <div class="{{ final_class }}" x-ref="{{ name|default(id) }}_select_display_div" id="{{ name|default(id) }}_select_display_div">
       &nbsp;
     </div>
     <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500 z-20">

@@ -150,7 +150,7 @@ validation:
     name_not_blank: "Tên túi không được để trống"
     name_exist: "Tên túi đã được dùng"
     name_too_long: "Tên túi không được có độ dài quá {limit} ký tự"
-  new_card:
+  card:
     title_not_blank: "Tiêu đề thẻ không được để trống"
     card_type_not_blank: "Loại thẻ không được để trống"
     card_type_invalid: "Loại thẻ không hợp lệ"

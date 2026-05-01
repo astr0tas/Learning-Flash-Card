@@ -9,9 +9,9 @@ document.addEventListener('alpine:init', () =>
     selectedCards: [],
     openCardDetailModal(id)
     {
-      const card = this.filteredCardList.find(c => c.id === id);
+      const card = this.filteredCardList.find(c => c.id == id);
       this.$dispatch('set-view-card-data', card);
-      document.getElementById('card_detail_modal').setAttribute('open',true);
+      document.getElementById('cardDetailModal').setAttribute('open',true);
     },
     openEditCardModal(id)
     {

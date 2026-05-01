@@ -12,7 +12,11 @@ Please follow the rule bellow to ensure there will be no bugs and errors:
 {% set new_card_text_color = error.newCardTextColor|default(constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR')) %}
 
 {% if createMode %}
-  <div class="flex flex-col gap-10 z-50 w-full h-full" x-data="{ title: '{{ new_card_title }}', subtitle: '{{ new_card_subtitle }}', description: '{{ new_card_description }}', type: '{{ new_card_type }}', cardColor: '{{ new_card_color }}', textColor: '{{ new_card_text_color }}' }"
+  <div class="flex flex-col gap-5 z-50 w-full h-full" x-data="{ title: '{{ new_card_title }}', subtitle: '{{ new_card_subtitle }}', description: '{{ new_card_description }}', type: '{{ new_card_type }}', cardColor: '{{ new_card_color }}', textColor: '{{ new_card_text_color }}' }"
+  x-init="$nextTick(() => {
+    // Trigger change event in the case of new card creation validation error to update the select display div with the correct selected option text
+    document.getElementById('card_type').options[document.getElementById('card_type').selectedIndex]; document.getElementById('card_type_select_display_div').innerHTML = document.getElementById('card_type').options[document.getElementById('card_type').selectedIndex].text || '&nbsp;';
+  })"
   @reset-new-card-inputs.window="document.getElementById('div_new_card_title').innerHTML = ''; title = '';
   document.getElementById('div_new_card_subtitle').innerHTML = ''; subtitle = '';
   document.getElementById('div_new_card_description').innerHTML = ''; description = '';
@@ -56,9 +60,8 @@ Please follow the rule bellow to ensure there will be no bugs and errors:
     </div>
     <div class="flex flex-col gap-5 w-full text-start p-5 rounded-md" :class="darkMode ? 'bg-(--dark-theme-bg-color) text-(--white)' : 'bg-(--white) text-(--black)'">
       <div>
-        <twig:Select name="card_type" label="{{ 'card_bag.card_type'|trans }}" aria-label="{{ 'card_bag.card_type'|trans }}" required error="{{ error.newCardError is defined and error.newCardError.card_type is defined ? error.newCardError.card_type[0] : '' }}" default="">
+        <twig:Select name="card_type" label="{{ 'card_bag.card_type'|trans }}" aria-label="{{ 'card_bag.card_type'|trans }}" required error="{{ error.newCardError is defined and error.newCardError.card_type is defined ? error.newCardError.card_type[0] : '' }}" defaultValue="" x-model="type">
           <twig:block name="options">
-            <option value="" class="hidden"></option>
             {% for type in constant('App\\Config\\Constants::FLASH_CARD_BAG_TYPES') %}
               <option value="{{ type }}">{{ ('card_bag.card_type_'~(type|lower))|trans }}</option>
             {% endfor %}

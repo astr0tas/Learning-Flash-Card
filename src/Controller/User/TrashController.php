@@ -64,15 +64,11 @@ class TrashController extends BaseController
     ]);
   }
 
-  #[Route(path: Routes::PERMANENT_DELETE_OBJECT_ROUTE_URL, name: Routes::PERMANENT_DELETE_OBJECT_ROUTE_NAME, methods: [Request::METHOD_GET, Request::METHOD_POST])]
+  #[Route(path: Routes::PERMANENT_DELETE_OBJECT_ROUTE_URL, name: Routes::PERMANENT_DELETE_OBJECT_ROUTE_NAME, methods: [Request::METHOD_POST])]
   public function deleteObjectPermanet(Request $request)
   {
     // Get the previous route to redirect back to it
     $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
-
-    if ($request->getMethod() === Request::METHOD_GET) {
-      return $this->redirect($previousRoute);
-    }
 
     // Handle login submission
     $postData = $request->request->all();
@@ -88,15 +84,11 @@ class TrashController extends BaseController
     return $this->redirect($previousRoute);
   }
 
-  #[Route(path: Routes::RESTORE_OBJECT_ROUTE_URL, name: Routes::RESTORE_OBJECT_ROUTE_NAME, methods: [Request::METHOD_GET, Request::METHOD_POST])]
+  #[Route(path: Routes::RESTORE_OBJECT_ROUTE_URL, name: Routes::RESTORE_OBJECT_ROUTE_NAME, methods: [Request::METHOD_POST])]
   public function restoreObject(Request $request)
   {
     // Get the previous route to redirect back to it
     $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
-
-    if ($request->getMethod() === Request::METHOD_GET) {
-      return $this->redirect($previousRoute);
-    }
 
     // Handle login submission
     $postData = $request->request->all();

@@ -47,7 +47,7 @@
 {% endblock %}
 
 {% block user_body %}
-  <div class="flex flex-col w-full h-full gap-5" x-data="cardBag" @reset-new-bag-input.window="document.getElementById('new_bag_name').dispatchEvent(new Event('reset'))" @edit-card="openEditCardModal($event.detail)">
+  <div class="flex flex-col w-full h-full gap-5" x-data="cardBag" @reset-new-bag-input.window="document.getElementById('new_bag_name').dispatchEvent(new Event('reset'))" @edit-card.window="openEditCardModal($event.detail)">
     {# Header panel #}
     <div class="flex items-center justify-between gap-2">
       {# Search bar #}
@@ -189,7 +189,7 @@
       <div>{{ 'card_bag.delete_confirm'|trans }}</div>
     </twig:block>
   </twig:Modal>
-  <twig:Modal id="card_detail_modal" @close-view-card-modal="$el.removeAttribute('open')">
+  <twig:Modal id="cardDetailModal" @close-view-card-modal.window="$el.removeAttribute('open')">
     <twig:block name="modal_content">
       <el-dialog-panel class="w-full max-w-125 h-150">
         <twig:Card :viewMode="true"></twig:Card>

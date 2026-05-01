@@ -17,10 +17,10 @@ class CardEntity extends BaseEntity
   private string $title;
 
   #[ORM\Column(type: 'string', length: Constraints::CARD_SUBTITLE_MAX_LENGTH, nullable: true)]
-  private ?string $subtitle;
+  private ?string $subtitle = null;
 
   #[ORM\Column(type: 'string', length: Constraints::CARD_DESCRIPTION_MAX_LENGTH, nullable: true)]
-  private ?string $description;
+  private ?string $description = null;
 
   #[ORM\Column(type: 'string', length: 10, options: ['default' => Constants::FLASH_CARD_DEFAULT_TYPE, 'comment' => 'Possible values: ' . Constants::FLASH_CARD_BAG_TYPES_STR])]
   private string $cardType = Constants::FLASH_CARD_DEFAULT_TYPE;
@@ -110,9 +110,9 @@ class CardEntity extends BaseEntity
   /**
    * Get the value of description
    *
-   * @return string
+   * @return ?string
    */
-  public function getDescription(): string
+  public function getDescription(): ?string
   {
     return $this->description;
   }
@@ -120,11 +120,11 @@ class CardEntity extends BaseEntity
   /**
    * Set the value of description
    *
-   * @param string $description
+   * @param ?string $description
    *
    * @return self
    */
-  public function setDescription(string $description): self
+  public function setDescription(?string $description): self
   {
     $this->description = $description;
 
@@ -134,9 +134,9 @@ class CardEntity extends BaseEntity
   /**
    * Get the value of subtitle
    *
-   * @return string
+   * @return ?string
    */
-  public function getSubtitle(): string
+  public function getSubtitle(): ?string
   {
     return $this->subtitle;
   }
@@ -144,11 +144,11 @@ class CardEntity extends BaseEntity
   /**
    * Set the value of subtitle
    *
-   * @param string $subtitle
+   * @param ?string $subtitle
    *
    * @return self
    */
-  public function setSubtitle(string $subtitle): self
+  public function setSubtitle(?string $subtitle): self
   {
     $this->subtitle = $subtitle;
 

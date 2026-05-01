@@ -60,17 +60,13 @@ class CardBagController extends BaseController
     ]);
   }
 
-  #[Route(path: Routes::CREATE_NEW_BAG_ROUTE_URL, name: Routes::CCREATE_NEW_BAG_ROUTE_NAME, methods: [Request::METHOD_GET, Request::METHOD_POST])]
+  #[Route(path: Routes::CREATE_NEW_BAG_ROUTE_URL, name: Routes::CREATE_NEW_BAG_ROUTE_NAME, methods: [Request::METHOD_POST])]
   public function createNewBag(Request $request)
   {
     $flashBag = $this->getFlashBag();
 
     // Get the previous route to redirect back to it
     $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
-
-    if ($request->getMethod() === Request::METHOD_GET) {
-      return $this->redirect($previousRoute);
-    }
 
     // Handle login submission
     $postData = $request->request->all();
@@ -111,17 +107,13 @@ class CardBagController extends BaseController
     return $this->redirect($redirectUrl);
   }
 
-  #[Route(path: Routes::CREATE_NEW_CARD_ROUTE_URL, name: Routes::CREATE_NEW_CARD_ROUTE_NAME, methods: [Request::METHOD_GET, Request::METHOD_POST])]
+  #[Route(path: Routes::CREATE_NEW_CARD_ROUTE_URL, name: Routes::CREATE_NEW_CARD_ROUTE_NAME, methods: [Request::METHOD_POST])]
   public function createNewCard(Request $request)
   {
     $flashBag = $this->getFlashBag();
 
     // Get the previous route to redirect back to it
     $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
-
-    if ($request->getMethod() === Request::METHOD_GET) {
-      return $this->redirect($previousRoute);
-    }
 
     // Handle login submission
     $postData = $request->request->all();
@@ -133,18 +125,18 @@ class CardBagController extends BaseController
     // Validate post data
     $fields = [
       'title' => [
-        new Assert\NotBlank(message: $this->translator->trans('validation.new_card.title_not_blank')),
-        new Assert\Length(max: Constraints::CARD_TITLE_MAX_LENGTH, maxMessage: $this->translator->trans('validation.new_card.title_too_long', ['limit' => Constraints::CARD_TITLE_MAX_LENGTH])),
+        new Assert\NotBlank(message: $this->translator->trans('validation.card.title_not_blank')),
+        new Assert\Length(max: Constraints::CARD_TITLE_MAX_LENGTH, maxMessage: $this->translator->trans('validation.card.title_too_long', ['limit' => Constraints::CARD_TITLE_MAX_LENGTH])),
       ],
       'subtitle' => [
-        new Assert\Length(max: Constraints::CARD_SUBTITLE_MAX_LENGTH, maxMessage: $this->translator->trans('validation.new_card.subtitle_too_long', ['limit' => Constraints::CARD_SUBTITLE_MAX_LENGTH]))
+        new Assert\Length(max: Constraints::CARD_SUBTITLE_MAX_LENGTH, maxMessage: $this->translator->trans('validation.card.subtitle_too_long', ['limit' => Constraints::CARD_SUBTITLE_MAX_LENGTH]))
       ],
       'description' => [
-        new Assert\Length(max: Constraints::CARD_DESCRIPTION_MAX_LENGTH, maxMessage: $this->translator->trans('validation.new_card.description_too_long', ['limit' => Constraints::CARD_DESCRIPTION_MAX_LENGTH])),
+        new Assert\Length(max: Constraints::CARD_DESCRIPTION_MAX_LENGTH, maxMessage: $this->translator->trans('validation.card.description_too_long', ['limit' => Constraints::CARD_DESCRIPTION_MAX_LENGTH])),
       ],
       'cardType' => [
-        new Assert\NotBlank(message: $this->translator->trans('validation.new_card.card_type_not_blank')),
-        new Assert\Choice(choices: Constants::FLASH_CARD_BAG_TYPES, message: $this->translator->trans('validation.new_card.card_type_invalid'))
+        new Assert\NotBlank(message: $this->translator->trans('validation.card.card_type_not_blank')),
+        new Assert\Choice(choices: Constants::FLASH_CARD_BAG_TYPES, message: $this->translator->trans('validation.card.card_type_invalid'))
       ],
       'cardColor' => [
         new Assert\CssColor(message: $this->translator->trans('validation.color.invalid_color')),
@@ -173,15 +165,11 @@ class CardBagController extends BaseController
     return $this->redirect($previousRoute);
   }
 
-  #[Route(path: Routes::DELETE_OBJECT_ROUTE_URL, name: Routes::DELETE_OBJECT_ROUTE_NAME, methods: [Request::METHOD_GET, Request::METHOD_POST])]
+  #[Route(path: Routes::DELETE_OBJECT_ROUTE_URL, name: Routes::DELETE_OBJECT_ROUTE_NAME, methods: [Request::METHOD_POST])]
   public function deleteObject(Request $request)
   {
     // Get the previous route to redirect back to it
     $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
-
-    if ($request->getMethod() === Request::METHOD_GET) {
-      return $this->redirect($previousRoute);
-    }
 
     // Handle login submission
     $postData = $request->request->all();
