@@ -74,4 +74,8 @@ class Routes
   // Admin Routes
   public const ADMIN_HOME_ROUTE_URL = '/admin';
   public const ADMIN_HOME_ROUTE_NAME = 'admin_home';
+
+  // User API Routes
+  public const API_USER_CARD_BAG_ROUTE_URL = '/api/card-bag';
+  public const API_USER_CARD_BAG_ROUTE_NAME = 'api-card-bag';
 }

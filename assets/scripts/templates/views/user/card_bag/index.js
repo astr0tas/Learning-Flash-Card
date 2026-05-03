@@ -7,6 +7,9 @@ document.addEventListener('alpine:init', () =>
     selectCard: '',
     selectedBags: [],
     selectedCards: [],
+    objectMovingBreadcrumb: [],
+    newParentBag: null,
+    parentBagContent: [],
     openCardDetailModal(id)
     {
       const card = this.filteredCardList.find(c => c.id == id);
@@ -42,6 +45,23 @@ document.addEventListener('alpine:init', () =>
         return searchKeywords.some(keyword => normalizedCardTitle.includes(keyword));
       });
     },
+    fetchParentBagContent(id)
+    {
+      const params = { parentBagId: id };
+      const queryString = new URLSearchParams(params).toString();
+      const url = `${ fetchBagContentUrl }?${ queryString }`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data =>
+        {
+        })
+        .catch(error =>
+        {
+          console.error("Error when fetching bag list: ", error);
+          this.pushNotification(apiRequestError,'error');
+        })
+    },
     init()
     {
       this.$watch('selectedBags', () =>{
@@ -50,6 +70,7 @@ document.addEventListener('alpine:init', () =>
       this.$watch('selectedCards', () =>{
         this.$dispatch('update-select-card', this.selectedCards);
       });
+      this.$watch('newParentBag', (value) => { this.fetchParentBagContent(value) });
     }
   }));
 });

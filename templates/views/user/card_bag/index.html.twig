@@ -40,6 +40,13 @@
 {% block javascripts %}
   {{ parent() }}
   <script>
+    const breadcrumbRoot = {{ {
+      'icon': include('icons/folder.svg'),
+      'label': 'menu.card_bag',
+      'action': 'newParentBag = null'
+    }|json_encode|raw }};
+    const fetchBagContentUrl = "{{ constant('App\\Config\\Routes::API_USER_CARD_BAG_ROUTE_URL') }}";
+    const apiRequestError = "{{ 'general_error.system_error'|trans }}";
     const bagList = {{ card_bag_array|json_encode|raw }};
     const cardList = {{ card_array|json_encode|raw }};
   </script>
