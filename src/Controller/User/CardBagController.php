@@ -85,7 +85,7 @@ class CardBagController extends BaseController
     ];
     $globals = [
       new Assert\Callback(callback: function (array $data, ExecutionContextInterface $context) {
-        if (count($this->service->getBagByNameAndParentId($data['newBagName'], $data['parentBag'] ?? null)) > 0) {
+        if (count($this->service->getBagByNameAndParentId($data['newBagName'], $data['parentBag'] ?: null)) > 0) {
           $context->buildViolation($this->translator->trans('validation.new_bag.name_exist'))
             ->atPath('[newBagName]')
             ->addViolation();
