@@ -9,6 +9,7 @@ use App\Entity\CardBagEntity;
 use App\Entity\CardEntity;
 use App\Repository\CardBagRepository;
 use App\Repository\CardRepository;
+use App\ToolClass\RestoreNode;
 
 class TrashService extends BaseService
 {
@@ -134,132 +135,229 @@ class TrashService extends BaseService
     $this->enableSoftDeleteFilter();
   }
 
-  private function processRestorePath(string $restorePath, ?CardBagEntity $parentBag = null): ?CardBagEntity
+  private function restoreBag(CardBagEntity $bag, RestoreNode $root): void
   {
-    // When the `restorePath` string is empty, it means that all the bags have been confirmed to be active or recreated
-    // Return the `parentBag` which is also the last bag to be confirmed or recreated to the root caller
-    if ($restorePath === '') {
-      return $parentBag;
+    $bagRestorePath = $bag->getRestorePath();
+
+    if ($bagRestorePath === '/') {
+      $bag->setDeletedAt(null);
+      $bag->setRestorePath(null);
+      $bag->setParentCardBagEntity(null);
+
+      $this->entityManager->persist($bag);
+
+      $newChild = new RestoreNode();
+      $newChild->setCardBag($bag);
+      $root->addChild($newChild);
+
+      foreach ($bag->getChildrenCardBagEntities() as $childBag) {
+        $this->restoreBag($childBag, $root);
+      }
+
+      foreach ($bag->getCardEntities() as $childCard) {
+        $this->restoreCard($childCard, $root);
+      }
+
+      return;
     }
 
-    // Reformat bag names from the `restorePath` string into an array
-    $bagNames = explode('/', $restorePath);
-    // Pop the first element from the bag name array
-    $bagName = array_shift($bagNames);
-    // Confirm the existence of the bag
-    $activeBags = $this->getActiveBagByNameAndParent($bagName, $parentBag ? $parentBag->getId() : null);
-    // If exists, then continue to the next level of `restorePath`
-    if (count($activeBags) > 0) {
-      return $this->processRestorePath(implode('/', $bagNames), $activeBags[0]);
+    $bagTree = explode('/', $bagRestorePath);
+    $runner = $root;
+
+    foreach ($bagTree as $bagName) {
+      if ($bagName === '') {
+        continue;
+      }
+
+      $matchingChildNode = null;
+
+      foreach ($runner->getChildren() as $child) {
+        if (($bagEntity = $child->getCardBag()) && ($bagEntity->getName() === $bagName)) {
+          $matchingChildNode = $child;
+          break;
+        }
+      }
+
+
+      if ($matchingChildNode !== null) {
+        $runner = $matchingChildNode;
+      } else {
+        $nodeBag = $runner->getCardBag();
+        $queryResult = $this->getActiveBagByNameAndParent($bagName, $nodeBag?->getId());
+        $newNodeBag = null;
+
+        if (count($queryResult) > 0) {
+          $newNodeBag = $queryResult[0];
+        } else {
+          $newBag = new CardBagEntity();
+          $newBag->setName($bagName);
+          $newBag->setUserEntity($this->user);
+          $newBag->setParentCardBagEntity($nodeBag);
+
+          $this->entityManager->persist($newBag);
+
+          if ($nodeBag) {
+            $nodeBag->addChildCardBagEntity($newBag);
+
+            $this->entityManager->persist($nodeBag);
+          }
+
+          $newNodeBag = $newBag;
+        }
+
+        $newNodeChild = new RestoreNode();
+        $newNodeChild->setCardBag($newNodeBag);
+        $runner->addChild($newNodeChild);
+
+        $runner = $newNodeChild;
+      }
     }
 
-    // If not exist (soft deleted or complete deletion from DB), recreate it and then continue to the next level of `restorePath`
-    // Get user entity through security
-    $user = $this->user;
+    $nodeCardBag = $runner->getCardBag();
+    $queryResult = $this->getActiveBagByNameAndParent($bag->getName(), $nodeCardBag?->getId());
+    $newRestoreNode = new RestoreNode();
 
-    $newBag = new CardBagEntity();
-    $newBag->setName($bagName);
-    $newBag->setUserEntity($user);
-    $newBag->setParentCardBagEntity($parentBag);
+    $childrenBags = $bag->getChildrenCardBagEntities()->toArray();
+    $childrenCards = $bag->getCardEntities()->toArray();
 
-    $this->entityManager->persist($newBag);
+    if (count($queryResult) > 0) {
+      $runner->addChild($newRestoreNode->setCardBag($queryResult[0]));
+    } else {
+      $bag->setDeletedAt(null);
+      $bag->setRestorePath(null);
+      $bag->setParentCardBagEntity($nodeCardBag);
 
-    return $this->processRestorePath(implode('/', $bagNames), $newBag);
-  }
+      $this->entityManager->persist($bag);
 
-  private function restoreBag(CardBagEntity $bag, bool $requireRestorePathProcess = false): void
-  {
-    $bagName = $bag->getName();
-    $restorePath = $bag->getRestorePath();
-    $restorePath = substr($restorePath, 1);
-    $bagParent = $this->processRestorePath($restorePath);
+      $runner->addChild($newRestoreNode->setCardBag($bag));
+    }
 
-    $activeBags = $this->getActiveBagByNameAndParent($bagName, $bagParent ? $bagParent->getId() : null);
+    foreach ($childrenBags as $childBag) {
+      $this->restoreBag($childBag, $root);
+    }
 
-    // If there is an active bag with the same name under the same parent bag, it means the bag in trash need to be permanently deleted
-    // and all the child bags and cards under this bag will be moved to the active bag with the same name
-    if (count($activeBags) > 0) {
-      $targetActiveBag = $activeBags[0];
+    foreach ($childrenCards as $childCard) {
+      $this->restoreCard($childCard, $root);
+    }
 
-      $childrenBags = $bag->getChildrenCardBagEntities()->toArray();
-      $childrenCards = $bag->getCardEntities()->toArray();
-
-      // Move all the child bags and cards under this bag to the active bag with the same name recursively
+    if (count($queryResult) > 0) {
       foreach ($childrenBags as $childBag) {
         $bag->removeChildCardBagEntity($childBag);
-
-        $childBag->setParentCardBagEntity($targetActiveBag);
-        $this->entityManager->persist($childBag);
-
-        $targetActiveBag->addChildCardBagEntity($childBag);
-
-        $this->restoreBag($childBag);
       }
 
       foreach ($childrenCards as $childCard) {
         $bag->removeCard($childCard);
-
-        $childCard->setCardBagEntity($targetActiveBag);
-        $this->entityManager->persist($childCard);
-
-        $targetActiveBag->addCard($childCard);
-
-        $this->restoreCard($childCard);
       }
 
-      // Remove the bag in trash permanently
       $this->entityManager->remove($bag);
-    } else {
-      $bag->setRestorePath(null);
-      $bag->setDeletedAt(null);
-
-      if ($requireRestorePathProcess) {
-        $bag->setParentCardBagEntity($bagParent);
-      }
-
-      $this->entityManager->persist($bag);
-
-      // Restore all the child bags and cards under the bag recursively
-      foreach ($bag->getChildrenCardBagEntities() as $childBag) {
-        $this->restoreBag($childBag);
-      }
-
-      foreach ($bag->getCardEntities() as $card) {
-        $this->restoreCard($card);
-      }
     }
   }
 
-  private function restoreCard(CardEntity $card): void
+  private function restoreCard(CardEntity $card, RestoreNode $root): void
   {
-    $restorePath = $card->getRestorePath();
-    $restorePath = substr($restorePath, 1);
+    $cardRestorePath = $card->getRestorePath();
 
-    $bag = $this->processRestorePath($restorePath);
+    if ($cardRestorePath === '/') {
+      $card->setDeletedAt(null);
+      $card->setRestorePath(null);
+      $card->setCardBagEntity(null);
 
-    $card->setCardBagEntity($bag);
+      $this->entityManager->persist($card);
+      return;
+    }
 
-    $card->setRestorePath(null);
+    $bagTree = explode('/', $cardRestorePath);
+    $runner = $root;
+
+    foreach ($bagTree as $bagName) {
+      if ($bagName === '') {
+        continue;
+      }
+
+      $matchingChildNode = null;
+
+      foreach ($runner->getChildren() as $child) {
+        if (($bagEntity = $child->getCardBag()) && ($bagEntity->getName() === $bagName)) {
+          $matchingChildNode = $child;
+          break;
+        }
+      }
+
+
+      if ($matchingChildNode !== null) {
+        $runner = $matchingChildNode;
+      } else {
+        $nodeBag = $runner->getCardBag();
+        $queryResult = $this->getActiveBagByNameAndParent($bagName, $nodeBag?->getId());
+        $newNodeBag = null;
+
+        if (count($queryResult) > 0) {
+          $newNodeBag = $queryResult[0];
+        } else {
+          $newBag = new CardBagEntity();
+          $newBag->setName($bagName);
+          $newBag->setUserEntity($this->user);
+          $newBag->setParentCardBagEntity($nodeBag);
+
+          $this->entityManager->persist($newBag);
+
+          if ($nodeBag) {
+            $nodeBag->addChildCardBagEntity($newBag);
+
+            $this->entityManager->persist($nodeBag);
+          }
+
+          $newNodeBag = $newBag;
+        }
+
+        $newNodeChild = new RestoreNode();
+        $newNodeChild->setCardBag($newNodeBag);
+        $runner->addChild($newNodeChild);
+
+        $runner = $newNodeChild;
+      }
+    }
+
     $card->setDeletedAt(null);
+    $card->setRestorePath(null);
+
+    $nodeBag = $runner->getCardBag();
+    $cardBag = $card->getCardBagEntity();
+
+    if ($cardBag === null || $cardBag->getId() === $nodeBag->getId()) {
+      $card->setCardBagEntity($nodeBag);
+    } else {
+      // Remove association between the card and its old bag
+      $cardBag->removeCard($card);
+
+      // Move the card to the new bag
+      $nodeBag->addCard($card);
+      $card->setCardBagEntity($nodeBag);
+
+      // $this->entityManager->persist($nodeBag);
+      $this->entityManager->remove($cardBag);
+    }
 
     $this->entityManager->persist($card);
   }
 
   public function restoreObject(SelectObjectDTO $dto): void
   {
+    $root = new RestoreNode();
+
     $this->disableSoftDeleteFilter();
 
     foreach ($dto->getBag() as $bagId) {
       $bag = $this->getBag($bagId);
       if ($bag) {
-        $this->restoreBag($bag, true);
+        $this->restoreBag($bag, $root);
       }
     }
 
     foreach ($dto->getCard() as $cardId) {
       $card = $this->getCard($cardId);
       if ($card) {
-        $this->restoreCard($card);
+        $this->restoreCard($card, $root);
       }
     }
 
