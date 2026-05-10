@@ -81,17 +81,17 @@
     <twig:Breadcrumb :items="breadcrumb"></twig:Breadcrumb>
     {# Display body #}
     <template x-if="filteredRecords.length">
-      <div class="flex flex-col overflow-auto hide-browser-scollbar rounded-md border border-gray-400">
+      <div class="flex flex-col overflow-auto hide-browser-scollbar">
         <table>
           <thead>
             <tr class="border-b border-gray-400 select-none">
-              <th class="w-[50px] p-2 border-r border-gray-400">
+              <th class="w-[50px] p-2">
                 {# <twig:ClickInput type="checkbox" name="check_all_records"></twig:ClickInput> #}
                 <input class="w-4 h-4" type="checkbox" id="check_all_records" name="check_all_records" x-ref="check_all_records" @change="toggleAllRecords"/>
               </th>
-              <th class="p-2 border-r border-gray-400 font-bold cursor-pointer active:opacity-80"
+              <th class="p-2 font-bold cursor-pointer active:opacity-80"
               @click="setSort(COLUMNS.NAME_OR_TITLE, sort.column !== COLUMNS.NAME_OR_TITLE || sort.direction === null ? DIRECTIONS.ASC : (sort.direction === DIRECTIONS.ASC && sort.column === COLUMNS.NAME_OR_TITLE ? DIRECTIONS.DESC : null))">
-                <div class="flex items-center justify-center gap-2">
+                <div class="flex items-center gap-2">
                   <div>{{ 'trash.name_or_title'|trans }}</div>
                   <template x-if="sort.column !== COLUMNS.NAME_OR_TITLE || sort.direction === null">
                     <div class="w-4 h-4">
@@ -110,9 +110,9 @@
                   </template>
                 </div>
               </th>
-              <th class="p-2 border-r border-gray-400 font-bold cursor-pointer active:opacity-80"
+              <th class="p-2 font-bold cursor-pointer active:opacity-80"
               @click="setSort(COLUMNS.TYPE, sort.column !== COLUMNS.TYPE || sort.direction === null ? DIRECTIONS.ASC : (sort.direction === DIRECTIONS.ASC && sort.column === COLUMNS.TYPE ? DIRECTIONS.DESC : null))">
-                <div class="flex items-center justify-center gap-2">
+                <div class="flex items-center gap-2">
                   <div>{{ 'trash.type'|trans }}</div>
                   <template x-if="sort.column !== COLUMNS.TYPE || sort.direction === null">
                     <div class="w-4 h-4">
@@ -131,10 +131,10 @@
                   </template>
                 </div>
               </th>
-              <th class="p-2 border-r border-gray-400 font-bold">{{ 'trash.restore_path'|trans }}</th>
+              <th class="p-2 font-bold text-start">{{ 'trash.restore_path'|trans }}</th>
               <th class="p-2 font-bold cursor-pointer active:opacity-80"
               @click="setSort(COLUMNS.DELETED_AT, sort.column !== COLUMNS.DELETED_AT || sort.direction === null ? DIRECTIONS.ASC : (sort.direction === DIRECTIONS.ASC && sort.column === COLUMNS.DELETED_AT ? DIRECTIONS.DESC : null))">
-                <div class="flex items-center justify-center gap-2">
+                <div class="flex items-center gap-2">
                   <div>{{ 'trash.deleted_at'|trans }}</div>
                   <template x-if="sort.column !== COLUMNS.DELETED_AT || sort.direction === null">
                     <div class="w-4 h-4">
@@ -161,7 +161,7 @@
               class="cursor-pointer select-none active:opacity-80"
               @click.window="if($el.contains($event.target)) { selectedRecord = index }"
               @dblclick="record.record_type === RECORD_TYPE_BAG ? window.location.href = record.href : openCardDetailModal(record.id)">
-                <td class="p-2 border-r border-gray-400">
+                <td class="p-2">
                   <template x-if="record.record_type === RECORD_TYPE_BAG">
                     <twig:ClickInput
                       type="checkbox"
@@ -185,7 +185,7 @@
                     </twig:ClickInput>
                   </template>
                 </td>
-                <td class="p-2 border-r border-gray-400">
+                <td class="p-2">
                   <template x-if="record.record_type === RECORD_TYPE_BAG">
                     <div class="flex items-center gap-1">
                       <div class="w-4 h-4">
@@ -204,12 +204,12 @@
                   </template>
                 </td>
                 <template x-if="record.record_type === RECORD_TYPE_BAG">
-                  <td class="p-2 border-r border-gray-400">{{ 'trash.type_bag'|trans }}</td>
+                  <td class="p-2">{{ 'trash.type_bag'|trans }}</td>
                 </template>
                 <template x-if="record.record_type === RECORD_TYPE_CARD">
-                  <td class="p-2 border-r border-gray-400">{{ 'trash.type_card'|trans }}</td>
+                  <td class="p-2">{{ 'trash.type_card'|trans }}</td>
                 </template>
-                <td class="p-2 border-r border-gray-400"><span x-text="record.restorePath"></span></td>
+                <td class="p-2"><span x-text="record.restorePath"></span></td>
                 <td class="p-2"><span x-text="record.deletedAt"></span></td>
               </tr>
             </template>
