@@ -118,10 +118,8 @@
         </twig:Dropdown>
       </div>
     </div>
-    {# Back button #}
-    {% if breadcrumb is defined %}
+    {# Breadcrumb #}
       <twig:Breadcrumb :items="breadcrumb"></twig:Breadcrumb>
-    {% endif %}
     {# Display body #}
     <template x-if="filteredBagList.length || filteredCardList.length">
       <div class="flex flex-col flex-1 w-full gap-10">

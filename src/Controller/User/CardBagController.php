@@ -27,10 +27,13 @@ class CardBagController extends BaseController
   public function index()
   {
     $error = $this->getErrorFlash();
+    $breadcrumb = [['icon' => $this->renderView('icons/folder.svg'), 'label' => $this->translator->trans('menu.card_bag'), 'url' => Routes::CARD_BAG_ROUTE_URL, 'id' => null]];
+
     return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG, parameters: [
       'error' => $error,
       'bagList' => $this->service->getBagList(null),
-      'cardList' => $this->service->getCardList(null)
+      'cardList' => $this->service->getCardList(null),
+      'breadcrumb' => $breadcrumb,
     ]);
   }
 
@@ -49,7 +52,7 @@ class CardBagController extends BaseController
     $bagTree = $this->service->getBagTree($id);
 
     // Convert the bag tree to breadcrumbs array
-    $breadcrumb = [['icon' => $this->renderView('icons/folder.svg'), 'label' => $this->translator->trans('menu.card_bag'), 'url' => Routes::CARD_BAG_ROUTE_URL]];
+    $breadcrumb = [['icon' => $this->renderView('icons/folder.svg'), 'label' => $this->translator->trans('menu.card_bag'), 'url' => Routes::CARD_BAG_ROUTE_URL, 'id' => null]];
     $breadcrumb = $this->service->parseBagTreeToBreadcrumb($bagTree, $breadcrumb);
 
     return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG, parameters: [
@@ -201,7 +204,7 @@ class CardBagController extends BaseController
     $dto = new EditCardDTO();
     ClassUtility::mapArrayToDTO($postData, $dto);
 
-    if($this->service->getCard($dto->getCard()) === null){
+    if ($this->service->getCard($dto->getCard()) === null) {
       Utility::addNoticeToSessionFlash($this->session, 'error', $this->translator->trans('card_bag.no_card_found'));
       return $this->redirect($previousRoute);
     }

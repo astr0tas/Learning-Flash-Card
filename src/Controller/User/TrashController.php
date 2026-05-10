@@ -23,12 +23,14 @@ class TrashController extends BaseController
 
     $bagList = $this->service->getBagList(null);
     $cardList = $this->service->getCardList(null);
+    $breadcrumb = [['icon' => $this->renderView('icons/folder.svg'), 'label' => $this->translator->trans('menu.trash'), 'url' => Routes::TRASH_ROUTE_URL]];
 
     $this->service->enableSoftDeleteFilter();
 
     return $this->render(view: TwigTemplate::PAGE_USER_TRASH, parameters: [
       'bagList' => $bagList,
-      'cardList' => $cardList
+      'cardList' => $cardList,
+      'breadcrumb' => $breadcrumb
     ]);
   }
 

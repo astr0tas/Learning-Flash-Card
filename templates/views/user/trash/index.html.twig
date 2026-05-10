@@ -77,10 +77,8 @@
         </div>
       </div>
     </div>
-    {# Back button #}
-    {% if breadcrumb is defined %}
-      <twig:Breadcrumb :items="breadcrumb"></twig:Breadcrumb>
-    {% endif %}
+    {# Breadcrumb #}
+    <twig:Breadcrumb :items="breadcrumb"></twig:Breadcrumb>
     {# Display body #}
     <template x-if="filteredRecords.length">
       <div class="flex flex-col overflow-auto hide-browser-scollbar rounded-md border border-gray-400">

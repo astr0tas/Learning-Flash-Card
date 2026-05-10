@@ -204,7 +204,8 @@ class CardBagService extends BaseService
   {
     $runner = $bagTree;
     while ($runner) {
-      $breadcrumb[] = ['label' => $runner->getBagName(), 'url' => str_replace('{id}', $runner->getBagId(), Routes::CARD_BAG_DETAIL_ROUTE_URL)];
+      $id = $runner->getBagId();
+      $breadcrumb[] = ['label' => $runner->getBagName(), 'url' => str_replace('{id}', $id, Routes::CARD_BAG_DETAIL_ROUTE_URL), 'id' => $id];
 
       $runner = $runner->getChild();
     }
