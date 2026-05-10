@@ -90,6 +90,9 @@ card_bag:
   bag_not_found: "Không tìm thấy túi thẻ"
   no_card_found: "Thẻ không tồn tại"
   card_edit_success: "Thẻ đã được cập nhật thành công"
+  card_bag: "Túi thẻ"
+  created_at: "Thời gian tạo"
+  search_placeholder2: "Tìm kiếm túi"
 
 trash:
   title: "Thùng rác"

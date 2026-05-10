@@ -35,4 +35,52 @@ abstract class BaseEntity
   {
     $this->updatedAt = new \DateTimeImmutable();
   }
+
+  /**
+   * Get the value of createdAt
+   *
+   * @return ?\DateTimeImmutable
+   */
+  public function getCreatedAt(): ?\DateTimeImmutable
+  {
+    return $this->createdAt;
+  }
+
+  /**
+   * Set the value of createdAt
+   *
+   * @param ?\DateTimeImmutable $createdAt
+   *
+   * @return self
+   */
+  public function setCreatedAt(?\DateTimeImmutable $createdAt): self
+  {
+    $this->createdAt = $createdAt;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of updatedAt
+   *
+   * @return ?\DateTimeImmutable
+   */
+  public function getUpdatedAt(): ?\DateTimeImmutable
+  {
+    return $this->updatedAt;
+  }
+
+  /**
+   * Set the value of updatedAt
+   *
+   * @param ?\DateTimeImmutable $updatedAt
+   *
+   * @return self
+   */
+  public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+  {
+    $this->updatedAt = $updatedAt;
+
+    return $this;
+  }
 }

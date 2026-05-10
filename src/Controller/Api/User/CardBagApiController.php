@@ -19,8 +19,9 @@ class CardBagApiController extends BaseApiController
   #[Route(path: Routes::API_USER_CARD_BAG_ROUTE_URL, name: Routes::API_USER_CARD_BAG_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function getCardList(Request $request): JsonResponse
   {
-    $parentBagId = $request->query->get('parentBagId') ?: null;
-    $cardList = $this->cardBagService->getBagList($parentBagId);
+    $parentBagId = $request->query->get('parentBagId');
+    $parentBagId = $parentBagId !== "" && $parentBagId !== "null" ? (int)$parentBagId : null;
+    $cardList = $this->cardBagService->getBagList($parentBagId, false);
 
     return $this->json($cardList, Response::HTTP_OK, [
       Header::CONTENT_TYPE => ContentType::JSON

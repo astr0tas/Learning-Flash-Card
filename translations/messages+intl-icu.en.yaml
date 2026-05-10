@@ -90,6 +90,9 @@ card_bag:
   bag_not_found: "Card bag not found"
   no_card_found: "Card does not exist"
   card_edit_success: "Card has been updated successfully"
+  card_bag: "Card bag"
+  created_at: "Created at"
+  search_placeholder2: "Search card bags"
 
 trash:
   title: "Trash Bin"

@@ -7,9 +7,6 @@ document.addEventListener('alpine:init', () =>
     selectCard: '',
     selectedBags: [],
     selectedCards: [],
-    objectMovingBreadcrumb: [],
-    newParentBag: null,
-    parentBagContent: [],
     openCardDetailModal(id)
     {
       const card = this.filteredCardList.find(c => c.id == id);
@@ -45,9 +42,29 @@ document.addEventListener('alpine:init', () =>
         return searchKeywords.some(keyword => normalizedCardTitle.includes(keyword));
       });
     },
-    fetchParentBagContent(id)
+    init()
     {
-      const params = { parentBagId: id };
+      this.$watch('selectedBags', () => {
+        this.$dispatch('update-select-bag', this.selectedBags);
+      });
+      this.$watch('selectedCards', () => {
+        this.$dispatch('update-select-card', this.selectedCards);
+      });
+    }
+  }));
+
+  Alpine.data('objectMove', () => ({
+    selectedBags: [],
+    selectedCards: [],
+    originalParent: objectMovingBreadcrumb.length > 0 ? objectMovingBreadcrumb[objectMovingBreadcrumb.length - 1].id : null,
+    newParentBag: objectMovingBreadcrumb.length > 0 ? objectMovingBreadcrumb[objectMovingBreadcrumb.length - 1].id : null,
+    objectMovingBreadcrumb,
+    parentBagContent: [],
+    filteredParentBagContent: [],
+    searchFilter: '',
+    fetchParentBagContent()
+    {
+      const params = { parentBagId: this.newParentBag };
       const queryString = new URLSearchParams(params).toString();
       const url = `${ fetchBagContentUrl }?${ queryString }`;
 
@@ -55,22 +72,58 @@ document.addEventListener('alpine:init', () =>
         .then(response => response.json())
         .then(data =>
         {
+          this.parentBagContent = data.filter(elem => !this.selectedBags.some(bag => bag == elem.id));
+          this.applySearch();
+          document.getElementById('objectMovingBreadcrumb').dispatchEvent(new CustomEvent('set-breadcrumb-items', { detail: this.objectMovingBreadcrumb }));
         })
         .catch(error =>
         {
           console.error("Error when fetching bag list: ", error);
-          this.pushNotification(apiRequestError,'error');
+          this.pushNotification(apiRequestError, 'error');
         })
+    },
+    applySearch()
+    {
+      if (!this.searchFilter)
+      {
+        this.filteredParentBagContent = JSON.parse(JSON.stringify(this.parentBagContent));
+        return;
+      }
+
+      const normalizedSearch = this.removeDiacritics(this.searchFilter.toLowerCase());
+      const searchKeywords = normalizedSearch.split(/[~`!@#$%^&*()_+\-\=\[\]{}\\|;':"<>,./? ]+/).filter(keyword => keyword);
+
+      this.filteredParentBagContent = this.parentBagContent.filter(bag => {
+        const normalizedBagName = this.removeDiacritics(bag.name.toLowerCase());
+        return searchKeywords.some(keyword => normalizedBagName.includes(keyword));
+      });
     },
     init()
     {
-      this.$watch('selectedBags', () =>{
-        this.$dispatch('update-select-bag', this.selectedBags);
+      this.$watch('newParentBag', (value) =>
+      {
+        const findIndex = this.objectMovingBreadcrumb.findIndex(elem => elem.id === value);
+
+        if (findIndex !== -1)
+        {
+          this.objectMovingBreadcrumb = this.objectMovingBreadcrumb.slice(0, findIndex + 1);
+        } else
+        {
+          const result = this.parentBagContent.find(elem => elem.id === value);
+          this.objectMovingBreadcrumb.push({
+            id: result.id,
+            label: result.name,
+            action: `document.getElementById('moveObjectModal').dispatchEvent(new CustomEvent('set-new-parent-bag', { detail: ${result.id} }))`
+          });
+        }
+
+        this.fetchParentBagContent();
       });
-      this.$watch('selectedCards', () =>{
-        this.$dispatch('update-select-card', this.selectedCards);
+
+      this.$watch('searchFilter', () =>
+      {
+        this.applySearch();
       });
-      this.$watch('newParentBag', (value) => { this.fetchParentBagContent(value) });
     }
   }));
 });

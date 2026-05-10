@@ -36,15 +36,21 @@
 {% endfor %}
 
 {% set new_bag_name = error.newBagName | default('') %}
+{% set objectMovingBreadcrumb = [] %}
+
+{% for item in breadcrumb %}
+  {% set objectMovingBreadcrumb = objectMovingBreadcrumb|merge([{
+    'icon': item.icon|default(null),
+    'label': item.label,
+    'action': "document.getElementById('moveObjectModal').dispatchEvent(new CustomEvent('set-new-parent-bag', { detail: " ~ item.id|default('null') ~ " }));",
+    'id': item.id
+  }]) %}
+{% endfor %}
 
 {% block javascripts %}
   {{ parent() }}
   <script>
-    const breadcrumbRoot = {{ {
-      'icon': include('icons/folder.svg'),
-      'label': 'menu.card_bag',
-      'action': 'newParentBag = null'
-    }|json_encode|raw }};
+    const objectMovingBreadcrumb = {{ objectMovingBreadcrumb|json_encode|raw }};
     const fetchBagContentUrl = "{{ constant('App\\Config\\Routes::API_USER_CARD_BAG_ROUTE_URL') }}";
     const apiRequestError = "{{ 'general_error.system_error'|trans }}";
     const bagList = {{ card_bag_array|json_encode|raw }};
@@ -97,7 +103,7 @@
           </twig:block>
           <twig:block name="dropdown_content">
             <div class="py-1">
-              <button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full hover:text-[#101828]!" @click="document.getElementById('moveObjectModal').setAttribute('open',true)" x-bind:disabled="!selectedBags.length && !selectedCards.length" x-bind:class="!selectedBags.length && !selectedCards.length?'!hover:opacity:20 !active:opacity-25 opacity-25!':''">
+              <button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full hover:text-[#101828]!" @click="document.getElementById('moveObjectModal').dispatchEvent(new CustomEvent('open')); document.getElementById('moveObjectModal').setAttribute('open',true)" x-bind:disabled="!selectedBags.length && !selectedCards.length" x-bind:class="!selectedBags.length && !selectedCards.length?'!hover:opacity:20 !active:opacity-25 opacity-25!':''">
                 <div class="w-5 h-5 text-inherit!">
                   {{ include('icons/move_folder.svg') }}
                 </div>
@@ -119,7 +125,7 @@
       </div>
     </div>
     {# Breadcrumb #}
-      <twig:Breadcrumb :items="breadcrumb"></twig:Breadcrumb>
+    <twig:Breadcrumb :items="breadcrumb"></twig:Breadcrumb>
     {# Display body #}
     <template x-if="filteredBagList.length || filteredCardList.length">
       <div class="flex flex-col flex-1 w-full gap-10">
@@ -180,7 +186,60 @@
       </el-dialog-panel>
     </twig:block>
   </twig:Modal>
-  <twig:Modal modalTitle="{{ 'action.move'|trans }}" actionButtonText="{{ 'action.confirm'|trans }}" actionButtonVariant="primary" @modal-action="" id="moveObjectModal"></twig:Modal>
+  <twig:Modal x-data="objectMove" @open="fetchParentBagContent()" @set-new-parent-bag="newParentBag = $event.detail" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.move'|trans }}" @modal-action="$el.removeAttribute('open'); $refs.moveObjectFormRef.submit()" id="moveObjectModal" modalContentClass="sm:max-w-7xl!">
+    <twig:block name="modal_body">
+      <twig:Form x-ref="moveObjectFormRef" action="{{ constant('App\\Config\\Routes::MOVE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
+        <template x-for="selectedBag in selectedBags">
+          <input type="hidden" name="bag[]" :value="selectedBag">
+        </template>
+        <template x-for="selectedCard in selectedCards">
+          <input type="hidden" name="card[]" :value="selectedCard">
+        </template>
+        <input type="hidden" name="newParentBag" :value="newParentBag">
+      </twig:Form>
+      <div class="flex flex-col gap-10">
+        <div class="flex flex-col gap-5">
+          <twig:Breadcrumb :items="objectMovingBreadcrumb" id="objectMovingBreadcrumb"></twig:Breadcrumb>
+          <div class="w-full" @search="searchFilter = document.getElementById('search2').value">
+            <twig:Input type="search" name="search2" placeholder="{{ 'card_bag.search_placeholder2'|trans }}" size="9xl" @keyup.enter="searchFilter = document.getElementById('search2').value"/>
+          </div>
+        </div>
+        <template x-if="filteredParentBagContent.length">
+          <div class="flex flex-col overflow-auto hide-browser-scollbar">
+            <table>
+              <thead>
+                <tr class="border-b border-gray-400 select-none">
+                  <th class="text-start py-2">{{ 'card_bag.card_bag'|trans }}</th>
+                  <th class="w-50 text-start py-2">{{ 'card_bag.created_at'|trans }}</th>
+                </tr>
+              </thead>
+              <tbody x-data="{ selectedRecord: null }" @click.window="selectedRecord = null">
+                <template x-for="(record,index) in filteredParentBagContent" :key="record.id">
+                  <tr x-bind:class="{ 'border-t border-gray-400': index, 'bg-(--blue) text-(--white)': selectedRecord === index }"
+                  class="cursor-pointer select-none active:opacity-80"
+                  @click.window="if($el.contains($event.target)) { selectedRecord = index }"
+                  @dblclick="newParentBag = record.id">
+                    <td class="py-2" x-text="record.name"></td>
+                    <td class="py-2" x-text="dayjs(record.createdAt).format('YYYY-MM-DD HH:mm:ss')"></td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </template>
+        <template x-if="!filteredParentBagContent.length">
+          <div class="flex-1 w-full">
+            <twig:NoContent></twig:NoContent>
+          </div>
+        </template>
+      </div>
+    </twig:block>
+    <twig:block name="action_button">
+      <twig:Button type="button" class="text-sm" variant="primary" title="{{ 'action.confirm'|trans }}" @click="$dispatch('modal-action')" x-bind:disabled="originalParent === newParentBag" x-bind:class="{ 'cursor-not-allowed!' : originalParent === newParentBag }">
+        {{ 'action.confirm'|trans }}
+      </twig:Button>
+    </twig:block>
+  </twig:Modal>
   <twig:Modal x-data="{ selectedBags: [], selectedCards: [] }" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="$refs.deleteObjectFormRef.submit()" id="deleteObjectModal">
     <twig:block name="modal_body">
       <twig:Form x-ref="deleteObjectFormRef" action="{{ constant('App\\Config\\Routes::DELETE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">

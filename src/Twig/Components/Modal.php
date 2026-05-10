@@ -13,6 +13,7 @@ final class Modal
   public string $modalTitle = '';
   public string $actionButtonText = '';
   public string $actionButtonVariant = ''; // Use for the `variant` property of the `Button` component
+  public string $modalContentClass = '';
 
   public function __construct()
   {

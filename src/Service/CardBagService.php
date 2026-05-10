@@ -13,6 +13,8 @@ use App\Entity\CardBagEntity;
 use App\Entity\CardEntity;
 use App\Repository\CardBagRepository;
 use App\Repository\CardRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Parameter;
 
 class CardBagService extends BaseService
 {
@@ -87,9 +89,24 @@ class CardBagService extends BaseService
     $this->entityManager->flush();
   }
 
-  public function getBagList(?int $bagId): array
+  public function getBagList(?int $bagId, bool $preloadAssociations = true): array
   {
-    return $this->cardBagRepository->findBy(['parentCardBagEntity' => $bagId, 'userEntity' => $this->user->getId()]);
+    $userId = $this->user->getId();
+    if ($preloadAssociations) {
+      return $this->cardBagRepository->findBy(['parentCardBagEntity' => $bagId, 'userEntity' => $userId]);
+    }
+
+    $query = $this->cardBagRepository->createQueryBuilder('cb')
+      ->where('cb.userEntity = :userEntity')
+      ->setParameter('userEntity', $userId);
+
+    if ($bagId !== null) {
+      $query->andWhere('cb.parentCardBagEntity = :parentCardBagEntity')->setParameter('parentCardBagEntity', $bagId);
+    } else {
+      $query->andWhere('cb.parentCardBagEntity IS NULL');
+    }
+
+    return $query->getQuery()->getArrayResult();
   }
 
   public function getCardList(?int $bagId): array
