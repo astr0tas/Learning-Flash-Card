@@ -15,10 +15,6 @@ services:
       context: .
       dockerfile: postgres.Dockerfile
     restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: lfc
     volumes:
       - pg-data:/var/lib/postgresql/data
     ports:
