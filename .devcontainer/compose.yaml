@@ -4,8 +4,11 @@ services:
       context: .
       dockerfile: symfony.Dockerfile
     volumes:
-      # Mounts the root of your project into the container's workspace
-      - ../:/workspace:cached
+      # 2 way binding the host's source code and the container's
+      - ../:/workspace
+      # Dedicated volume to store the var and vendor directories inside the container (greatly improve the performance)
+      - symfony-var:/workspace/var
+      - symfony-vendor:/workspace/vendor
     command: sleep infinity
     ports:
       - "8000:8000"
@@ -20,3 +23,5 @@ services:
 
 volumes:
   pg-data:
+  symfony-var:
+  symfony-vendor:
