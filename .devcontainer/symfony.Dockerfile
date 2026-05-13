@@ -9,7 +9,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         unzip \
         iputils-ping \
     # 2. Compile PHP extensions
-    && docker-php-ext-install pdo pdo_pgsql opcache \
+    && docker-php-ext-install -j 2 pdo pdo_pgsql opcache \
     && pecl install apcu \
     && docker-php-ext-enable apcu
 

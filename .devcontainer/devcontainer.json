@@ -21,7 +21,7 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html"
-	"postCreateCommand": "composer install && php bin/console make:migration && php bin/console doctrine:migrations:migrate --no-interaction && symfony server:ca:install",
+	"postCreateCommand": "composer install && php bin/console make:migration --no-interaction && php bin/console doctrine:migrations:migrate --no-interaction && symfony server:ca:install",
 	"postStartCommand": "symfony serve --allow-all-ip"
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.

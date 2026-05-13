@@ -1,4 +1,11 @@
 services:
   database:
-   ports:
-     - "5433:5432"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: testdatabase
+
+volumes:
+  pg-data:
+   external: true
