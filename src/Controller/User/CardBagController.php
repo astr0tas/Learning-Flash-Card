@@ -72,7 +72,6 @@ class CardBagController extends BaseController
     // Get the previous route to redirect back to it
     $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
 
-    // Handle login submission
     $postData = $request->request->all();
 
     // Pass the form data to a DTO
@@ -103,12 +102,14 @@ class CardBagController extends BaseController
       return $this->redirect($previousRoute);
     }
 
-    $newBag = $this->service->addNewBag($dto);
+    // $newBag = $this->service->addNewBag($dto);
+    $this->service->addNewBag($dto);
 
     Utility::addNoticeToSessionFlash($this->session, 'success', $this->translator->trans('card_bag.new_bag_created'));
 
-    $redirectUrl = str_replace('{id}', $newBag->getId(), Routes::CARD_BAG_DETAIL_ROUTE_URL);
-    return $this->redirect($redirectUrl);
+    // $redirectUrl = str_replace('{id}', $newBag->getId(), Routes::CARD_BAG_DETAIL_ROUTE_URL);
+    // return $this->redirect($redirectUrl);
+    return $this->redirect($previousRoute);
   }
 
   #[Route(path: Routes::CREATE_NEW_CARD_ROUTE_URL, name: Routes::CREATE_NEW_CARD_ROUTE_NAME, methods: [Request::METHOD_POST])]
@@ -119,7 +120,6 @@ class CardBagController extends BaseController
     // Get the previous route to redirect back to it
     $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
 
-    // Handle login submission
     $postData = $request->request->all();
 
     // Pass the form data to a DTO
@@ -175,7 +175,6 @@ class CardBagController extends BaseController
     // Get the previous route to redirect back to it
     $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
 
-    // Handle login submission
     $postData = $request->request->all();
 
     // Pass the form data to a DTO
@@ -197,7 +196,6 @@ class CardBagController extends BaseController
     // Get the previous route to redirect back to it
     $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
 
-    // Handle login submission
     $postData = $request->request->all();
 
     // Pass the form data to a DTO
