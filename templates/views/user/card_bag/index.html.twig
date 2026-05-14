@@ -186,7 +186,7 @@
       </el-dialog-panel>
     </twig:block>
   </twig:Modal>
-  <twig:Modal x-data="objectMove" @set-new-parent-bag="newParentBag = $event.detail" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.move'|trans }}" @modal-action="clickConfirm()" id="moveObjectModal" modalContentClass="sm:max-w-7xl!">
+  <twig:Modal x-data="objectMove" @close="resetMoveObjectModal()" @set-new-parent-bag="newParentBag = $event.detail" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.move'|trans }}" @modal-action="clickConfirm()" id="moveObjectModal" modalContentClass="sm:max-w-7xl!">
     <twig:block name="modal_body">
       <twig:Form x-ref="moveObjectFormRef" action="{{ constant('App\\Config\\Routes::MOVE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
         <template x-for="selectedBag in selectedBags">

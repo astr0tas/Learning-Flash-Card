@@ -120,6 +120,10 @@ document.addEventListener('alpine:init', () =>
       document.getElementById('moveObjectModal').removeAttribute('open');
       $refs.moveObjectFormRef.requestSubmit();
     },
+    resetMoveObjectModal()
+    {
+      this.newParentBag = this.originalParent;
+    },
     init()
     {
       this.$watch('newParentBag', (value) =>
