@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+@source "../../templates";
+@source "../../src/Twig/Components";
+
 /* body {
     background-color: skyblue;
 } */
@@ -209,5 +212,3 @@ input[type="checkbox"]:checked::after {
 input::placeholder {
   color: var(--gray);
 }
-
-[x-cloak] { display: none !important; }

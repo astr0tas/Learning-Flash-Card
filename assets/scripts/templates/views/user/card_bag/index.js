@@ -62,13 +62,16 @@ document.addEventListener('alpine:init', () =>
     parentBagContent: [],
     filteredParentBagContent: [],
     searchFilter: '',
-    fetchParentBagContent()
+    isLoading: false,
+    async fetchParentBagContent()
     {
+      this.toggleLoading();
+
       const params = { parentBagId: this.newParentBag };
       const queryString = new URLSearchParams(params).toString();
       const url = `${ fetchBagContentUrl }?${ queryString }`;
 
-      fetch(url)
+      await fetch(url)
         .then(response => response.json())
         .then(data =>
         {
@@ -81,6 +84,20 @@ document.addEventListener('alpine:init', () =>
           console.error("Error when fetching bag list: ", error);
           this.pushNotification(apiRequestError, 'error');
         })
+
+      this.toggleLoading();
+    },
+    toggleLoading()
+    {
+      this.isLoading = !this.isLoading;
+
+      if (this.isLoading)
+      {
+        document.getElementById('bag-content-list-loading').dispatchEvent(new CustomEvent('set-loading'));
+      } else
+      {
+        document.getElementById('bag-content-list-loading').dispatchEvent(new CustomEvent('unset-loading'));
+      }
     },
     applySearch()
     {
@@ -97,6 +114,11 @@ document.addEventListener('alpine:init', () =>
         const normalizedBagName = this.removeDiacritics(bag.name.toLowerCase());
         return searchKeywords.some(keyword => normalizedBagName.includes(keyword));
       });
+    },
+    clickConfirm()
+    {
+      document.getElementById('moveObjectModal').removeAttribute('open');
+      $refs.moveObjectFormRef.requestSubmit();
     },
     init()
     {
@@ -124,6 +146,13 @@ document.addEventListener('alpine:init', () =>
       {
         this.applySearch();
       });
+
+      this.$watch('selectedBags', () =>
+      {
+        this.fetchParentBagContent();
+      });
+
+      this.fetchParentBagContent();
     }
   }));
 });

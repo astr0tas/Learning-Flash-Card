@@ -103,7 +103,7 @@
           </twig:block>
           <twig:block name="dropdown_content">
             <div class="py-1">
-              <button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full hover:text-[#101828]!" @click="document.getElementById('moveObjectModal').dispatchEvent(new CustomEvent('open')); document.getElementById('moveObjectModal').setAttribute('open',true)" x-bind:disabled="!selectedBags.length && !selectedCards.length" x-bind:class="!selectedBags.length && !selectedCards.length?'!hover:opacity:20 !active:opacity-25 opacity-25!':''">
+              <button class="flex items-center px-4 py-2 gap-1 cursor-pointer w-full hover:text-[#101828]!" @click="document.getElementById('moveObjectModal').setAttribute('open',true)" x-bind:disabled="!selectedBags.length && !selectedCards.length" x-bind:class="!selectedBags.length && !selectedCards.length?'!hover:opacity:20 !active:opacity-25 opacity-25!':''">
                 <div class="w-5 h-5 text-inherit!">
                   {{ include('icons/move_folder.svg') }}
                 </div>
@@ -186,7 +186,7 @@
       </el-dialog-panel>
     </twig:block>
   </twig:Modal>
-  <twig:Modal x-data="objectMove" @open="fetchParentBagContent()" @set-new-parent-bag="newParentBag = $event.detail" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.move'|trans }}" @modal-action="$el.removeAttribute('open'); $refs.moveObjectFormRef.requestSubmit()" id="moveObjectModal" modalContentClass="sm:max-w-7xl!">
+  <twig:Modal x-data="objectMove" @set-new-parent-bag="newParentBag = $event.detail" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.move'|trans }}" @modal-action="clickConfirm()" id="moveObjectModal" modalContentClass="sm:max-w-7xl!">
     <twig:block name="modal_body">
       <twig:Form x-ref="moveObjectFormRef" action="{{ constant('App\\Config\\Routes::MOVE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
         <template x-for="selectedBag in selectedBags">
@@ -204,7 +204,7 @@
             <twig:Input type="search" name="search2" placeholder="{{ 'card_bag.search_placeholder2'|trans }}" size="9xl" @keyup.enter="searchFilter = document.getElementById('search2').value"/>
           </div>
         </div>
-        <template x-if="filteredParentBagContent.length">
+        <template x-if="filteredParentBagContent.length && !isLoading">
           <div class="flex flex-col overflow-auto hide-browser-scollbar">
             <table>
               <thead>
@@ -227,11 +227,12 @@
             </table>
           </div>
         </template>
-        <template x-if="!filteredParentBagContent.length">
-          <div class="flex-1 w-full">
+        <template x-if="!filteredParentBagContent.length && !isLoading">
+          <div class="h-[75px] w-full">
             <twig:NoContent></twig:NoContent>
           </div>
         </template>
+        <twig:Loading x-show="isLoading" id="bag-content-list-loading" class="opacity-30 h-[75px]!"></twig:Loading>
       </div>
     </twig:block>
     <twig:block name="action_button">

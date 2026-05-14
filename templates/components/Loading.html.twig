@@ -1,4 +1,4 @@
-<div x-data="{ isLoading: false }" x-cloak x-show="isLoading" @set-loading="isLoading=true" @unset-loading="isLoading=false" {{ attributes.defaults({ class: "w-full h-full flex items-center justify-center"} ) }}>
+<div x-data="{ isLoading: false }" x-show="isLoading" @set-loading="isLoading=true" @unset-loading="isLoading=false" {{ attributes.defaults({ class: "w-full h-full flex items-center justify-center"} ) }}>
   <div class="bg-white/30 backdrop-blur-[2px] w-full h-full"></div>
   <div role="status" class="loader"></div>
 </div>
