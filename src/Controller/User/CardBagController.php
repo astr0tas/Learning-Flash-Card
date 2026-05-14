@@ -251,6 +251,37 @@ class CardBagController extends BaseController
     return $this->redirect($previousRoute);
   }
 
+  #[Route(path: Routes::MOVE_OBJECT_ROUTE_URL, name: Routes::MOVE_OBJECT_ROUTE_NAME, methods: [Request::METHOD_POST])]
+  public function moveObject(Request $request)
+  {
+    // Get the previous route to redirect back to it
+    $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
+
+    $postData = $request->request->all();
+
+    $dto = new SelectObjectDTO();
+
+    ClassUtility::mapArrayToDTO($postData, $dto);
+
+    $newParentBag = $dto->getNewParentBag();
+
+    if ($newParentBag !== null && $this->service->getBag($newParentBag) === null) {
+      Utility::addNoticeToSessionFlash($this->session, 'error', $this->translator->trans('card_bag.bag_not_found'));
+      return $this->redirect($previousRoute);
+    }
+
+    $this->service->moveObject($dto);
+
+    Utility::addNoticeToSessionFlash($this->session, 'info', $this->translator->trans('card_bag.object_moved'));
+
+    if ($newParentBag !== null) {
+      $redirectUrl = str_replace('{id}', $newParentBag, Routes::CARD_BAG_DETAIL_ROUTE_URL);
+      return $this->redirect($redirectUrl);
+    } else {
+      return $this->redirect(Routes::CARD_BAG_ROUTE_URL);
+    }
+  }
+
   /**
    * This function will focus on getting flash error data emitted from other functions in this controller
    * @return array

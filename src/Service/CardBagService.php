@@ -217,6 +217,16 @@ class CardBagService extends BaseService
     $this->entityManager->flush();
   }
 
+  public function moveObject(SelectObjectDTO $dto)
+  {
+    $newParentBagId = $dto->getNewParentBag();
+    $newParentBag = null;
+
+    if ($newParentBagId !== null) {
+      $newParentBag = $this->getBag($newParentBagId);
+    }
+  }
+
   public function parseBagTreeToBreadcrumb(BagNavigationTreeDTO $bagTree, array $breadcrumb = []): array
   {
     $runner = $bagTree;

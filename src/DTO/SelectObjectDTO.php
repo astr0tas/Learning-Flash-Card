@@ -6,6 +6,7 @@ class SelectObjectDTO extends BaseDTO
 {
   private array $bag = [];
   private array $card = [];
+  private ?int $newParentBag = null;
 
   /**
    * Get the value of bag
@@ -51,6 +52,30 @@ class SelectObjectDTO extends BaseDTO
   public function setCard(array $card): self
   {
     $this->card = $card;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of newParentBag
+   *
+   * @return ?int
+   */
+  public function getNewParentBag(): ?int
+  {
+    return $this->newParentBag;
+  }
+
+  /**
+   * Set the value of newParentBag
+   *
+   * @param ?int $newParentBag
+   *
+   * @return self
+   */
+  public function setNewParentBag(?int $newParentBag): self
+  {
+    $this->newParentBag = $newParentBag;
 
     return $this;
   }

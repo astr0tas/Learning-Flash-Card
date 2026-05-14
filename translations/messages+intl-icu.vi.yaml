@@ -93,6 +93,7 @@ card_bag:
   card_bag: "Túi thẻ"
   created_at: "Thời gian tạo"
   search_placeholder2: "Tìm kiếm túi"
+  object_moved: "Các mục được chọn đã được di chuyển thành công"
 
 trash:
   title: "Thùng rác"

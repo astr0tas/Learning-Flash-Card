@@ -93,6 +93,7 @@ card_bag:
   card_bag: "Card bag"
   created_at: "Created at"
   search_placeholder2: "Search card bags"
+  object_moved: "The selected items have been moved successfully"
 
 trash:
   title: "Trash Bin"
