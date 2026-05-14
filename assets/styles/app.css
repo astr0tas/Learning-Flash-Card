@@ -209,3 +209,5 @@ input[type="checkbox"]:checked::after {
 input::placeholder {
   color: var(--gray);
 }
+
+[x-cloak] { display: none !important; }

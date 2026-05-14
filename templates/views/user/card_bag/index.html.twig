@@ -165,7 +165,7 @@
 {% endblock %}
 
 {% block modals %}
-  <twig:Modal @close="$dispatch('reset-new-bag-input')" open="{{ error.newBagError is defined }}" modalTitle="{{ 'card_bag.create_options.new_bag'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newBagFormRef.submit()" id="addNewBagModal">
+  <twig:Modal @close="$dispatch('reset-new-bag-input')" open="{{ error.newBagError is defined }}" modalTitle="{{ 'card_bag.create_options.new_bag'|trans }}" actionButtonText="{{ 'action.add'|trans }}" actionButtonVariant="primary" @modal-action="$refs.newBagFormRef.requestSubmit();" id="addNewBagModal">
     <twig:block name="modal_body">
       <twig:Form x-ref="newBagFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_BAG_ROUTE_URL') }}" method="POST">
         {% if bag is defined %}
@@ -177,7 +177,7 @@
       </twig:Form>
     </twig:block>
   </twig:Modal>
-  <twig:Modal @close="$dispatch('reset-new-card-inputs')" open="{{ error.newCardError is defined }}" @submit-form="$refs.newCardFormRef.submit()" @close-create-new-card-modal="document.getElementById('addNewCardModal').removeAttribute('open'); setTimeout(()=>{$dispatch('close')},250)" id="addNewCardModal">
+  <twig:Modal @close="$dispatch('reset-new-card-inputs')" open="{{ error.newCardError is defined }}" @submit-form="$refs.newCardFormRef.requestSubmit()" @close-create-new-card-modal="document.getElementById('addNewCardModal').removeAttribute('open'); setTimeout(()=>{$dispatch('close')},250)" id="addNewCardModal">
     <twig:block name="modal_content">
       <el-dialog-panel class="w-full max-w-125 h-150">
         <twig:Form x-ref="newCardFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_CARD_ROUTE_URL') }}" method="POST" class="flex flex-col gap-3">
@@ -186,7 +186,7 @@
       </el-dialog-panel>
     </twig:block>
   </twig:Modal>
-  <twig:Modal x-data="objectMove" @open="fetchParentBagContent()" @set-new-parent-bag="newParentBag = $event.detail" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.move'|trans }}" @modal-action="$el.removeAttribute('open'); $refs.moveObjectFormRef.submit()" id="moveObjectModal" modalContentClass="sm:max-w-7xl!">
+  <twig:Modal x-data="objectMove" @open="fetchParentBagContent()" @set-new-parent-bag="newParentBag = $event.detail" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.move'|trans }}" @modal-action="$el.removeAttribute('open'); $refs.moveObjectFormRef.requestSubmit()" id="moveObjectModal" modalContentClass="sm:max-w-7xl!">
     <twig:block name="modal_body">
       <twig:Form x-ref="moveObjectFormRef" action="{{ constant('App\\Config\\Routes::MOVE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
         <template x-for="selectedBag in selectedBags">
@@ -240,7 +240,7 @@
       </twig:Button>
     </twig:block>
   </twig:Modal>
-  <twig:Modal x-data="{ selectedBags: [], selectedCards: [] }" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="$refs.deleteObjectFormRef.submit()" id="deleteObjectModal">
+  <twig:Modal x-data="{ selectedBags: [], selectedCards: [] }" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="$refs.deleteObjectFormRef.requestSubmit()" id="deleteObjectModal">
     <twig:block name="modal_body">
       <twig:Form x-ref="deleteObjectFormRef" action="{{ constant('App\\Config\\Routes::DELETE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
         <template x-for="selectedBag in selectedBags">
@@ -260,7 +260,7 @@
       </el-dialog-panel>
     </twig:block>
   </twig:Modal>
-  <twig:Modal @close="$dispatch('set-edit-card-inputs')" open="{{ error.editCardError is defined }}" @submit-form="$refs.editCardFormRef.submit()" @close-edit-card-modal="document.getElementById('editCardModal').removeAttribute('open'); setTimeout(()=>{$dispatch('close')},250)" id="editCardModal">
+  <twig:Modal @close="$dispatch('set-edit-card-inputs')" open="{{ error.editCardError is defined }}" @submit-form="$refs.editCardFormRef.requestSubmit()" @close-edit-card-modal="document.getElementById('editCardModal').removeAttribute('open'); setTimeout(()=>{$dispatch('close')},250)" id="editCardModal">
     <twig:block name="modal_content">
       <el-dialog-panel class="w-full max-w-125 h-150">
         <twig:Form x-ref="editCardFormRef" action="{{ constant('App\\Config\\Routes::UPDATE_CARD_ROUTE_URL') }}" method="POST" class="flex flex-col gap-3">

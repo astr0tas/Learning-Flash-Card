@@ -1,4 +1,4 @@
-<form {{ attributes }}>
+<form {{ attributes }} @submit.prevent="document.getElementById('document-loading').dispatchEvent(new CustomEvent('set-loading')); $el.submit();">
   <input type="hidden" name="{{ constant('App\\Config\\Constants::PARAMETER_CSRF_TOKEN') }}" value="{{ csrf_token(constant('App\\Config\\Constants::PARAMETER_CSRF_TOKEN')) }}" />
   {# prettier-ignore #}
   {% block content %}{% endblock %}

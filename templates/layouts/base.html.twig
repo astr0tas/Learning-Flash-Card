@@ -28,7 +28,7 @@
         {% block body %}{% endblock %}
         <twig:AppSetting/>
       </div>
-      <twig:Loading :fullScreenLoading="true" />
+      <twig:Loading class="fixed z-50000" id="document-loading" />
       {% block modals %}{% endblock %}
     </div>
     {% block javascripts %}{% endblock %}
