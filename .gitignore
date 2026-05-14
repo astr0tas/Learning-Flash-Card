@@ -21,7 +21,13 @@
 /assets/vendor/
 ###< symfony/asset-mapper ###
 
-### Others ###
+### Docker ###
 *compose.override.yaml
 *compose.override.yml
-.vscode
+
+### VSCode ###
+.vscode/**/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/settings.json
