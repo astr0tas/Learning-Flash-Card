@@ -187,7 +187,7 @@
       </el-dialog-panel>
     </twig:block>
   </twig:Modal>
-  <twig:Modal x-data="objectMove" @close="resetMoveObjectModal()" @set-new-parent-bag="newParentBag = $event.detail" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.move'|trans }}" @modal-action="clickConfirm()" id="moveObjectModal" modalContentClass="sm:max-w-7xl!">
+  <twig:Modal x-data="objectMove" @close="resetMoveObjectModal()" @set-new-parent-bag="newParentBag = $event.detail" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.move'|trans }}" @modal-action="document.getElementById('moveObjectModal').removeAttribute('open'); $refs.moveObjectFormRef.requestSubmit();" id="moveObjectModal" modalContentClass="sm:max-w-7xl!">
     <twig:block name="modal_body">
       <twig:Form x-ref="moveObjectFormRef" action="{{ constant('App\\Config\\Routes::MOVE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
         <template x-for="selectedBag in selectedBags">
@@ -206,26 +206,31 @@
           </div>
         </div>
         <template x-if="filteredParentBagContent.length && !isLoading">
-          <div class="flex flex-col overflow-auto hide-browser-scollbar">
-            <table>
-              <thead>
-                <tr class="border-b border-gray-400 select-none">
-                  <th class="text-start py-2">{{ 'card_bag.card_bag'|trans }}</th>
-                  <th class="w-50 text-start py-2">{{ 'card_bag.created_at'|trans }}</th>
-                </tr>
-              </thead>
-              <tbody x-data="{ selectedRecord: null }" @click.window="selectedRecord = null">
-                <template x-for="(record,index) in filteredParentBagContent" :key="record.id">
-                  <tr x-bind:class="{ 'border-t border-gray-400': index, 'bg-(--blue) text-(--white)': selectedRecord === index }"
-                  class="cursor-pointer select-none active:opacity-80"
-                  @click.window="if($el.contains($event.target)) { selectedRecord = index }"
-                  @dblclick="newParentBag = record.id">
-                    <td class="py-2" x-text="record.name"></td>
-                    <td class="py-2" x-text="dayjs(record.createdAt).format('YYYY-MM-DD HH:mm:ss')"></td>
+          <div class="flex flex-col gap-3">
+            <div class="flex flex-col overflow-auto hide-browser-scollbar">
+              <table>
+                <thead>
+                  <tr class="border-b border-gray-400 select-none">
+                    <th class="text-start py-2">{{ 'card_bag.card_bag'|trans }}</th>
+                    <th class="w-50 text-start py-2">{{ 'card_bag.created_at'|trans }}</th>
                   </tr>
-                </template>
-              </tbody>
-            </table>
+                </thead>
+                <tbody x-data="{ selectedRecord: null }" @click.window="selectedRecord = null">
+                  <template x-for="(record,index) in filteredParentBagContent" :key="record.id">
+                    <tr x-bind:class="{ 'border-t border-gray-400': index, 'bg-(--blue) text-(--white)': selectedRecord === index }"
+                    class="cursor-pointer select-none active:opacity-80"
+                    @click.window="if($el.contains($event.target)) { selectedRecord = index }"
+                    @dblclick="newParentBag = record.id">
+                      <td class="py-2" x-text="record.name"></td>
+                      <td class="py-2" x-text="dayjs(record.createdAt).format('YYYY-MM-DD HH:mm:ss')"></td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+            <div class="text-(--gray) text-sm">
+              *{{ 'card_bag.move_object_note'|trans }}
+            </div>
           </div>
         </template>
         <template x-if="!filteredParentBagContent.length && !isLoading">

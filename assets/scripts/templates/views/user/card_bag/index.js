@@ -115,11 +115,6 @@ document.addEventListener('alpine:init', () =>
         return searchKeywords.some(keyword => normalizedBagName.includes(keyword));
       });
     },
-    clickConfirm()
-    {
-      document.getElementById('moveObjectModal').removeAttribute('open');
-      this.$refs.moveObjectFormRef.requestSubmit();
-    },
     resetMoveObjectModal()
     {
       this.newParentBag = this.originalParent;

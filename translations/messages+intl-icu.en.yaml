@@ -94,6 +94,7 @@ card_bag:
   created_at: "Created at"
   search_placeholder2: "Search card bags"
   object_moved: "The selected items have been moved successfully"
+  move_object_note: "For duplicated card bags, their contents will be merge together"
 
 trash:
   title: "Trash Bin"

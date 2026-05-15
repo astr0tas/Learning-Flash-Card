@@ -94,6 +94,7 @@ card_bag:
   created_at: "Thời gian tạo"
   search_placeholder2: "Tìm kiếm túi"
   object_moved: "Các mục được chọn đã được di chuyển thành công"
+  move_object_note: "Đối với các túi thẻ bị trùng lặp, các túi con và thẻ ở trong hai túi đó sẽ được kết hợp lại"
 
 trash:
   title: "Thùng rác"
