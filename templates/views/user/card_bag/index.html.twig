@@ -13,6 +13,7 @@
   {% endset %}
 
   {% set card_bag_array = card_bag_array|merge([{
+    'id': bag.id,
     'name': bag.name,
     'html': bagTemplate
   }]) %}

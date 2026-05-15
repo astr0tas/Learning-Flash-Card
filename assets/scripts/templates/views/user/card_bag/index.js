@@ -118,7 +118,7 @@ document.addEventListener('alpine:init', () =>
     clickConfirm()
     {
       document.getElementById('moveObjectModal').removeAttribute('open');
-      $refs.moveObjectFormRef.requestSubmit();
+      this.$refs.moveObjectFormRef.requestSubmit();
     },
     resetMoveObjectModal()
     {
