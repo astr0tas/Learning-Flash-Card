@@ -69,12 +69,16 @@ class SelectObjectDTO extends BaseDTO
   /**
    * Set the value of newParentBag
    *
-   * @param ?int $newParentBag
+   * @param int|string|null $newParentBag
    *
    * @return self
    */
-  public function setNewParentBag(?int $newParentBag): self
+  public function setNewParentBag(int|string|null $newParentBag): self
   {
+    if ($newParentBag === '') {
+      $newParentBag = null;
+    }
+
     $this->newParentBag = $newParentBag;
 
     return $this;

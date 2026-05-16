@@ -22,7 +22,7 @@ class CardBagEntity extends BaseEntity
   #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
   private ?UserEntity $userEntity = null;
 
-  #[ORM\OneToMany(targetEntity: CardEntity::class, mappedBy: 'cardBagEntity', cascade: ['remove'], orphanRemoval: true)]
+  #[ORM\OneToMany(targetEntity: CardEntity::class, mappedBy: 'cardBagEntity', cascade: ['remove'])]
   private Collection $cardEntities;
 
   // 1. THE OWNING SIDE (Who is my parent?)
@@ -32,7 +32,7 @@ class CardBagEntity extends BaseEntity
   private ?self $parentCardBagEntity = null;
 
   // 2. THE INVERSE SIDE (Who are my children?)
-  #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parentCardBagEntity', cascade: ['remove'], orphanRemoval: true)]
+  #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parentCardBagEntity', cascade: ['remove'])]
   private Collection $childrenCardBagEntities;
 
   #[ORM\Column(type: 'string', nullable: true)]

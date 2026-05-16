@@ -13,8 +13,7 @@ use App\Entity\CardBagEntity;
 use App\Entity\CardEntity;
 use App\Repository\CardBagRepository;
 use App\Repository\CardRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Query\Parameter;
+use DateTime;
 
 class CardBagService extends BaseService
 {
@@ -89,19 +88,19 @@ class CardBagService extends BaseService
     $this->entityManager->flush();
   }
 
-  public function getBagList(?int $bagId, bool $preloadAssociations = true): array
+  public function getBagList(?int $parentBagId, bool $preloadAssociations = true): array
   {
     $userId = $this->user->getId();
     if ($preloadAssociations) {
-      return $this->cardBagRepository->findBy(['parentCardBagEntity' => $bagId, 'userEntity' => $userId]);
+      return $this->cardBagRepository->findBy(['parentCardBagEntity' => $parentBagId, 'userEntity' => $userId]);
     }
 
     $query = $this->cardBagRepository->createQueryBuilder('cb')
       ->where('cb.userEntity = :userEntity')
       ->setParameter('userEntity', $userId);
 
-    if ($bagId !== null) {
-      $query->andWhere('cb.parentCardBagEntity = :parentCardBagEntity')->setParameter('parentCardBagEntity', $bagId);
+    if ($parentBagId !== null) {
+      $query->andWhere('cb.parentCardBagEntity = :parentCardBagEntity')->setParameter('parentCardBagEntity', $parentBagId);
     } else {
       $query->andWhere('cb.parentCardBagEntity IS NULL');
     }
@@ -144,7 +143,7 @@ class CardBagService extends BaseService
     return $currentDTO;
   }
 
-  private function deleteCard(int $cardId, \DateTimeInterface $deleteTime = new \DateTime(), bool $moveToRoot = false)
+  private function deleteCard(int $cardId, \DateTimeInterface $deleteTime = new DateTime(), bool $moveToRoot = false)
   {
     $card = $this->cardRepository->find($cardId);
     if ($card) {
@@ -166,7 +165,7 @@ class CardBagService extends BaseService
     }
   }
 
-  private function deleteBag(int $bagId, \DateTimeInterface $deleteTime = new \DateTime(), bool $moveToRoot = false)
+  private function deleteBag(int $bagId, \DateTimeInterface $deleteTime = new DateTime(), bool $moveToRoot = false)
   {
     $bag = $this->getBag($bagId);
     if ($bag) {
@@ -202,7 +201,7 @@ class CardBagService extends BaseService
 
   public function deleteObject(SelectObjectDTO $dto)
   {
-    $deleteTime = new \DateTime();
+    $deleteTime = new DateTime();
 
     // Delete cards
     foreach ($dto->getCard() as $cardId) {
@@ -225,6 +224,16 @@ class CardBagService extends BaseService
     if ($newParentBagId !== null) {
       $newParentBag = $this->getBag($newParentBagId);
     }
+
+    foreach ($dto->getBag() as $bagId) {
+      $this->moveBag($this->getBag($bagId), $newParentBag);
+    }
+
+    foreach ($dto->getCard() as $cardId) {
+      $this->moveCard($this->getCard($cardId), $newParentBag);
+    }
+
+    $this->entityManager->flush();
   }
 
   public function parseBagTreeToBreadcrumb(BagNavigationTreeDTO $bagTree, array $breadcrumb = []): array
@@ -237,6 +246,65 @@ class CardBagService extends BaseService
       $runner = $runner->getChild();
     }
     return $breadcrumb;
+  }
+
+  private function moveCard(CardEntity $card, ?CardBagEntity $newParentBag = null): void
+  {
+    $oldParentBag = $card->getCardBagEntity();
+    if ($oldParentBag !== null) {
+      $oldParentBag->removeCard($card);
+      $this->entityManager->persist($oldParentBag);
+    }
+
+    $card->setCardBagEntity($newParentBag);
+    $this->entityManager->persist($card);
+
+    if ($newParentBag !== null) {
+      $newParentBag->addCard($card);
+      $this->entityManager->persist($newParentBag);
+    }
+  }
+
+  private function moveBag(CardBagEntity $bag, ?CardBagEntity $newParentBag = null): void
+  {
+    $newBagChildrenBags = $newParentBag === null ? $this->getBagList(null) : $newParentBag->getChildrenCardBagEntities();
+    $duplicatedBag = null;
+
+    foreach ($newBagChildrenBags as $newBagChildBag) {
+      if ($newBagChildBag->getName() === $bag->getName()) {
+        $duplicatedBag = $newBagChildBag;
+        break;
+      }
+    }
+
+    $oldBagParent = $bag->getParentCardBagEntity();
+    if ($oldBagParent !== null) {
+      $oldBagParent->removeChildCardBagEntity($bag);
+      $this->entityManager->persist($oldBagParent);
+    }
+
+    if ($duplicatedBag !== null) {
+      $childBagList = $bag->getChildrenCardBagEntities()->toArray();
+      foreach ($childBagList as $childBag) {
+        $this->moveBag($childBag, $duplicatedBag);
+      }
+
+      $childCardList = $bag->getCardEntities()->toArray();
+      foreach ($childCardList as $card) {
+        $this->moveCard($card, $duplicatedBag);
+      }
+
+      $bag->setDeletedAt(new DateTime());
+      $this->entityManager->remove($bag);
+    } else {
+      $bag->setParentCardBagEntity($newParentBag);
+      $this->entityManager->persist($bag);
+
+      if ($newParentBag !== null) {
+        $newParentBag->addChildCardBagEntity($bag);
+        $this->entityManager->persist($newParentBag);
+      }
+    }
   }
 
   private function parseBagTreeToRestorePath(BagNavigationTreeDTO $bagTree, string $str = ''): string
