@@ -5,6 +5,7 @@ import { dropdownProcessor } from './dropdown.js';
 document.addEventListener('alpine:init', () =>
 {
   Alpine.data('appData', () => ({
+    submitTimeout: null,
     darkMode: (function ()
     {
       // Get the dark_mode cookie
@@ -28,6 +29,18 @@ document.addEventListener('alpine:init', () =>
     removeDiacritics(str)
     {
       return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    },
+    submitForm(formElement)
+    {
+      if (this.submitTimeout !== null)
+      {
+        clearTimeout(submitTimeout);
+      }
+
+      this.submitTimeout = setTimeout(() =>
+      {
+        formElement.requestSubmit();
+      },10);
     },
     getContrastColor(hexColor) {
       // Fallback if no color is provided

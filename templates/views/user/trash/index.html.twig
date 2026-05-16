@@ -226,7 +226,7 @@
 {% endblock %}
 
 {% block modals %}
-  <twig:Modal x-data="{ selectedBags: [], selectedCards: [] }" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'trash.permanent_delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="$refs.permanentDeleteObjectFormRef.requestSubmit()" id="permanentDeleteObjectModal">
+  <twig:Modal x-data="{ selectedBags: [], selectedCards: [] }" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'trash.permanent_delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="submitForm($refs.permanentDeleteObjectFormRef)" id="permanentDeleteObjectModal">
     <twig:block name="modal_body">
       <twig:Form x-ref="permanentDeleteObjectFormRef" action="{{ constant('App\\Config\\Routes::PERMANENT_DELETE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
         <template x-for="selectedBag in selectedBags">
@@ -246,7 +246,7 @@
       </el-dialog-panel>
     </twig:block>
   </twig:Modal>
-  <twig:Modal x-data="{ selectedBags: [], selectedCards: [] }" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.restore'|trans }}" actionButtonText="{{ 'action.restore'|trans }}" actionButtonVariant="primary" @modal-action="$refs.restoreObjectFormRef.requestSubmit()" id="restoreObjectModal">
+  <twig:Modal x-data="{ selectedBags: [], selectedCards: [] }" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.restore'|trans }}" actionButtonText="{{ 'action.restore'|trans }}" actionButtonVariant="primary" @modal-action="submitForm($refs.restoreObjectFormRef)" id="restoreObjectModal">
     <twig:block name="modal_body">
       <twig:Form x-ref="restoreObjectFormRef" action="{{ constant('App\\Config\\Routes::RESTORE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
         <template x-for="selectedBag in selectedBags">
