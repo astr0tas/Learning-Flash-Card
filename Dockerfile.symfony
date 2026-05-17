@@ -1,0 +1,36 @@
+FROM php:8.4
+
+# Set the working directory
+WORKDIR /app
+
+# Install system dependencies required for Composer and PHP extensions
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+  && apt-get install -y --no-install-recommends \
+  libpq-dev \
+  libicu-dev \
+  unzip \
+  zip \
+  # Clean up apt cache to keep image small
+  && rm -rf /var/lib/apt/lists/*
+
+# Install PHP extensions
+RUN docker-php-ext-install -j 2 \
+  pdo \
+  pdo_pgsql \
+  intl \
+  opcache
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+# Copy application files into the image
+COPY . .
+
+# Install PHP dependencies
+RUN composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
+
+# Clear and warm up cache
+RUN APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear
+
+# Compile assets
+RUN php bin/console asset-map:compile

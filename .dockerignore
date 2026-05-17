@@ -1,0 +1,34 @@
+# Runtime data and packages
+var/
+vendor/
+
+# Version control (Reduces image size and prevents leaking history)
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# Local environment overrides (Ensures the container uses its own ENV vars)
+.env*
+!.env
+
+# IDE and OS files
+.idea/
+.vscode/
+.DS_Store
+
+# Devcontainer
+.devcontainer/
+
+# Testing
+tests/
+phpunit.xml.dist
+
+# Docker-related files
+*Dockerfile*
+*compose.*
+.dockerignore
+
+# Others
+.editorconfig
+.symfony.local.yaml
