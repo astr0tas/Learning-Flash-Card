@@ -1,16 +1,15 @@
-name: CI/CD Pipeline
+name: CI/CD Staging Pipeline
 
 on:
+  workflow_dispatch:
   push:
     branches:
-      - main
       - staging
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: astr0tas/lfc
   USERNAME: ${{ github.actor }}
-  IMAGE_TAG: ${{ github.ref_name == 'main' && 'prod' || github.ref_name }}
 
 jobs:
   build-and-push:
@@ -35,7 +34,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: type=raw,value=${{ env.IMAGE_TAG }}
+          tags: type=raw,value=staging
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -69,8 +68,8 @@ jobs:
           # Navigate to the project directory
           cd /home/nghia/Projects/LFC
 
-          # Inject the branch tag variable, pull the fresh image, and recreate the container
-          ./start.sh ${{ env.IMAGE_TAG }}
+          # Pull the fresh image, and recreate the container for staging environment
+          ./start.sh staging
 
           # Clean up unused dangling images to preserve server disk space
           docker image prune -f
