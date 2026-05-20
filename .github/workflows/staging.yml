@@ -70,6 +70,3 @@ jobs:
 
           # Pull the fresh image, and recreate the container for staging environment
           ./start.sh staging
-
-          # Clean up unused dangling images to preserve server disk space
-          docker image prune -f

@@ -72,6 +72,3 @@ jobs:
 
           # Pull the fresh image, and recreate the container for production environment
           ./start.sh prod
-
-          # Clean up unused dangling images to preserve server disk space
-          docker image prune -f
