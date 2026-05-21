@@ -1,17 +1,14 @@
-FROM php:8.4-fpm
+FROM php:8.4-fpm-alpine
 
 # Set the working directory
 WORKDIR /app
 
 # Install system dependencies required for Composer and PHP extensions
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-  && apt-get install -y --no-install-recommends \
-  libpq-dev \
-  libicu-dev \
-  unzip \
-  zip \
-  # Clean up apt cache to keep image small
-  && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache \
+    postgresql-dev \
+    icu-dev \
+    unzip \
+    zip
 
 # Install PHP extensions
 RUN docker-php-ext-install -j 2 \
