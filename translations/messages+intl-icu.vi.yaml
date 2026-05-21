@@ -1,0 +1,190 @@
+login:
+  title: "Đăng nhập"
+  header: "Đăng nhập"
+  submit_button: "Đăng nhập"
+  email: "Email"
+  password: "Mật khẩu"
+  forgot_password: "Quên mật khẩu?"
+  remember_me: "Ghi nhớ đăng nhập"
+  dont_have_account: "Bạn chưa có tài khoản?"
+  register: "Đăng ký ngay"
+  login_with: "Đăng nhập bằng {service_name}"
+  or: "hoặc"
+  incorrect_credentials: "Email hoặc mật khẩu không đúng"
+  email_not_verified: "Tài khoản chưa được xác thực, vui lòng kiểm tra hộp thư và bấm vào liên kết xác thực tài khoản để hoàn tất quá trình đăng ký và đăng nhập lại"
+
+login_with_google:
+  error: "Đăng nhập bằng Google không thành công. Vui lòng thử lại"
+  notice_change_login_method_to_SSO: "Tài khoản của bạn đã được thay đổi phương thức đăng nhập sang {service} và mật khẩu hiện tại bị vô hiệu hóa. Để tiếp tục sử dụng tính năng đăng nhập bằng mật khẩu của bạn, vui lòng đổi sang mật khẩu mới"
+
+logout: "Đăng xuất"
+
+register:
+  title: "Đăng ký tài khoản"
+  header: "Đăng ký tài khoản"
+  email: "Email"
+  first_name: "Tên"
+  last_name: "Họ"
+  middle_name: "Tên đệm"
+  password: "Mật khẩu"
+  confirm_password: "Xác nhận mật khẩu"
+  submit: "Đăng ký"
+  back_to_login: "Quay lại trang đăng nhập"
+  email_sent_header: "Đã gửi email xác thực tài khoản"
+  email_sent_description: "Email xác thực tài khoản đã được gửi đến hòm thư của <strong>{email}</strong>. Vui lòng kiểm tra email và bấm vào liên kết đính kèm để hoàn tất quá trình đăng ký tài khoản"
+
+forgot_password:
+  title: "Quên mật khẩu"
+  header: "Quên mật khẩu"
+  email: "Email"
+  reset_password: "Đặt lại mật khẩu"
+  back_to_login: "Quay lại trang đăng nhập"
+  user_not_found: "Email người dùng không tồn tại"
+  # oauth_user: "Người dùng này đã đăng ký tài khoản bằng Google. Vui lòng đăng nhập bằng Google để truy cập hệ thống"
+  email_sent_header: "Đã gửi email khôi phục mật khẩu"
+  email_sent_description: "Email khôi phục mật khẩu đã được gửi đến hòm thư của <strong>{email}</strong>. Vui lòng kiểm tra email và bấm vào liên kết đính kèm để khôi phục mật khẩu"
+
+reset_password:
+  title: "Đặt lại mật khẩu"
+  header: "Đặt lại mật khẩu"
+  new_password: "Mật khẩu mới"
+  confirm_new_password: "Xác nhận mật khẩu mới"
+  invalid_or_expire_url: "Liên kết không hợp lệ hoặc đã hết hiệu lực"
+  back_to_login: "Quay lại trang đăng nhập"
+  submit: "Thay đổi mật khẩu"
+  success: "Mật khẩu mới đã được đặt thành công"
+  user_not_found: "Không tìm thấy tài khoản để đặt lại mật khẩu"
+
+verify_email:
+  title: "Xác thực tài khoản"
+  invalid_or_expire_url: "Liên kết không hợp lệ hoặc đã hết hiệu lực"
+  user_not_found: "Không tìm thấy tài khoản cần xác thực"
+  verify_success: "Tài khoản của bạn đã được xác thực thành công"
+  back_to_login: "Quay lại trang đăng nhập"
+
+dashboard:
+  title: "Trang chủ"
+
+card_bag:
+  title: "Túi thẻ"
+  search_placeholder: "Tìm kiếm túi thẻ hoặc thẻ"
+  create_options:
+    new_bag: "Tạo túi mới"
+    new_card: "Tạo thẻ mới"
+  other_option: "Tùy chọn khác"
+  bag_name: "Tên túi thẻ"
+  card_title: "Tiêu đề thẻ"
+  card_subtitle: "Phụ đề thẻ"
+  card_description: "Mô tả thẻ"
+  card_type: "Loại thẻ"
+  card_type_normal: "Thường"
+  card_type_language: "Ngôn ngữ"
+  card_color: "Màu thẻ"
+  card_text_color: "Màu chữ"
+  bag_list: "Danh sách túi thẻ"
+  card_list: "Danh sách thẻ"
+  delete_confirm: "Bạn có chắc chắn muốn xóa các mục đã chọn?"
+  new_card_created: "Thẻ mới đã được tạo thành công"
+  new_bag_created: "Túi thẻ mới đã được tạo thành công"
+  object_deleted: "Các mục được chọn đã được xóa thành công"
+  bag_not_found: "Không tìm thấy túi thẻ"
+  no_card_found: "Thẻ không tồn tại"
+  card_edit_success: "Thẻ đã được cập nhật thành công"
+  card_bag: "Túi thẻ"
+  created_at: "Thời gian tạo"
+  search_placeholder2: "Tìm kiếm túi"
+  object_moved: "Các mục được chọn đã được di chuyển thành công"
+  move_object_note: "Đối với các túi thẻ bị trùng lặp, các túi con và thẻ ở trong hai túi đó sẽ được kết hợp lại"
+
+trash:
+  title: "Thùng rác"
+  search_placeholder: "Tìm kiếm túi thẻ hoặc thẻ"
+  name_or_title: "Tên hoặc tiêu đề"
+  type: "Phân loại"
+  type_bag: "Túi thẻ"
+  type_card: "Thẻ"
+  restore_path: "Đường dẫn khôi phục"
+  deleted_at: "Ngày xóa"
+  permanent_delete: "Xóa vĩnh viễn"
+  restore: "Khôi phục"
+  permanent_delete_confirm: "Bạn có chắc chắn muốn xóa vĩnh viễn các mục đã chọn? Hành động này không thể hoàn tác"
+  restore_confirm: "Bạn có chắc chắn muốn khôi phục các mục đã chọn?"
+  permanent_delete_success: "Các mục được chọn đã được xóa thành công"
+  restore_success: "Các mục được chọn đã được khôi phục thành công"
+  bag_not_found: "Không tìm thấy túi thẻ"
+
+feature_in_development: "Tính năng đang phát triển"
+
+app_setting:
+  setting: "Thiết lập"
+  close: "Đóng thiết lập"
+  set_dark_mode: "Chuyển sang chế độ tối"
+  set_light_mode: "Chuyển sang chế độ sáng"
+  set_english: "Chuyển ngôn ngữ sang tiếng Anh"
+  set_vietnamese: "Chuyển ngôn ngữ sang tiếng Việt"
+
+menu:
+  expand: "Mở rộng"
+  minimize: "Thu gọn"
+  dash_board: "Trang chủ"
+  card_bag: "Túi thẻ"
+  trash: "Thùng rác"
+  logout: "Đăng xuất"
+  account: "Tài khoản"
+
+validation:
+  email:
+    not_blank: "Email không được để trống"
+    invalid: "Định dạng email không hợp lệ"
+    email_exist: "Email đã được sử dụng"
+  password:
+    not_blank: "Mật khẩu không được để trống"
+    invalid: "Mật khẩu phải có độ dài ít nhất 8 ký tự và phải chứa ít nhất 1 ký tự thường, 1 ký tự in hoa, 1 ký tự số và 1 ký tự đặc biệt"
+  first_name:
+    not_blank: "Tên không được để trống"
+  last_name:
+    not_blank: "Họ không được để trống"
+  confirm_password:
+    not_blank: "Mật khẩu xác nhận không được để trống"
+    mismatch: "Mật khẩu xác nhận không trùng khớp"
+  new_password:
+    not_blank: "Mật khẩu mới không được để trống"
+    invalid: "Mật khẩu mới phải có độ dài ít nhất 8 ký tự và phải chứa ít nhất 1 ký tự thường, 1 ký tự in hoa, 1 ký tự số và 1 ký tự đặc biệt"
+  confirm_new_password:
+    not_blank: "Mật khẩu xác nhận không được để trống"
+    mismatch: "Mật khẩu xác nhận không trùng khớp"
+  new_bag:
+    name_not_blank: "Tên túi không được để trống"
+    name_exist: "Tên túi đã được dùng"
+    name_too_long: "Tên túi không được có độ dài quá {limit} ký tự"
+  card:
+    title_not_blank: "Tiêu đề thẻ không được để trống"
+    card_type_not_blank: "Loại thẻ không được để trống"
+    card_type_invalid: "Loại thẻ không hợp lệ"
+    title_too_long: "Tiêu đề thẻ không được có độ dài quá {limit} ký tự"
+    subtitle_too_long: "Phụ đề thẻ không được có độ dài quá {limit} ký tự"
+    description_too_long: "Mô tả của thẻ không được có độ dài quá {limit} ký tự"
+  color:
+    invalid_color: "Mã màu không hợp lệ"
+
+general_error:
+  system_error: "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau"
+  too_many_requests: "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau"
+
+navigation_error:
+  error_404: "Trang tìm kiếm không tồn tại"
+  error_500: "Lỗi hệ thống"
+
+action:
+  cancel: "Hủy"
+  confirm: "Xác nhận"
+  close: "Đóng"
+  submit: "Xác nhận"
+  delete: "Xóa"
+  edit: "Chỉnh sửa"
+  move: "Di chuyển"
+  create: "Tạo"
+  add: "Thêm"
+  restore: "Khôi phục"
+
+empty: "Trống"

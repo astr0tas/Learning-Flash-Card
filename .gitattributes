@@ -1,0 +1,18 @@
+# .gitattributes
+
+# Auto-detect text files and ensure they use LF in the repo
+* text=auto eol=lf
+
+# # Explicitly declare text files you want to always be LF (Linux style)
+# *.php text eol=lf
+# *.js text eol=lf
+# *.json text eol=lf
+# *.yml text eol=lf
+# *.md text eol=lf
+# *.svg text eol=lf
+
+# Denote files that are truly binary and shouldn't be modified by Git
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary

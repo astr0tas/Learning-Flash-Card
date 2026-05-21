@@ -1,0 +1,190 @@
+login:
+  title: "Sign In"
+  header: "Sign In"
+  submit_button: "Sign In"
+  email: "Email"
+  password: "Password"
+  forgot_password: "Forgot Password?"
+  remember_me: "Remember Me"
+  dont_have_account: "Don't have an account?"
+  register: "Sign up now"
+  login_with: "Sign In with {service_name}"
+  or: "or"
+  incorrect_credentials: "Incorrect email or password"
+  email_not_verified: "This account has not been verified, please check your mailbox and click on the attached link to finished the registration process and try logging in again"
+
+login_with_google:
+  error: "Sign in with Google failed. Please try again"
+  notice_change_login_method_to_SSO: "You have changed your login method to {service} and your current password will now be disabled. To continue using your password to login, please change it to a new passsword"
+
+logout: "Sign Out"
+
+register:
+  title: "Create an account"
+  header: "Create an account"
+  email: "Email"
+  first_name: "First name"
+  last_name: "Last name"
+  middle_name: "Middle name"
+  password: "Password"
+  confirm_password: "Confirm password"
+  submit: "Register"
+  back_to_login: "Back to login page"
+  email_sent_header: "Verification Email Sent"
+  email_sent_description: "A verification email has been sent to your email address of <strong>{email}</strong>. Please check your mail box and click on the attached link to complete your registration process"
+
+forgot_password:
+  title: "Forgot Password"
+  header: "Forgot Password"
+  email: "Email"
+  reset_password: "Reset Password"
+  back_to_login: "Back to login page"
+  user_not_found: User not found"
+  # oauth_user: "This user is registered as an Google account. Please sign in with Google"
+  email_sent_header: "Recovery Email Sent"
+  email_sent_description: "A recovery email has been sent to your email address of <strong>{email}</strong>. Please check your mail box and click on the attached link to reset your password"
+
+reset_password:
+  title: "Reset Password"
+  header: "Reset Password"
+  new_password: "New password"
+  confirm_new_password: "Confirm new password"
+  invalid_or_expire_url: "Invalid URL or URL has expired"
+  back_to_login: "Back to login page"
+  submit: "Submit"
+  success: "New password has been set successfully"
+  user_not_found: "Can not find the user's account to set new password"
+
+verify_email:
+  title: "Verify Account"
+  invalid_or_expire_url: "Invalid URL or URL has expired"
+  user_not_found: "Can not find the verify account"
+  verify_success: "Your account has been verified successfully"
+  back_to_login: "Back to login page"
+
+dashboard:
+  title: "Dashboard"
+
+card_bag:
+  title: "Card Bag"
+  search_placeholder: "Search card bags or cards"
+  create_options:
+    new_bag: "Create new bag"
+    new_card: "Create new card"
+  other_option: "Other options"
+  bag_name: "Bag name"
+  card_title: "Card title"
+  card_subtitle: "Card subtitle"
+  card_description: "Card description"
+  card_type: "Card type"
+  card_type_normal: "Normal"
+  card_type_language: "Language"
+  card_color: "Card color"
+  card_text_color: "Text color"
+  bag_list: "Bag list"
+  card_list: "Card list"
+  delete_confirm: "Do you want to delete the selected items?"
+  new_card_created: "New card has been created successfully"
+  new_bag_created: "New bag has been created successfully"
+  object_deleted: "The selected items have been deleted successfully"
+  bag_not_found: "Card bag not found"
+  no_card_found: "Card does not exist"
+  card_edit_success: "Card has been updated successfully"
+  card_bag: "Card bag"
+  created_at: "Created at"
+  search_placeholder2: "Search card bags"
+  object_moved: "The selected items have been moved successfully"
+  move_object_note: "For duplicated card bags, their contents will be merge together"
+
+trash:
+  title: "Trash Bin"
+  search_placeholder: "Search card bags or cards"
+  name_or_title: "Name or title"
+  type: "Type"
+  type_bag: "Card bag"
+  type_card: "Card"
+  restore_path: "Restore path"
+  deleted_at: "Deleted at"
+  permanent_delete: "Permanent delete"
+  restore: "Restore"
+  permanent_delete_confirm: "Are you sure you want to permanently delete the selected items? This action can not be undone"
+  restore_confirm: "Are you sure you want to restore the selected items?"
+  permanent_delete_success: "The selected items have been deleted permanently"
+  restore_success: "The selected items have been restored successfully"
+  bag_not_found: "Card bag not found"
+
+feature_in_development: "Feature in Development"
+
+app_setting:
+  setting: "Setting"
+  close: "Close setting"
+  set_dark_mode: "Set to dark mode"
+  set_light_mode: "Set to light mode"
+  set_english: "Set language to English"
+  set_vietnamese: "Set language to Vietnamese"
+
+menu:
+  expand: "Expand"
+  minimize: "Minimize"
+  dash_board: "Dash Board"
+  card_bag: "Card Bag"
+  trash: "Trash Bin"
+  logout: "Logout"
+  account: "Account"
+
+validation:
+  email:
+    not_blank: "Email must not be blank"
+    invalid: "Invalid email format"
+    email_exist: "This email is already existed"
+  password:
+    not_blank: "Password must not be blank"
+    invalid: "Password must have at least 8 characters and contain at least 1 lower case, 1 upper case, 1 number and 1 special character"
+  first_name:
+    not_blank: "First name must not be blank"
+  last_name:
+    not_blank: "Last name must not be blank"
+  confirm_password:
+    not_blank: "Confirm password must not be blank"
+    mismatch: "Confirm password does not match"
+  new_password:
+    not_blank: "New password must not be blank"
+    invalid: "New password must have at least 8 characters and contain at least 1 lower case, 1 upper case, 1 number and 1 special character"
+  confirm_new_password:
+    not_blank: "Confirm new password must not be blank"
+    mismatch: "Confirm new password does not match"
+  new_bag:
+    name_not_blank: "Bag name must not be blank"
+    name_exist: "Bag name has already been used"
+    name_too_long: "Bag name must not exceed {limit} characters"
+  card:
+    title_not_blank: "Card title must not be blank"
+    card_type_not_blank: "Card type must not be blank"
+    card_type_invalid: "Card type is invalid"
+    title_too_long: "Card title must not exceed {limit} characters"
+    subtitle_too_long: "Card subtitle must not exceed {limit} characters"
+    description_too_long: "Card description must not exceed {limit} characters"
+  color:
+    invalid_color: "Color is invalid"
+
+general_error:
+  system_error: "A system error has occurred. Please try again later"
+  too_many_requests: "You have sent too many requests. Please try again later"
+
+navigation_error:
+  error_404: "Page not Found"
+  error_500: "Internal Server Error"
+
+action:
+  cancel: "Cancel"
+  confirm: "Confirm"
+  close: "Close"
+  submit: "Submit"
+  delete: "Delete"
+  edit: "Edit"
+  move: "Move"
+  create: "Create"
+  add: "Add"
+  restore: "Restore"
+
+empty: "Empty"

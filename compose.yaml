@@ -1,0 +1,15 @@
+services:
+  lfc-app:
+    restart: unless-stopped
+    image: ghcr.io/ast0rtas/lfc:${TAG:-staging}
+    networks:
+      - lfc-internal-net
+
+  lfc-nginx:
+    image: nginx:apline
+    restart: unless-stopped
+    networks:
+      - lfc-internal-net
+
+networks:
+  lfc-internal-net:

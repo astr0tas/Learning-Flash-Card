@@ -1,0 +1,45 @@
+{% set base_class = "w-full rounded-lg ps-3.5 pe-7 py-3 outline-none focus:ring-2 focus:ring-offset-0 peer-focus:ring-2 peer-focus:ring-offset-0 transition-all peer select-none" %}
+{% set error_class = error is empty
+    ? "border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500 peer-focus:ring-blue-200 peer-focus:ring-offset-white peer-focus:border-blue-500"
+    : "border border-[var(--red)] text-red-900 placeholder-red-700 focus:ring-red-300 peer-focus:ring-red-300" %}
+{# force text size to be base #}
+{% set size_class = "!text-base" %}
+{% set final_class = base_class ~ ' ' ~ error_class ~ ' ' ~ size_class %}
+{% set normal_class = base_class ~ ' border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500 peer-focus:ring-blue-200 peer-focus:ring-offset-white peer-focus:border-blue-500 ' ~ size_class %}
+
+<div class="w-full flex flex-col component-input">
+  {% if label is not empty %}
+    <label {% if name|default(id) is not empty %} for="{{ name|default(id) }}" {% endif %} class="text-sm text-zinc-400 mb-1">
+      {{ label }}
+      {% if required %}
+        <span class="text-(--red)">
+          *
+        </span>
+      {% endif %}
+    </label>
+  {% endif %}
+
+  <div class="w-full relative">
+    <select x-ref="{{ name|default(id) }}" name="{{ name|default(id) }}" id="{{ id|default(name) }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class ~ " absolute z-20 opacity-0" } ) }}
+    placeholder="" default="{{ defaultValue }}"
+    x-on:change="$refs.{{ id|default(name) }}_select_display_div.innerHTML = ($event.target.options[$event.target.selectedIndex].text || '&nbsp;')"
+    x-on:reset="$refs.{{ name|default(id) }}_error?.remove(); $el.className = '{{ normal_class ~ " absolute z-20 opacity-0" }}'; $refs.{{ id|default(name) }}_select_display_div.className = '{{ normal_class }}'; $el.value = '{{ defaultValue }}'; $dispatch('change');"
+    x-on:set="$el.value = $event.detail || '{{ defaultValue }}'; $dispatch('change');">
+      <option value="" class="hidden"></option>
+      {% block options %}{% endblock %}
+    </select>
+    <div class="{{ final_class }}" x-ref="{{ id|default(name) }}_select_display_div" id="{{ id|default(name) }}_select_display_div">
+      &nbsp;
+    </div>
+    <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500 z-20">
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+      </svg>
+    </div>
+  </div>
+  {% if error is not empty %}
+    <div id="{{ name|default(id) }}_error" x-ref="{{ name|default(id) }}_error" class="mt-1 text-xs text-(--red)">
+      {{ error }}
+    </div>
+  {% endif %}
+</div>

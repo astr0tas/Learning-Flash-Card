@@ -1,0 +1,9 @@
+{
+  "features": {
+    "ghcr.io/r3dpoint/devcontainer-features/tailwindcss-standalone-cli:1": {
+      "version": "1.0.1",
+      "resolved": "ghcr.io/r3dpoint/devcontainer-features/tailwindcss-standalone-cli@sha256:b2b60737e993bf9b6c74838520111469a2f27e9d0ba648b8c4dc7d3ed38fdfe0",
+      "integrity": "sha256:b2b60737e993bf9b6c74838520111469a2f27e9d0ba648b8c4dc7d3ed38fdfe0"
+    }
+  }
+}

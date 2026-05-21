@@ -1,0 +1,9 @@
+<div class="flex items-center gap-3 p-3 select-none rounded-lg w-full" x-bind:class="darkMode?'bg-[#1e2022] hover:bg-gray-800':'bg-[#ebeef1] hover:bg-gray-300'" title="{{ bagName }}" ondblclick="window.location.href='{{ href }}'">
+  <div class="w-10 h-10" x-bind:class="darkMode ? 'text-white' : 'text-gray-500'">
+    {{ include('icons/folder_solid.svg') }}
+  </div>
+  <h2 class="overflow-hidden whitespace-nowrap text-ellipsis">{{ bagName }}</h2>
+  <div class="ms-auto">
+    <twig:ClickInput type="checkbox" class="cursor-default!" name="bag_{{ bagId }}_checkbox" @dblclick.stop x-model="{{ model is defined ? model : null }}" value="{{ bagId }}" x-bind:style="{borderColor: darkMode?getContrastColor('#1e2022'):getContrastColor('#ebeef1')}"></twig:ClickInput>
+  </div>
+</div>
