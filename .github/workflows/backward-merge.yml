@@ -4,11 +4,14 @@ on:
     branches:
       - main
       - staging
+permissions:
+  contents: write
+
 jobs:
   sync-branch:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v4
       - name: Merge main -> staging
         uses: devmasx/merge-branch@master
         with:
