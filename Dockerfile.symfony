@@ -32,5 +32,11 @@ RUN composer install --prefer-dist --no-progress --no-interaction --optimize-aut
 # Clear and warm up cache
 RUN APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear
 
+# Download 3rd party JS
+RUN php bin/console importmap:install
+
+# Build the Tailwind CSS file (use --prod to minify it for production)
+RUN php bin/console tailwind:build --prod
+
 # Compile assets
-RUN php bin/console asset-map:compile -vvv
+RUN php bin/console asset-map:compile
