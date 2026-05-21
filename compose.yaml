@@ -6,7 +6,7 @@ services:
       - lfc-internal-net
 
   lfc-nginx:
-    image: nginx:apline
+    image: nginx:alpine
     restart: unless-stopped
     networks:
       - lfc-internal-net
