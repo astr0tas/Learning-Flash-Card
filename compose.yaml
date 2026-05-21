@@ -1,7 +1,7 @@
 services:
   lfc-app:
     restart: unless-stopped
-    image: ghcr.io/ast0rtas/lfc:${TAG:-staging}
+    image: ghcr.io/astr0tas/lfc:${TAG:-staging}
     networks:
       - lfc-internal-net
 
