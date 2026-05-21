@@ -1,12 +1,12 @@
 services:
   lfc-app:
     restart: unless-stopped
-    image: ghcr.io/ast0rtas/lfc:${TAG:-staging}
+    image: ghcr.io/astr0tas/lfc:${TAG:-staging}
     networks:
       - lfc-internal-net
 
   lfc-nginx:
-    image: nginx:apline
+    image: nginxinc/nginx-unprivileged:alpine
     restart: unless-stopped
     networks:
       - lfc-internal-net
