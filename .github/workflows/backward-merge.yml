@@ -1,0 +1,25 @@
+name: Synchronize branches backwardly
+on:
+  push:
+    branches:
+      - main
+      - staging
+jobs:
+  sync-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Merge main -> staging
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: main
+          target_branch: staging
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Merge staging -> develop
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: staging
+          target_branch: develop
+          github_token: ${{ secrets.GITHUB_TOKEN }}
