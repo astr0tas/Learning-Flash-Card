@@ -1,0 +1,67 @@
+{% extends 'layouts/authentication.html.twig' %}
+{% block title %}
+  {{ 'login.title'|trans }}
+{% endblock %}
+{% set email = email | default('') %}
+{% set remember_me = remember_me | default('') %}
+{% block auth_body %}
+  <div>
+    <h1 class="font-bold text-2xl text-center">
+      {{ 'login.header'|trans }}
+    </h1>
+    <div class="my-5 flex flex-col gap-3">
+      <div class="relative hover:cursor-pointer hover:opacity-80 active:opacity-70 overflow-hidden h-[50px]">
+        <a href="{{ google_oauth_url }}" class="absolute flex items-center justify-center gap-3 border border-gray-400 rounded-md py-2 px-4 w-full select-none h-[50px]">
+          <div class="w-8 h-8">
+            {{ include('icons/google.svg') }}
+          </div>
+          {{ 'login.login_with'|trans({'service_name': 'Google'}) }}
+        </a>
+      </div>
+    {# <div class="flex-1 flex items-center justify-center gap-3 border border-gray-400 rounded-md py-2 hover:cursor-pointer hover:opacity-80 active:opacity-70 select-none">
+      <div class="w-9 h-9 ms-3">
+      {{include('icons/facebook.svg')}}
+      </div>
+      {{ 'login.login_with'|trans({'service_name': 'Facebook'}) }}
+    </div> #}
+    </div>
+    <div class="mt-5 flex items-center">
+      <div class="border-t flex-1 border-gray-400"></div>
+      <p class="text-center mx-5 pb-1">
+        {{ 'login.or'|trans }}
+      </p>
+      <div class="border-t flex-1 border-gray-400"></div>
+    </div>
+    {% if error.general is defined %}
+      <div class="py-5 px-10 text-center border border-dashed border-(--red) rounded-lg bg-[#f8d7da] text-[#721c24] break-words">
+        {{ error.general[0] }}
+      </div>
+    {% endif %}
+    <twig:Form action="{{ constant('App\\Config\\Routes::LOGIN_SUBMIT_ROUTE_URL') }}" method="POST" class="mt-5">
+      <div>
+        <twig:Input name="email" label="{{ 'login.email'|trans }}" aria-label="{{ 'login.email'|trans }}" type="text" autocomplete="email" value="{{ email }}" required error="{{ error.email is defined ? error.email[0] : '' }}" />
+      </div>
+      <div class="my-3">
+        <twig:Input name="password" label="{{ 'login.password'|trans }}" aria-label="{{ 'login.password'|trans }}" type="password" autocomplete="current-password" required error="{{ error.password is defined ? error.password[0] : '' }}" />
+      </div>
+      <div class="flex justify-between items-center">
+        <twig:ClickInput name="remember_me" label="{{ 'login.remember_me'|trans }}" type="checkbox" checked="{{ remember_me|default('') == 'checked' }}" />
+        <a class="text-(--blue) hover:cursor-pointer hover:opacity-80 active:opacity-70" href="{{ constant('App\\Config\\Routes::FORGOT_PASSWORD_ROUTE_URL') }}">
+          {{ 'login.forgot_password'|trans }}
+        </a>
+      </div>
+      <twig:Button type="submit" variant="primary" class="my-5">
+        {{ 'login.submit_button'|trans }}
+      </twig:Button>
+      <p class="text-center">
+        {{ 'login.dont_have_account'|trans }}
+        <a href="{{ constant('App\\Config\\Routes::REGISTER_ROUTE_URL') }}" class="text-(--blue) hover:cursor-pointer hover:opacity-80 active:opacity-70">
+          {{ 'login.register'|trans }}
+        </a>
+      </p>
+    </twig:Form>
+  </div>
+{% endblock %}
+{% block head_javascripts %}
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+{% endblock %}

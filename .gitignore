@@ -7,6 +7,8 @@
 /public/bundles/
 /var/
 /vendor/
+/db/
+/migrations/
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
@@ -18,3 +20,14 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+### Docker ###
+*compose.override.yaml
+*compose.override.yml
+
+### VSCode ###
+.vscode/**/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/settings.json

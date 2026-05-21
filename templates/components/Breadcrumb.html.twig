@@ -1,0 +1,130 @@
+<div x-data="{ items: {{ items|json_encode }} }" @set-breadcrumb-items="items = $event.detail" {{ attributes }}>
+  <template x-if="items.length > {{ maximumDisplayableItems }}">
+    <div class="flex items-center gap-2" x-data="{ get displayedItems() { return items.slice(-{{ maximumDisplayableItems }}) }, get hiddenItems() { return items.slice(0, -{{ maximumDisplayableItems }}).reverse() } }">
+      <div class="flex items-center gap-2">
+        <twig:Dropdown>
+          <twig:block name="dropdown_toggler">
+            <button class="rounded-full py-2 px-4 cursor-pointer" x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200'">
+              <div class="w-4 h-4 transform rotate-90 opacity-70">
+                {{ include('icons/option.svg') }}
+              </div>
+            </button>
+          </twig:block>
+          <twig:block name="dropdown_content">
+            <div class="py-1">
+              <template x-for="(item,index) in hiddenItems" :key="index">
+                <div>
+                  <template x-if="item.url">
+                    <a :href="item.url" class="rounded-full py-2 px-4 cursor-pointer flex items-center gap-2" x-bind:class="darkMode?'text-white hover:bg-gray-800! active:bg-gray-700!':'text-black hover:bg-gray-100 active:bg-gray-200'">
+                      <template x-if="item.icon">
+                        <span class="w-4 h-4">
+                          <span x-html="item.icon"></span>
+                        </span>
+                      </template>
+                      <span x-text="item.label"></span>
+                    </a>
+                  </template>
+                  <template x-if="item.action">
+                    <button @click="(new Function(item.action))()" class="rounded-full py-2 px-4 cursor-pointer flex items-center gap-2" x-bind:class="darkMode?'text-white hover:bg-gray-800! active:bg-gray-700!':'text-black hover:bg-gray-100 active:bg-gray-200'">
+                      <template x-if="item.icon">
+                        <span class="w-4 h-4">
+                          <span x-html="item.icon"></span>
+                        </span>
+                      </template>
+                      <span x-text="item.label"></span>
+                    </button>
+                  </template>
+                </div>
+              </template>
+            </div>
+          </twig:block>
+        </twig:Dropdown>
+        <div class="w-6 h-6 opacity-80">
+          {{ include('icons/chevron_right.svg') }}
+        </div>
+      </div>
+      <template x-for="(item, index) in displayedItems" :key="index">
+        <div class="flex items-center gap-2">
+          <template x-if="index < displayedItems.length - 1 && item.url">
+            <a :href="item.url" class="rounded-full py-2 px-4 cursor-pointer flex items-center gap-2" x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200'">
+              <template x-if="item.icon">
+                <span class="w-4 h-4">
+                  <span x-html="item.icon"></span>
+                </span>
+              </template>
+              <span x-text="item.label"></span>
+            </a>
+          </template>
+          <template x-if="index < displayedItems.length - 1 && item.action">
+            <button @click="(new Function(item.action))()" class="rounded-full py-2 px-4 cursor-pointer flex items-center gap-2" x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200'">
+              <template x-if="item.icon">
+                <span class="w-4 h-4">
+                  <span x-html="item.icon"></span>
+                </span>
+              </template>
+              <span x-text="item.label"></span>
+            </button>
+          </template>
+          <template x-if="index === displayedItems.length - 1">
+            <span class="rounded-full py-2 px-4 flex items-center gap-2" x-bind:class="darkMode?'text-white':'text-black'">
+              <template x-if="item.icon">
+                <span class="w-4 h-4">
+                  <span x-html="item.icon"></span>
+                </span>
+              </template>
+              <span x-text="item.label"></span>
+            </span>
+          </template>
+          <template x-if="index < displayedItems.length - 1">
+            <div class="w-6 h-6 opacity-80">
+              {{ include('icons/chevron_right.svg') }}
+            </div>
+          </template>
+        </div>
+      </template>
+    </div>
+  </template>
+  <template x-if="items.length <= {{ maximumDisplayableItems }}">
+    <div class="flex items-center gap-2">
+      <template x-for="(item, index) in items" :key="index">
+        <div class="flex items-center gap-2">
+          <template x-if="index < items.length - 1 && item.url">
+            <a :href="item.url" class="rounded-full py-2 px-4 cursor-pointer flex items-center gap-2" x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200'">
+              <template x-if="item.icon">
+                <span class="w-4 h-4">
+                  <span x-html="item.icon"></span>
+                </span>
+              </template>
+              <span x-text="item.label"></span>
+            </a>
+          </template>
+          <template x-if="index < items.length - 1 && item.action">
+            <button @click="(new Function(item.action))()" class="rounded-full py-2 px-4 cursor-pointer flex items-center gap-2" x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200'">
+              <template x-if="item.icon">
+                <span class="w-4 h-4">
+                  <span x-html="item.icon"></span>
+                </span>
+              </template>
+              <span x-text="item.label"></span>
+            </button>
+          </template>
+          <template x-if="index === items.length - 1">
+            <span class="rounded-full py-2 px-4 flex items-center gap-2" x-bind:class="darkMode?'text-white':'text-black'">
+              <template x-if="item.icon">
+                <span class="w-4 h-4">
+                  <span x-html="item.icon"></span>
+                </span>
+              </template>
+              <span x-text="item.label"></span>
+            </span>
+          </template>
+          <template x-if="index < items.length - 1">
+            <div class="w-6 h-6 opacity-80">
+              {{ include('icons/chevron_right.svg') }}
+            </div>
+          </template>
+        </div>
+      </template>
+    </div>
+  </template>
+</div>

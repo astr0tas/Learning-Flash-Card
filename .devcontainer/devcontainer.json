@@ -1,0 +1,73 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/php
+{
+	"name": "LFC Dev Container",
+	// // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	// "image": "mcr.microsoft.com/devcontainers/php:3-8.4-bookworm",
+	"dockerComposeFile": ["compose.yaml", "compose.override.yaml"],
+  "service": "app",
+  "workspaceFolder": "/workspace",
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/r3dpoint/devcontainer-features/tailwindcss-standalone-cli:1": {}
+	},
+
+	// Configure tool-specific properties.
+	"customizations": {
+    "vscode": {
+      "extensions": [
+        "artagnon.vstwig",
+        "bmewburn.vscode-intelephense-client",
+        "DEVSENSE.composer-php-vscode",
+        "DEVSENSE.intelli-php-vscode",
+        "DEVSENSE.phptools-vscode",
+        "MehediDracula.php-namespace-resolver",
+        "formulahendry.code-runner",
+        "MykhailoKushnir.vscode-php-getter-setter",
+        "xdebug.php-debug",
+        "ecmel.vscode-html-css",
+        "formulahendry.auto-rename-tag",
+        "bradlc.vscode-tailwindcss",
+        "adrianwilczynski.alpine-js-intellisense",
+        "sperovita.alpinejs-syntax-highlight",
+        "LeonQin.auto-insert-comma",
+        "xabikos.JavaScriptSnippets",
+        "ms-vscode.vscode-typescript-next",
+        "rvest.vs-code-prettier-eslint",
+        "dbaeumer.vscode-eslint",
+        "usernamehw.errorlens",
+        "mhutchie.git-graph",
+        "GitHub.vscode-pull-request-github",
+        "eamodio.gitlens",
+        "aaron-bond.better-comments",
+        "alefragnani.Bookmarks",
+        "wesbos.theme-cobalt2",
+        "Continue.continue",
+        "dracula-theme.theme-dracula",
+        "vincaslt.highlight-matching-tag",
+        "vscode-icons-team.vscode-icons",
+        "codegyan.auto-closing-tags",
+        "Nuxt.mdc",
+        "yzhang.markdown-all-in-one",
+        "shd101wyy.markdown-preview-enhanced",
+        "esbenp.prettier-vscode",
+        "jock.svg",
+        "DotJoshJohnson.xml",
+        "redhat.vscode-yaml",
+        "mblode.twig-language-2"
+      ]
+    }
+  },
+
+	// // Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html"
+	"postCreateCommand": "composer install",
+	"postStartCommand": "symfony server:stop && symfony serve --allow-all-ip"
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}

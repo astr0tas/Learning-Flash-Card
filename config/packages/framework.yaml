@@ -3,10 +3,30 @@ framework:
     secret: '%env(APP_SECRET)%'
 
     # Note that the session will be started ONLY if you read or write from it.
-    session: true
+    session:
+        enabled: true
+        handler_id: 'session.handler.native_file'
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+        cookie_domain: null
+        cookie_secure: auto
+        cookie_samesite: lax
+        cookie_httponly: true
+        cookie_path: /
+        cookie_lifetime: 86400 # 1 day
+        gc_probability: 1
 
     #esi: true
     #fragments: true
+
+    http_client:
+        default_options:
+            max_redirects: 5
+
+    csrf_protection: true
+
+    # Proxy configuration
+    trusted_proxies: '%env(TRUSTED_PROXIES)%'
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix', 'forwarded']
 
 when@test:
     framework:

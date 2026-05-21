@@ -1,0 +1,59 @@
+{% extends 'layouts/base.html.twig' %}
+{% block body %}
+  <div class="flex w-full h-full">
+    <div x-ref="menu" x-data="{isCollapsed: false}" class="h-full w-[250px] py-6 px-3 border-r border-gray-400 flex flex-col transition-[width] ease-in-out gap-5" x-bind:class="isCollapsed?'duration-500':'duration-300'">
+      <div x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'hover:bg-gray-100 active:bg-gray-200'" class="w-12 h-12 cursor-pointer flex items-center justify-center rounded-full" @click="$refs.menu.style.width = isCollapsed ? '250px' : '75px' ; isCollapsed=!isCollapsed;" x-bind:title="isCollapsed ? '{{ 'menu.expand'|trans }}' : '{{ 'menu.minimize'|trans }}'">
+        <div class="w-5 h-5">
+          {{ include('icons/menu.svg') }}
+        </div>
+      </div>
+      <div class="flex flex-col" x-bind:class="isCollapsed?'gap-1':'gap-3'">
+        <a href="{{ constant('App\\Config\\Routes::ACCOUNT_ROUTE_URL') }}" class="flex items-center cursor-pointer gap-2 rounded-md px-3 py-5 select-none {{ app.request.attributes.get('_route') == constant('App\\Config\\Routes::ACCOUNT_ROUTE_NAME') ? 'text-(--blue)!' : '' }}" x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200'" title="{{ 'menu.account'|trans }}">
+          <img src="https://ui-avatars.com/api/?size=32&background=random&name={{ app.user.getFirstName() ~ '+' ~ app.user.getLastName() }}&rounded=true">
+            <div class="overflow-hidden text-ellipsis" x-show="!isCollapsed">
+              {{ app.user.getEmail() }}
+            </div>
+          </a>
+          <div class="flex flex-col gap-1">
+            <a href="{{ constant('App\\Config\\Routes::HOME_ROUTE_URL') }}" class="flex items-center cursor-pointer gap-2 rounded-md p-3 select-none {{ app.request.attributes.get('_route') == constant('App\\Config\\Routes::HOME_ROUTE_NAME') ? 'text-(--blue)!' : '' }}" {% if app.request.attributes.get('_route') == constant('App\\Config\\Routes::HOME_ROUTE_NAME') %} x-bind:class="darkMode?'text-white bg-gray-800 hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200 bg-gray-100'" {% else %} x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200'" {% endif %} title="{{ 'menu.dash_board'|trans }}">
+              <div class="w-6 h-6">
+                {{ include('icons/dash_board.svg') }}
+              </div>
+              <div x-show="!isCollapsed">
+                {{ 'menu.dash_board'|trans }}
+              </div>
+            </a>
+            <a href="{{ constant('App\\Config\\Routes::CARD_BAG_ROUTE_URL') }}" class="flex items-center cursor-pointer gap-2 rounded-md p-3 select-none {{ constant('App\\Config\\Routes::CARD_BAG_ROUTE_URL') in app.request.pathInfo ? 'text-(--blue)!' : '' }}" {% if constant('App\\Config\\Routes::CARD_BAG_ROUTE_URL') in app.request.pathInfo %} x-bind:class="darkMode?'text-white bg-gray-800 hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200 bg-gray-100'" {% else %} x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200'" {% endif %} title="{{ 'menu.card_bag'|trans }}">
+              <div class="w-6 h-6">
+                {{ include('icons/folder.svg') }}
+              </div>
+              <div x-show="!isCollapsed">
+                {{ 'menu.card_bag'|trans }}
+              </div>
+            </a>
+            <a href="{{ constant('App\\Config\\Routes::TRASH_ROUTE_URL') }}" class="flex items-center cursor-pointer gap-2 rounded-md p-3 select-none {{ app.request.attributes.get('_route') == constant('App\\Config\\Routes::TRASH_ROUTE_NAME') ? 'text-(--blue)!' : '' }}" {% if app.request.attributes.get('_route') == constant('App\\Config\\Routes::TRASH_ROUTE_NAME') %} x-bind:class="darkMode?'text-white bg-gray-800 hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200 bg-gray-100'" {% else %} x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200'" {% endif %} title="{{ 'menu.trash'|trans }}">
+              <div class="w-6 h-6">
+                {{ include('icons/trash.svg') }}
+              </div>
+              <div x-show="!isCollapsed">
+                {{ 'menu.trash'|trans }}
+              </div>
+            </a>
+          </div>
+        </div>
+        <twig:Form class="mt-auto" action="{{ constant('App\\Config\\Routes::LOGOUT_ROUTE_URL') }}" method="POST">
+          <button type="submit" class="flex items-center cursor-pointer gap-2 rounded-md p-3 text-(--red) w-full select-none" x-bind:class="darkMode?'hover:bg-gray-800 active:bg-gray-700':'hover:bg-gray-100 active:bg-gray-200'" title="{{ 'menu.logout'|trans }}">
+            <div class="w-6 h-6">
+              {{ include('icons/logout.svg') }}
+            </div>
+            <div x-show="!isCollapsed">
+              {{ 'menu.logout'|trans }}
+            </div>
+          </button>
+        </twig:Form>
+      </div>
+      <div class="flex-1 p-5">
+        {% block user_body %}{% endblock %}
+      </div>
+    </div>
+  {% endblock %}

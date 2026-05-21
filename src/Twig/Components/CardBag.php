@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Twig\Components;
+
+use App\Config\Routes;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent]
+final class CardBag
+{
+  public int $bagId;
+  public string $bagName;
+  public string $href = "";
+  public ?string $model = null;
+
+  public function mount(int $bagId, string $bagName, ?string $model = null, string $href = ""): void
+  {
+    $this->bagId = $bagId;
+    $this->bagName = $bagName;
+    $this->model = $model;
+    $this->href = $href;
+  }
+}

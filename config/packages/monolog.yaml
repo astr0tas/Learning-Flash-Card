@@ -1,15 +1,41 @@
 monolog:
     channels:
         - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+        - email_content
+        - email_service
 
 when@dev:
     monolog:
         handlers:
+            security:
+                # log all messages (since debug is the lowest level)
+                level:    debug
+                type:     stream
+                path:     '%kernel.logs_dir%/security.log'
+                channels: [security]
+                max_files: 0
+
+            email_content:
+                type: stream
+                path: "%kernel.logs_dir%/email_content.log"
+                level: info
+                channels: [email_content]
+                max_files: 0
+
+            email_service:
+                type: stream
+                path: "%kernel.logs_dir%/email_service.log"
+                level: debug
+                channels: [email_service]
+                max_files: 0
+
             main:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
                 channels: ["!event"]
+                max_files: 0
+
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration
             #firephp:
@@ -40,6 +66,28 @@ when@test:
 when@prod:
     monolog:
         handlers:
+            security:
+                # log all messages (since debug is the lowest level)
+                level:    debug
+                type:     stream
+                path:     '%kernel.logs_dir%/security.log'
+                channels: [security]
+                max_files: 0
+
+            email_content:
+                type: stream
+                path: "%kernel.logs_dir%/email_content.log"
+                level: info
+                channels: [email_content]
+                max_files: 0
+
+            email_service:
+                type: stream
+                path: "%kernel.logs_dir%/email_service.log"
+                level: debug
+                channels: [email_service]
+                max_files: 0
+                
             main:
                 type: fingers_crossed
                 action_level: error

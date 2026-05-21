@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>
+      {% block title %}
+        Welcome!
+      {% endblock %}
+    </title>
+    {# <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>"> #}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Toastify-js css -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <!-- App Styles -->
+    <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+    {% block importmap %}
+      {{ importmap('app') }}
+    {% endblock %}
+    {% block stylesheets %}{% endblock %}
+    {% block head_javascripts %}{% endblock %}
+  </head>
+  <body data-turbo="false" x-data="appData" class="{{ is_dark_mode() ? 'dark_theme' : 'light_theme' }}" @click.window="checkAppClick($event)">
+    <div class="w-screen h-screen flex flex-col">
+      <div class="flex-1 w-full">
+        {# prettier-ignore #}
+        {% block body %}{% endblock %}
+        <twig:AppSetting/>
+      </div>
+      <twig:Loading class="fixed z-50000" id="document-loading" />
+      {% block modals %}{% endblock %}
+    </div>
+    {% block javascripts %}{% endblock %}
+    <!-- Alpine Plugins -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    <!-- Alpine Core -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Toastify JS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <!-- Tailwind Plus -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+    <!-- validator -->
+    <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
+    <!-- Dayjs -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.20/dayjs.min.js"></script>
+    <twig:AppJsScript/>
+  </body>
+</html>
