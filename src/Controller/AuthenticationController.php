@@ -85,7 +85,7 @@ class AuthenticationController extends BaseController
     return $this->redirectUserToHome();
   }
 
-  #[Route(path: Routes::LOGIN_WITH_GOOGLE_ROUTE_URL, name: Routes::LOGIN_WITH_GOOGLE_ROUTE_NAME, methods: [Request::METHOD_GET])]
+  #[Route(path: Routes::LOGIN_WITH_GOOGLE_ROUTE_URL, name: Routes::LOGIN_WITH_GOOGLE_ROUTE_NAME, methods: [Request::METHOD_GET], schemes: ['%app.scheme%'])]
   public function LoginWithGoogleAction(Request $request)
   {
     if ($this->getUser()) {
@@ -261,7 +261,7 @@ class AuthenticationController extends BaseController
     return $this->render(view: TwigTemplate::PAGE_FORGOT_PASSWORD, parameters: $data);
   }
 
-  #[Route(path: Routes::RESET_PASSWORD_ROUTE_URL, name: Routes::RESET_PASSWORD_ROUTE_NAME, methods: [Request::METHOD_GET])]
+  #[Route(path: Routes::RESET_PASSWORD_ROUTE_URL, name: Routes::RESET_PASSWORD_ROUTE_NAME, methods: [Request::METHOD_GET], schemes: ['%app.scheme%'])]
   public function ResetPasswordAction(Request $request)
   {
     if ($this->getUser()) {
@@ -352,7 +352,7 @@ class AuthenticationController extends BaseController
     return $this->render(view: TwigTemplate::PAGE_RESET_PASSWORD, parameters: $data);
   }
 
-  #[Route(path: Routes::EMAIL_VERIFICATION_ROUTE_URL, name: Routes::EMAIL_VERIFICATION_ROUTE_NAME, methods: [Request::METHOD_GET])]
+  #[Route(path: Routes::EMAIL_VERIFICATION_ROUTE_URL, name: Routes::EMAIL_VERIFICATION_ROUTE_NAME, methods: [Request::METHOD_GET], schemes: ['%app.scheme%'])]
   public function EmailVerificationAction(Request $request)
   {
     if ($this->getUser()) {
