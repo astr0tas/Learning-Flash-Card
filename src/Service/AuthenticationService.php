@@ -16,7 +16,6 @@ use App\Repository\EmailVerificationTokenRepository;
 use App\Repository\RecoveryTokenRepository;
 use App\Repository\UserRepository;
 use App\Utility\Utility;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
 use League\OAuth2\Client\Provider\Google;
@@ -31,8 +30,8 @@ class AuthenticationService extends BaseService
   private ?RememberMeBadge $rememberMeBadge = null;
 
   public function __construct(
-    #[Autowire(env: 'GOOGLE_CLIENT_ID')] private string $googleOAuthClientId,
-    #[Autowire(env: 'GOOGLE_CLIENT_SECRET')] private string $googleOAuthClientSecret,
+    #[Autowire('%app.google_client_id%')] private string $googleOAuthClientId,
+    #[Autowire('%app.google_client_secret%')] private string $googleOAuthClientSecret,
     private EmailService $emailService,
     private UserRepository $userRepository,
     private RecoveryTokenRepository $recoveryTokenRepository,
