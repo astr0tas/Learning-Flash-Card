@@ -21,47 +21,47 @@ class TrashController extends BaseController
   {
     $this->service->disableSoftDeleteFilter();
 
-    $bagList = $this->service->getBagList(null);
+    $topicList = $this->service->getTopicList(null);
     $cardList = $this->service->getCardList(null);
-    $breadcrumb = [['icon' => $this->renderView('icons/folder.svg'), 'label' => $this->translator->trans('menu.trash'), 'url' => Routes::TRASH_ROUTE_URL]];
+    $breadcrumb = [['icon' => $this->renderView('icons/trash.svg'), 'label' => $this->translator->trans('menu.trash'), 'url' => Routes::TRASH_ROUTE_URL]];
 
     $this->service->enableSoftDeleteFilter();
 
     return $this->render(view: TwigTemplate::PAGE_USER_TRASH, parameters: [
-      'bagList' => $bagList,
+      'topicList' => $topicList,
       'cardList' => $cardList,
       'breadcrumb' => $breadcrumb
     ]);
   }
 
-  #[Route(path: Routes::TRASH_BAG_ROUTE_URL, name: Routes::TRASH_BAG_ROUTE_NAME, methods: [Request::METHOD_GET])]
-  public function getBagDetail(int $id)
+  #[Route(path: Routes::TRASH_TOPIC_ROUTE_URL, name: Routes::TRASH_TOPIC_ROUTE_NAME, methods: [Request::METHOD_GET])]
+  public function getTopicDetail(int $id)
   {
     $this->service->disableSoftDeleteFilter();
 
-    $bag = $this->service->getBag($id);
+    $topic = $this->service->getTopic($id);
 
-    if ($bag === null) {
-      throw $this->createNotFoundException($this->translator->trans('trash.bag_not_found'));
+    if ($topic === null) {
+      throw $this->createNotFoundException($this->translator->trans('trash.topic_not_found'));
     }
 
-    $cards = $bag->getCardEntities();
-    $childrenBags = $bag->getChildrenCardBagEntities();
-    $bagTree = $this->service->getBagTree($id);
+    $cards = $topic->getCardEntities();
+    $childrenTopics = $topic->getChildrenTopicEntities();
+    $topicTree = $this->service->getTopicTree($id);
 
     $cards->initialize();
-    $childrenBags->initialize();
+    $childrenTopics->initialize();
 
     $this->service->enableSoftDeleteFilter();
 
-    // Convert the bag tree to breadcrumbs array
-    $breadcrumb = [['icon' => $this->renderView('icons/folder.svg'), 'label' => $this->translator->trans('menu.trash'), 'url' => Routes::TRASH_ROUTE_URL]];
-    $breadcrumb = $this->service->parseBagTreeToBreadcrumb($bagTree, $breadcrumb);
+    // Convert the topic tree to breadcrumbs array
+    $breadcrumb = [['icon' => $this->renderView('icons/trash.svg'), 'label' => $this->translator->trans('menu.trash'), 'url' => Routes::TRASH_ROUTE_URL]];
+    $breadcrumb = $this->service->parseTopicTreeToBreadcrumb($topicTree, $breadcrumb);
 
     return $this->render(view: TwigTemplate::PAGE_USER_TRASH, parameters: [
-      'bagList' => $childrenBags,
+      'topicList' => $childrenTopics,
       'cardList' => $cards,
-      'bag' => $bag,
+      'topic' => $topic,
       'breadcrumb' => $breadcrumb
     ]);
   }
@@ -70,7 +70,7 @@ class TrashController extends BaseController
   public function deleteObjectPermanet(Request $request)
   {
     // Get the previous route to redirect back to it
-    $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
+    $previousRoute = $request->headers->get('referer') ?? Routes::TOPIC_ROUTE_URL;
 
     // Handle login submission
     $postData = $request->request->all();
@@ -90,7 +90,7 @@ class TrashController extends BaseController
   public function restoreObject(Request $request)
   {
     // Get the previous route to redirect back to it
-    $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
+    $previousRoute = $request->headers->get('referer') ?? Routes::TOPIC_ROUTE_URL;
 
     // Handle login submission
     $postData = $request->request->all();

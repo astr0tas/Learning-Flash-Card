@@ -3,78 +3,78 @@
 namespace App\Service;
 
 use App\Config\Routes;
-use App\DTO\BagNavigationTreeDTO;
+use App\DTO\TopicNavigationTreeDTO;
 use App\DTO\SelectObjectDTO;
-use App\Entity\CardBagEntity;
+use App\Entity\TopicEntity;
 use App\Entity\CardEntity;
-use App\Repository\CardBagRepository;
+use App\Repository\TopicRepository;
 use App\Repository\CardRepository;
 use App\ToolClass\RestoreNode;
 
 class TrashService extends BaseService
 {
-  public function __construct(private CardBagRepository $cardBagRepository, private CardRepository $cardRepository) {}
+  public function __construct(private TopicRepository $topicRepository, private CardRepository $cardRepository) {}
 
-  public function getActiveBagByNameAndParent(string $name, ?int $id): array
+  public function getActiveTopicByNameAndParent(string $name, ?int $id): array
   {
-    $query = $this->cardBagRepository->createQueryBuilder('cb')
-      ->where('cb.deletedAt IS NULL')
-      ->andWhere('cb.name = :name')
+    $query = $this->topicRepository->createQueryBuilder('t')
+      ->where('t.deletedAt IS NULL')
+      ->andWhere('t.name = :name')
       ->setParameter('name', $name)
-      ->andWhere('cb.userEntity = :userId')
+      ->andWhere('t.userEntity = :userId')
       ->setParameter('userId', $this->user->getId());
 
     if ($id !== null) {
-      $query->andWhere('cb.parentCardBagEntity = :bagId')
-        ->setParameter('bagId', $id);
+      $query->andWhere('t.parentTopicEntity = :topicId')
+        ->setParameter('topicId', $id);
     } else {
-      $query->andWhere('cb.parentCardBagEntity IS NULL');
+      $query->andWhere('t.parentTopicEntity IS NULL');
     }
 
     return $query->getQuery()->getResult();
   }
 
-  public function getBagList(?int $bagId): array
+  public function getTopicList(?int $topicId): array
   {
-    $query = $this->cardBagRepository->createQueryBuilder('cb')
-      ->where('cb.deletedAt IS NOT NULL')
-      ->andWhere('cb.userEntity = :userId')
+    $query = $this->topicRepository->createQueryBuilder('t')
+      ->where('t.deletedAt IS NOT NULL')
+      ->andWhere('t.userEntity = :userId')
       ->setParameter('userId', $this->user->getId());
 
-    if ($bagId !== null) {
-      $query->andWhere('cb.parentCardBagEntity = :bagId')
-        ->setParameter('bagId', $bagId);
+    if ($topicId !== null) {
+      $query->andWhere('t.parentTopicEntity = :topicId')
+        ->setParameter('topicId', $topicId);
     } else {
-      $query->andWhere('cb.parentCardBagEntity IS NULL');
+      $query->andWhere('t.parentTopicEntity IS NULL');
     }
 
     return $query->getQuery()->getResult();
   }
 
-  public function getCardList(?int $bagId): array
+  public function getCardList(?int $topicId): array
   {
     $query = $this->cardRepository->createQueryBuilder('c')
       ->where('c.deletedAt IS NOT NULL')
       ->andWhere('c.userEntity = :userId')
       ->setParameter('userId', $this->user->getId());
 
-    if ($bagId !== null) {
-      $query->andWhere('c.cardBagEntity = :bagId')
-        ->setParameter('bagId', $bagId);
+    if ($topicId !== null) {
+      $query->andWhere('c.topicEntity = :topicId')
+        ->setParameter('topicId', $topicId);
     } else {
-      $query->andWhere('c.cardBagEntity IS NULL');
+      $query->andWhere('c.topicEntity IS NULL');
     }
 
     return $query->getQuery()->getResult();
   }
 
-  public function getBag(int $bagId)
+  public function getTopic(int $topicId)
   {
-    $query = $this->cardBagRepository->createQueryBuilder('cb')
-      ->where('cb.deletedAt IS NOT NULL')
-      ->andWhere('cb.id = :bagId')
-      ->setParameter('bagId', $bagId)
-      ->andWhere('cb.userEntity = :userId')
+    $query = $this->topicRepository->createQueryBuilder('t')
+      ->where('t.deletedAt IS NOT NULL')
+      ->andWhere('t.id = :topicId')
+      ->setParameter('topicId', $topicId)
+      ->andWhere('t.userEntity = :userId')
       ->setParameter('userId', $this->user->getId());
 
     return $query->getQuery()->getOneOrNullResult();
@@ -92,21 +92,21 @@ class TrashService extends BaseService
     return $query->getQuery()->getOneOrNullResult();
   }
 
-  public function getBagTree(int $bagId): BagNavigationTreeDTO
+  public function getTopicTree(int $topicId): TopicNavigationTreeDTO
   {
-    $currentBag = $this->getBag($bagId);
+    $currentTopic = $this->getTopic($topicId);
     $previousDTO = null;
     $currentDTO = null;
 
-    while ($currentBag) {
-      $currentDTO = new BagNavigationTreeDTO();
-      $currentDTO->setBagId($currentBag->getId());
-      $currentDTO->setBagName($currentBag->getName());
+    while ($currentTopic) {
+      $currentDTO = new TopicNavigationTreeDTO();
+      $currentDTO->setTopicId($currentTopic->getId());
+      $currentDTO->setTopicName($currentTopic->getName());
       $currentDTO->setChild($previousDTO);
 
       $previousDTO = $currentDTO;
-      $parent = $currentBag->getParentCardBagEntity();
-      $currentBag = $parent ? $this->getBag($parent->getId()) : null;
+      $parent = $currentTopic->getParentTopicEntity();
+      $currentTopic = $parent ? $this->getTopic($parent->getId()) : null;
     }
 
     return $currentDTO;
@@ -116,10 +116,10 @@ class TrashService extends BaseService
   {
     $this->disableSoftDeleteFilter();
 
-    foreach ($dto->getBag() as $bagId) {
-      $bag = $this->getBag($bagId);
-      if ($bag) {
-        $this->entityManager->remove($bag);
+    foreach ($dto->getTopic() as $topicId) {
+      $topic = $this->getTopic($topicId);
+      if ($topic) {
+        $this->entityManager->remove($topic);
       }
     }
 
@@ -135,44 +135,44 @@ class TrashService extends BaseService
     $this->enableSoftDeleteFilter();
   }
 
-  private function restoreBag(CardBagEntity $bag, RestoreNode $root): void
+  private function restoreTopic(TopicEntity $topic, RestoreNode $root): void
   {
-    $bagRestorePath = $bag->getRestorePath();
+    $topicRestorePath = $topic->getRestorePath();
 
-    if ($bagRestorePath === '/') {
-      $bag->setDeletedAt(null);
-      $bag->setRestorePath(null);
-      $bag->setParentCardBagEntity(null);
+    if ($topicRestorePath === '/') {
+      $topic->setDeletedAt(null);
+      $topic->setRestorePath(null);
+      $topic->setParentTopicEntity(null);
 
-      $this->entityManager->persist($bag);
+      $this->entityManager->persist($topic);
 
       $newChild = new RestoreNode();
-      $newChild->setCardBag($bag);
+      $newChild->setTopic($topic);
       $root->addChild($newChild);
 
-      foreach ($bag->getChildrenCardBagEntities() as $childBag) {
-        $this->restoreBag($childBag, $root);
+      foreach ($topic->getChildrenTopicEntities() as $childTopic) {
+        $this->restoreTopic($childTopic, $root);
       }
 
-      foreach ($bag->getCardEntities() as $childCard) {
+      foreach ($topic->getCardEntities() as $childCard) {
         $this->restoreCard($childCard, $root);
       }
 
       return;
     }
 
-    $bagTree = explode('/', $bagRestorePath);
+    $topicTree = explode('/', $topicRestorePath);
     $runner = $root;
 
-    foreach ($bagTree as $bagName) {
-      if ($bagName === '') {
+    foreach ($topicTree as $topicName) {
+      if ($topicName === '') {
         continue;
       }
 
       $matchingChildNode = null;
 
       foreach ($runner->getChildren() as $child) {
-        if (($bagEntity = $child->getCardBag()) && ($bagEntity->getName() === $bagName)) {
+        if (($topicEntity = $child->getTopic()) && ($topicEntity->getName() === $topicName)) {
           $matchingChildNode = $child;
           break;
         }
@@ -182,58 +182,58 @@ class TrashService extends BaseService
       if ($matchingChildNode !== null) {
         $runner = $matchingChildNode;
       } else {
-        $nodeBag = $runner->getCardBag();
-        $queryResult = $this->getActiveBagByNameAndParent($bagName, $nodeBag?->getId());
-        $newNodeBag = null;
+        $nodeTopic = $runner->getTopic();
+        $queryResult = $this->getActiveTopicByNameAndParent($topicName, $nodeTopic?->getId());
+        $newNodeTopic = null;
 
         if (count($queryResult) > 0) {
-          $newNodeBag = $queryResult[0];
+          $newNodeTopic = $queryResult[0];
         } else {
-          $newBag = new CardBagEntity();
-          $newBag->setName($bagName);
-          $newBag->setUserEntity($this->user);
-          $newBag->setParentCardBagEntity($nodeBag);
+          $newTopic = new TopicEntity();
+          $newTopic->setName($topicName);
+          $newTopic->setUserEntity($this->user);
+          $newTopic->setParentTopicEntity($nodeTopic);
 
-          $this->entityManager->persist($newBag);
+          $this->entityManager->persist($newTopic);
 
-          if ($nodeBag) {
-            $nodeBag->addChildCardBagEntity($newBag);
+          if ($nodeTopic) {
+            $nodeTopic->addChildTopicEntity($newTopic);
 
-            $this->entityManager->persist($nodeBag);
+            $this->entityManager->persist($nodeTopic);
           }
 
-          $newNodeBag = $newBag;
+          $newNodeTopic = $newTopic;
         }
 
         $newNodeChild = new RestoreNode();
-        $newNodeChild->setCardBag($newNodeBag);
+        $newNodeChild->setTopic($newNodeTopic);
         $runner->addChild($newNodeChild);
 
         $runner = $newNodeChild;
       }
     }
 
-    $nodeCardBag = $runner->getCardBag();
-    $queryResult = $this->getActiveBagByNameAndParent($bag->getName(), $nodeCardBag?->getId());
+    $nodeTopic = $runner->getTopic();
+    $queryResult = $this->getActiveTopicByNameAndParent($topic->getName(), $nodeTopic?->getId());
     $newRestoreNode = new RestoreNode();
 
-    $childrenBags = $bag->getChildrenCardBagEntities()->toArray();
-    $childrenCards = $bag->getCardEntities()->toArray();
+    $childrenTopics = $topic->getChildrenTopicEntities()->toArray();
+    $childrenCards = $topic->getCardEntities()->toArray();
 
     if (count($queryResult) > 0) {
-      $runner->addChild($newRestoreNode->setCardBag($queryResult[0]));
+      $runner->addChild($newRestoreNode->setTopic($queryResult[0]));
     } else {
-      $bag->setDeletedAt(null);
-      $bag->setRestorePath(null);
-      $bag->setParentCardBagEntity($nodeCardBag);
+      $topic->setDeletedAt(null);
+      $topic->setRestorePath(null);
+      $topic->setParentTopicEntity($nodeTopic);
 
-      $this->entityManager->persist($bag);
+      $this->entityManager->persist($topic);
 
-      $runner->addChild($newRestoreNode->setCardBag($bag));
+      $runner->addChild($newRestoreNode->setTopic($topic));
     }
 
-    foreach ($childrenBags as $childBag) {
-      $this->restoreBag($childBag, $root);
+    foreach ($childrenTopics as $childTopic) {
+      $this->restoreTopic($childTopic, $root);
     }
 
     foreach ($childrenCards as $childCard) {
@@ -241,15 +241,15 @@ class TrashService extends BaseService
     }
 
     if (count($queryResult) > 0) {
-      foreach ($childrenBags as $childBag) {
-        $bag->removeChildCardBagEntity($childBag);
+      foreach ($childrenTopics as $childTopic) {
+        $topic->removeChildTopicEntity($childTopic);
       }
 
       foreach ($childrenCards as $childCard) {
-        $bag->removeCard($childCard);
+        $topic->removeCard($childCard);
       }
 
-      $this->entityManager->remove($bag);
+      $this->entityManager->remove($topic);
     }
   }
 
@@ -260,24 +260,24 @@ class TrashService extends BaseService
     if ($cardRestorePath === '/') {
       $card->setDeletedAt(null);
       $card->setRestorePath(null);
-      $card->setCardBagEntity(null);
+      $card->setTopicEntity(null);
 
       $this->entityManager->persist($card);
       return;
     }
 
-    $bagTree = explode('/', $cardRestorePath);
+    $topicTree = explode('/', $cardRestorePath);
     $runner = $root;
 
-    foreach ($bagTree as $bagName) {
-      if ($bagName === '') {
+    foreach ($topicTree as $topicName) {
+      if ($topicName === '') {
         continue;
       }
 
       $matchingChildNode = null;
 
       foreach ($runner->getChildren() as $child) {
-        if (($bagEntity = $child->getCardBag()) && ($bagEntity->getName() === $bagName)) {
+        if (($topicEntity = $child->getTopic()) && ($topicEntity->getName() === $topicName)) {
           $matchingChildNode = $child;
           break;
         }
@@ -287,31 +287,31 @@ class TrashService extends BaseService
       if ($matchingChildNode !== null) {
         $runner = $matchingChildNode;
       } else {
-        $nodeBag = $runner->getCardBag();
-        $queryResult = $this->getActiveBagByNameAndParent($bagName, $nodeBag?->getId());
-        $newNodeBag = null;
+        $nodeTopic = $runner->getTopic();
+        $queryResult = $this->getActiveTopicByNameAndParent($topicName, $nodeTopic?->getId());
+        $newNodeTopic = null;
 
         if (count($queryResult) > 0) {
-          $newNodeBag = $queryResult[0];
+          $newNodeTopic = $queryResult[0];
         } else {
-          $newBag = new CardBagEntity();
-          $newBag->setName($bagName);
-          $newBag->setUserEntity($this->user);
-          $newBag->setParentCardBagEntity($nodeBag);
+          $newTopic = new TopicEntity();
+          $newTopic->setName($topicName);
+          $newTopic->setUserEntity($this->user);
+          $newTopic->setParentTopicEntity($nodeTopic);
 
-          $this->entityManager->persist($newBag);
+          $this->entityManager->persist($newTopic);
 
-          if ($nodeBag) {
-            $nodeBag->addChildCardBagEntity($newBag);
+          if ($nodeTopic) {
+            $nodeTopic->addChildTopicEntity($newTopic);
 
-            $this->entityManager->persist($nodeBag);
+            $this->entityManager->persist($nodeTopic);
           }
 
-          $newNodeBag = $newBag;
+          $newNodeTopic = $newTopic;
         }
 
         $newNodeChild = new RestoreNode();
-        $newNodeChild->setCardBag($newNodeBag);
+        $newNodeChild->setTopic($newNodeTopic);
         $runner->addChild($newNodeChild);
 
         $runner = $newNodeChild;
@@ -321,21 +321,21 @@ class TrashService extends BaseService
     $card->setDeletedAt(null);
     $card->setRestorePath(null);
 
-    $nodeBag = $runner->getCardBag();
-    $cardBag = $card->getCardBagEntity();
+    $nodeTopic = $runner->getTopic();
+    $cardTopic = $card->getTopicEntity();
 
-    if ($cardBag === null || $cardBag->getId() === $nodeBag->getId()) {
-      $card->setCardBagEntity($nodeBag);
+    if ($cardTopic === null || $cardTopic->getId() === $nodeTopic->getId()) {
+      $card->setTopicEntity($nodeTopic);
     } else {
-      // Remove association between the card and its old bag
-      $cardBag->removeCard($card);
+      // Remove association between the card and its old topic
+      $cardTopic->removeCard($card);
 
-      // Move the card to the new bag
-      $nodeBag->addCard($card);
-      $card->setCardBagEntity($nodeBag);
+      // Move the card to the new topic
+      $nodeTopic->addCard($card);
+      $card->setTopicEntity($nodeTopic);
 
-      // $this->entityManager->persist($nodeBag);
-      $this->entityManager->remove($cardBag);
+      // $this->entityManager->persist($nodeTopic);
+      $this->entityManager->remove($cardTopic);
     }
 
     $this->entityManager->persist($card);
@@ -347,10 +347,10 @@ class TrashService extends BaseService
 
     $this->disableSoftDeleteFilter();
 
-    foreach ($dto->getBag() as $bagId) {
-      $bag = $this->getBag($bagId);
-      if ($bag) {
-        $this->restoreBag($bag, $root);
+    foreach ($dto->getTopic() as $topicId) {
+      $topic = $this->getTopic($topicId);
+      if ($topic) {
+        $this->restoreTopic($topic, $root);
       }
     }
 
@@ -366,11 +366,11 @@ class TrashService extends BaseService
     $this->enableSoftDeleteFilter();
   }
 
-  public function parseBagTreeToBreadcrumb(BagNavigationTreeDTO $bagTree, array $breadcrumb = []): array
+  public function parseTopicTreeToBreadcrumb(TopicNavigationTreeDTO $topicTree, array $breadcrumb = []): array
   {
-    $runner = $bagTree;
+    $runner = $topicTree;
     while ($runner) {
-      $breadcrumb[] = ['label' => $runner->getBagName(), 'url' => str_replace('{id}', $runner->getBagId(), Routes::TRASH_BAG_ROUTE_URL)];
+      $breadcrumb[] = ['label' => $runner->getTopicName(), 'url' => str_replace('{id}', $runner->getTopicId(), Routes::TRASH_TOPIC_ROUTE_URL)];
 
       $runner = $runner->getChild();
     }

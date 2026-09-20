@@ -4,36 +4,36 @@ namespace App\Entity;
 
 use App\Config\Constants;
 use App\Config\Constraints;
-use App\Repository\CardBagRepository;
+use App\Repository\TopicRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-#[ORM\Entity(repositoryClass: CardBagRepository::class)]
-#[ORM\Table(name: Constants::TABLE_CARD_BAG)]
+#[ORM\Entity(repositoryClass: TopicRepository::class)]
+#[ORM\Table(name: Constants::TABLE_TOPIC)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
-class CardBagEntity extends BaseEntity
+class TopicEntity extends BaseEntity
 {
-  #[ORM\Column(type: 'string', length: Constraints::CARD_BAG_NAME_MAX_LENGTH)]
+  #[ORM\Column(type: 'string', length: Constraints::TOPIC_NAME_MAX_LENGTH)]
   private string $name;
 
-  #[ORM\ManyToOne(targetEntity: UserEntity::class, inversedBy: 'cardBagEntities')]
+  #[ORM\ManyToOne(targetEntity: UserEntity::class, inversedBy: 'topicEntities')]
   #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
   private ?UserEntity $userEntity = null;
 
-  #[ORM\OneToMany(targetEntity: CardEntity::class, mappedBy: 'cardBagEntity', cascade: ['remove'])]
+  #[ORM\OneToMany(targetEntity: CardEntity::class, mappedBy: 'topicEntity', cascade: ['remove'])]
   private Collection $cardEntities;
 
   // 1. THE OWNING SIDE (Who is my parent?)
   // nullable: true is important here! A top-level item won't have a parent.
-  #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'childrenCardBagEntities')]
-  #[ORM\JoinColumn(name: 'parent_card_bag_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
-  private ?self $parentCardBagEntity = null;
+  #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'childrenTopicEntities')]
+  #[ORM\JoinColumn(name: 'parent_topic_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
+  private ?self $parentTopicEntity = null;
 
   // 2. THE INVERSE SIDE (Who are my children?)
-  #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parentCardBagEntity', cascade: ['remove'])]
-  private Collection $childrenCardBagEntities;
+  #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parentTopicEntity', cascade: ['remove'])]
+  private Collection $childrenTopicEntities;
 
   #[ORM\Column(type: 'string', nullable: true)]
   private ?string $restorePath = null;
@@ -44,7 +44,7 @@ class CardBagEntity extends BaseEntity
   public function __construct()
   {
     $this->cardEntities = new ArrayCollection();
-    $this->childrenCardBagEntities = new ArrayCollection();
+    $this->childrenTopicEntities = new ArrayCollection();
   }
 
   /**
@@ -102,7 +102,7 @@ class CardBagEntity extends BaseEntity
 
       // Keep the relationship in sync!
       // When you add B to A, you must tell B that A is its owner.
-      $card->setCardBagEntity($this);
+      $card->setTopicEntity($this);
     }
 
     return $this;
@@ -112,8 +112,8 @@ class CardBagEntity extends BaseEntity
   {
     if ($this->cardEntities->removeElement($card)) {
       // Set the owning side to null (unless already changed)
-      if ($card->getCardBagEntity() === $this) {
-        $card->setCardBagEntity(null);
+      if ($card->getTopicEntity() === $this) {
+        $card->setTopicEntity(null);
       }
     }
 
@@ -121,56 +121,56 @@ class CardBagEntity extends BaseEntity
   }
 
   /**
-   * Get the value of parentCardBagEntity
+   * Get the value of parentTopicEntity
    *
    * @return ?self
    */
-  public function getParentCardBagEntity(): ?self
+  public function getParentTopicEntity(): ?self
   {
-    return $this->parentCardBagEntity;
+    return $this->parentTopicEntity;
   }
 
   /**
-   * Set the value of parentCardBagEntity
+   * Set the value of parentTopicEntity
    *
-   * @param ?self $parentCardBagEntity
+   * @param ?self $parentTopicEntity
    *
    * @return self
    */
-  public function setParentCardBagEntity(?self $parentCardBagEntity): self
+  public function setParentTopicEntity(?self $parentTopicEntity): self
   {
-    $this->parentCardBagEntity = $parentCardBagEntity;
+    $this->parentTopicEntity = $parentTopicEntity;
 
     return $this;
   }
 
   /**
-   * Get the value of childrenCardBagEntities
+   * Get the value of childrenTopicEntities
    *
    * @return Collection
    */
-  public function getChildrenCardBagEntities(): Collection
+  public function getChildrenTopicEntities(): Collection
   {
-    return $this->childrenCardBagEntities;
+    return $this->childrenTopicEntities;
   }
 
-  public function addChildCardBagEntity(self $childCardBagEntity): self
+  public function addChildTopicEntity(self $childTopicEntity): self
   {
-    if (!$this->childrenCardBagEntities->contains($childCardBagEntity)) {
-      $this->childrenCardBagEntities->add($childCardBagEntity);
+    if (!$this->childrenTopicEntities->contains($childTopicEntity)) {
+      $this->childrenTopicEntities->add($childTopicEntity);
       // Sync the relationship!
-      $childCardBagEntity->setParentCardBagEntity($this);
+      $childTopicEntity->setParentTopicEntity($this);
     }
 
     return $this;
   }
 
-  public function removeChildCardBagEntity(self $childCardBagEntity): self
+  public function removeChildTopicEntity(self $childTopicEntity): self
   {
-    if ($this->childrenCardBagEntities->removeElement($childCardBagEntity)) {
+    if ($this->childrenTopicEntities->removeElement($childTopicEntity)) {
       // set the owning side to null (unless already changed)
-      if ($childCardBagEntity->getParentCardBagEntity() === $this) {
-        $childCardBagEntity->setParentCardBagEntity(null);
+      if ($childTopicEntity->getParentTopicEntity() === $this) {
+        $childTopicEntity->setParentTopicEntity(null);
       }
     }
 

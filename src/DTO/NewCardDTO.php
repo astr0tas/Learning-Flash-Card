@@ -9,31 +9,31 @@ class NewCardDTO extends BaseDTO
   private string $title;
   private ?string $subtitle = null;
   private ?string $description = null;
-  private ?int $bag = null;
+  private ?int $topic = null;
   private string $cardType;
   private string $cardColor = Constants::FLASH_CARD_DEFAULT_COLOR;
   private string $cardTextColor = Constants::FLASH_CARD_DEFAULT_TEXT_COLOR;
 
   /**
-   * Get the value of bag
+   * Get the value of topic
    *
    * @return int
    */
-  public function getBag(): ?int
+  public function getTopic(): ?int
   {
-    return $this->bag;
+    return $this->topic;
   }
 
   /**
-   * Set the value of bag
+   * Set the value of topic
    *
-   * @param int $bag
+   * @param int $topic
    *
    * @return self
    */
-  public function setBag(?int $bag): self
+  public function setTopic(?int $topic): self
   {
-    $this->bag = $bag;
+    $this->topic = $topic;
 
     return $this;
   }

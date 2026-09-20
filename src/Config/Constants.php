@@ -35,8 +35,8 @@ class Constants
   public const FLASH_CARD_NORMAL_TYPE = 'NORMAL';
   public const FLASH_CARD_LANGUAGE_TYPE = 'LANGUAGE';
   public const FLASH_CARD_DEFAULT_TYPE = self::FLASH_CARD_NORMAL_TYPE;
-  public const FLASH_CARD_BAG_TYPES = [self::FLASH_CARD_NORMAL_TYPE, self::FLASH_CARD_LANGUAGE_TYPE];
-  public const FLASH_CARD_BAG_TYPES_STR = 'NORMAL, LANGUAGE';
+  public const FLASH_CARD_TYPES = [self::FLASH_CARD_NORMAL_TYPE, self::FLASH_CARD_LANGUAGE_TYPE];
+  public const FLASH_CARD_TYPES_STR = 'NORMAL, LANGUAGE';
   public const FLASH_CARD_DEFAULT_COLOR = '#FFDE21';
   public const FLASH_CARD_DEFAULT_TEXT_COLOR = '#000000';
   // Since the card description can store raw HTML tags, it needs to define which tags are allowed to be in the database
@@ -53,7 +53,7 @@ class Constants
   public const TABLE_USER = 'user_tbl';
   public const TABLE_RECOVERY_TOKEN = 'recovery_token_tbl';
   public const TABLE_EMAIL_VERIFICATION_TOKEN = 'email_verification_token_tbl';
-  public const TABLE_CARD_BAG = 'card_bag_tbl';
+  public const TABLE_TOPIC = 'topic_tbl';
   public const TABLE_CARD = 'card_tbl';
   public const TABLE_CARD_CONTENT = 'card_content_tbl';
 

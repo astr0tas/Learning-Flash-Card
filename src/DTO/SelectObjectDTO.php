@@ -4,30 +4,30 @@ namespace App\DTO;
 
 class SelectObjectDTO extends BaseDTO
 {
-  private array $bag = [];
+  private array $topic = [];
   private array $card = [];
-  private ?int $newParentBag = null;
+  private ?int $newParentTopic = null;
 
   /**
-   * Get the value of bag
+   * Get the value of topic
    *
    * @return array
    */
-  public function getBag(): array
+  public function getTopic(): array
   {
-    return $this->bag;
+    return $this->topic;
   }
 
   /**
-   * Set the value of bag
+   * Set the value of topic
    *
-   * @param array $bag
+   * @param array $topic
    *
    * @return self
    */
-  public function setBag(array $bag): self
+  public function setTopic(array $topic): self
   {
-    $this->bag = $bag;
+    $this->topic = $topic;
 
     return $this;
   }
@@ -57,29 +57,29 @@ class SelectObjectDTO extends BaseDTO
   }
 
   /**
-   * Get the value of newParentBag
+   * Get the value of newParentTopic
    *
    * @return ?int
    */
-  public function getNewParentBag(): ?int
+  public function getNewParentTopic(): ?int
   {
-    return $this->newParentBag;
+    return $this->newParentTopic;
   }
 
   /**
-   * Set the value of newParentBag
+   * Set the value of newParentTopic
    *
-   * @param int|string|null $newParentBag
+   * @param int|string|null $newParentTopic
    *
    * @return self
    */
-  public function setNewParentBag(int|string|null $newParentBag): self
+  public function setNewParentTopic(int|string|null $newParentTopic): self
   {
-    if ($newParentBag === '') {
-      $newParentBag = null;
+    if ($newParentTopic === '') {
+      $newParentTopic = null;
     }
 
-    $this->newParentBag = $newParentBag;
+    $this->newParentTopic = $newParentTopic;
 
     return $this;
   }

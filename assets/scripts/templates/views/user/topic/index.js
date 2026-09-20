@@ -1,11 +1,11 @@
 document.addEventListener('alpine:init', () =>
 {
-  Alpine.data('cardBag', () => ({
+  Alpine.data('topic', () => ({
     normalInputClass: "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer select-none border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500 !text-base",
-    filteredBagList: JSON.parse(JSON.stringify(bagList)),
+    filteredTopicList: JSON.parse(JSON.stringify(topicList)),
     filteredCardList: JSON.parse(JSON.stringify(cardList)),
     selectCard: '',
-    selectedBags: [],
+    selectedTopics: [],
     selectedCards: [],
     openCardDetailModal(id)
     {
@@ -20,11 +20,11 @@ document.addEventListener('alpine:init', () =>
       document.getElementById('editCardModal').setAttribute('open',true);
       this.$dispatch('close-view-card-modal');
     },
-    filterBagAndCard(search)
+    filterTopicAndCard(search)
     {
       if (!search)
       {
-        this.filteredBagList = JSON.parse(JSON.stringify(bagList));
+        this.filteredTopicList = JSON.parse(JSON.stringify(topicList));
         this.filteredCardList = JSON.parse(JSON.stringify(cardList));
         return;
       }
@@ -32,9 +32,9 @@ document.addEventListener('alpine:init', () =>
       const normalizedSearch = this.removeDiacritics(search.toLowerCase());
       const searchKeywords = normalizedSearch.split(/[~`!@#$%^&*()_+\-\=\[\]{}\\|;':"<>,./? ]+/).filter(keyword => keyword);
 
-      this.filteredBagList = bagList.filter(bag => {
-        const normalizedBagName = this.removeDiacritics(bag.name.toLowerCase());
-        return searchKeywords.some(keyword => normalizedBagName.includes(keyword));
+      this.filteredTopicList = topicList.filter(topic => {
+        const normalizedTopicName = this.removeDiacritics(topic.name.toLowerCase());
+        return searchKeywords.some(keyword => normalizedTopicName.includes(keyword));
       });
 
       this.filteredCardList = cardList.filter(card => {
@@ -44,8 +44,8 @@ document.addEventListener('alpine:init', () =>
     },
     init()
     {
-      this.$watch('selectedBags', () => {
-        this.$dispatch('update-select-bag', this.selectedBags);
+      this.$watch('selectedTopics', () => {
+        this.$dispatch('update-select-topic', this.selectedTopics);
       });
       this.$watch('selectedCards', () => {
         this.$dispatch('update-select-card', this.selectedCards);
@@ -54,34 +54,34 @@ document.addEventListener('alpine:init', () =>
   }));
 
   Alpine.data('objectMove', () => ({
-    selectedBags: [],
+    selectedTopics: [],
     selectedCards: [],
     originalParent: objectMovingBreadcrumb.length > 0 ? objectMovingBreadcrumb[objectMovingBreadcrumb.length - 1].id : null,
-    newParentBag: objectMovingBreadcrumb.length > 0 ? objectMovingBreadcrumb[objectMovingBreadcrumb.length - 1].id : null,
+    newParentTopic: objectMovingBreadcrumb.length > 0 ? objectMovingBreadcrumb[objectMovingBreadcrumb.length - 1].id : null,
     objectMovingBreadcrumb,
-    parentBagContent: [],
-    filteredParentBagContent: [],
+    parentTopicContent: [],
+    filteredParentTopicContent: [],
     searchFilter: '',
     isLoading: false,
-    async fetchParentBagContent()
+    async fetchParentTopicContent()
     {
       this.toggleLoading();
 
-      const params = { parentBagId: this.newParentBag };
+      const params = { parentTopicId: this.newParentTopic };
       const queryString = new URLSearchParams(params).toString();
-      const url = `${ fetchBagContentUrl }?${ queryString }`;
+      const url = `${ fetchTopicContentUrl }?${ queryString }`;
 
       await fetch(url)
         .then(response => response.json())
         .then(data =>
         {
-          this.parentBagContent = data.filter(elem => !this.selectedBags.some(bag => bag == elem.id));
+          this.parentTopicContent = data.filter(elem => !this.selectedTopics.some(topic => topic == elem.id));
           this.applySearch();
           document.getElementById('objectMovingBreadcrumb').dispatchEvent(new CustomEvent('set-breadcrumb-items', { detail: this.objectMovingBreadcrumb }));
         })
         .catch(error =>
         {
-          console.error("Error when fetching bag list: ", error);
+          console.error("Error when fetching topic list: ", error);
           this.pushNotification(apiRequestError, 'error');
         })
 
@@ -93,35 +93,35 @@ document.addEventListener('alpine:init', () =>
 
       if (this.isLoading)
       {
-        document.getElementById('bag-content-list-loading').dispatchEvent(new CustomEvent('set-loading'));
+        document.getElementById('topic-content-list-loading').dispatchEvent(new CustomEvent('set-loading'));
       } else
       {
-        document.getElementById('bag-content-list-loading').dispatchEvent(new CustomEvent('unset-loading'));
+        document.getElementById('topic-content-list-loading').dispatchEvent(new CustomEvent('unset-loading'));
       }
     },
     applySearch()
     {
       if (!this.searchFilter)
       {
-        this.filteredParentBagContent = JSON.parse(JSON.stringify(this.parentBagContent));
+        this.filteredParentTopicContent = JSON.parse(JSON.stringify(this.parentTopicContent));
         return;
       }
 
       const normalizedSearch = this.removeDiacritics(this.searchFilter.toLowerCase());
       const searchKeywords = normalizedSearch.split(/[~`!@#$%^&*()_+\-\=\[\]{}\\|;':"<>,./? ]+/).filter(keyword => keyword);
 
-      this.filteredParentBagContent = this.parentBagContent.filter(bag => {
-        const normalizedBagName = this.removeDiacritics(bag.name.toLowerCase());
-        return searchKeywords.some(keyword => normalizedBagName.includes(keyword));
+      this.filteredParentTopicContent = this.parentTopicContent.filter(topic => {
+        const normalizedTopicName = this.removeDiacritics(topic.name.toLowerCase());
+        return searchKeywords.some(keyword => normalizedTopicName.includes(keyword));
       });
     },
     resetMoveObjectModal()
     {
-      this.newParentBag = this.originalParent;
+      this.newParentTopic = this.originalParent;
     },
     init()
     {
-      this.$watch('newParentBag', (value) =>
+      this.$watch('newParentTopic', (value) =>
       {
         const findIndex = this.objectMovingBreadcrumb.findIndex(elem => elem.id === value);
 
@@ -130,15 +130,15 @@ document.addEventListener('alpine:init', () =>
           this.objectMovingBreadcrumb = this.objectMovingBreadcrumb.slice(0, findIndex + 1);
         } else
         {
-          const result = this.parentBagContent.find(elem => elem.id === value);
+          const result = this.parentTopicContent.find(elem => elem.id === value);
           this.objectMovingBreadcrumb.push({
             id: result.id,
             label: result.name,
-            action: `document.getElementById('moveObjectModal').dispatchEvent(new CustomEvent('set-new-parent-bag', { detail: ${result.id} }))`
+            action: `document.getElementById('moveObjectModal').dispatchEvent(new CustomEvent('set-new-parent-topic', { detail: ${result.id} }))`
           });
         }
 
-        this.fetchParentBagContent();
+        this.fetchParentTopicContent();
       });
 
       this.$watch('searchFilter', () =>
@@ -146,12 +146,12 @@ document.addEventListener('alpine:init', () =>
         this.applySearch();
       });
 
-      this.$watch('selectedBags', () =>
+      this.$watch('selectedTopics', () =>
       {
-        this.fetchParentBagContent();
+        this.fetchParentTopicContent();
       });
 
-      this.fetchParentBagContent();
+      this.fetchParentTopicContent();
     }
   }));
 });

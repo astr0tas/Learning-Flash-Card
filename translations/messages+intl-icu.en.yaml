@@ -65,14 +65,14 @@ verify_email:
 dashboard:
   title: "Dashboard"
 
-card_bag:
-  title: "Card Bag"
-  search_placeholder: "Search card bags or cards"
+topic:
+  title: "Topic"
+  search_placeholder: "Search topics or cards"
   create_options:
-    new_bag: "Create new bag"
+    new_topic: "Create new topic"
     new_card: "Create new card"
   other_option: "Other options"
-  bag_name: "Bag name"
+  topic_name: "Topic name"
   card_title: "Card title"
   card_subtitle: "Card subtitle"
   card_description: "Card description"
@@ -81,27 +81,27 @@ card_bag:
   card_type_language: "Language"
   card_color: "Card color"
   card_text_color: "Text color"
-  bag_list: "Bag list"
+  topic_list: "Topic list"
   card_list: "Card list"
   delete_confirm: "Do you want to delete the selected items?"
   new_card_created: "New card has been created successfully"
-  new_bag_created: "New bag has been created successfully"
+  new_topic_created: "New topic has been created successfully"
   object_deleted: "The selected items have been deleted successfully"
-  bag_not_found: "Card bag not found"
+  topic_not_found: "Topic not found"
   no_card_found: "Card does not exist"
   card_edit_success: "Card has been updated successfully"
-  card_bag: "Card bag"
+  topic: "Topic"
   created_at: "Created at"
-  search_placeholder2: "Search card bags"
+  search_placeholder2: "Search topics"
   object_moved: "The selected items have been moved successfully"
-  move_object_note: "For duplicated card bags, their contents will be merge together"
+  move_object_note: "For duplicated topics, their contents will be merge together"
 
 trash:
   title: "Trash Bin"
-  search_placeholder: "Search card bags or cards"
+  search_placeholder: "Search topics or cards"
   name_or_title: "Name or title"
   type: "Type"
-  type_bag: "Card bag"
+  type_topic: "Topic"
   type_card: "Card"
   restore_path: "Restore path"
   deleted_at: "Deleted at"
@@ -111,7 +111,7 @@ trash:
   restore_confirm: "Are you sure you want to restore the selected items?"
   permanent_delete_success: "The selected items have been deleted permanently"
   restore_success: "The selected items have been restored successfully"
-  bag_not_found: "Card bag not found"
+  topic_not_found: "Topic not found"
 
 feature_in_development: "Feature in Development"
 
@@ -127,7 +127,7 @@ menu:
   expand: "Expand"
   minimize: "Minimize"
   dash_board: "Dash Board"
-  card_bag: "Card Bag"
+  topic: "Topic"
   trash: "Trash Bin"
   logout: "Logout"
   account: "Account"
@@ -153,10 +153,10 @@ validation:
   confirm_new_password:
     not_blank: "Confirm new password must not be blank"
     mismatch: "Confirm new password does not match"
-  new_bag:
-    name_not_blank: "Bag name must not be blank"
-    name_exist: "Bag name has already been used"
-    name_too_long: "Bag name must not exceed {limit} characters"
+  new_topic:
+    name_not_blank: "Topic name must not be blank"
+    name_exist: "Topic name has already been used"
+    name_too_long: "Topic name must not exceed {limit} characters"
   card:
     title_not_blank: "Card title must not be blank"
     card_type_not_blank: "Card type must not be blank"

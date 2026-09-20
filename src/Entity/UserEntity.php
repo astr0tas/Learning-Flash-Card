@@ -46,8 +46,8 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
   #[ORM\Column(type: 'datetime', nullable: true)]
   private ?\DateTimeInterface $deletedAt = null;
 
-  #[ORM\OneToMany(targetEntity: CardBagEntity::class, mappedBy: 'userEntity')]
-  private Collection $cardBagEntities;
+  #[ORM\OneToMany(targetEntity: TopicEntity::class, mappedBy: 'userEntity')]
+  private Collection $topicEntities;
 
   #[ORM\OneToMany(targetEntity: CardEntity::class, mappedBy: 'userEntity')]
   private Collection $cardEntities;
@@ -214,34 +214,34 @@ class UserEntity extends BaseEntity implements UserInterface, PasswordAuthentica
   }
 
   /**
-   * Get the value of cardBagEntities
+   * Get the value of topicEntities
    *
    * @return Collection
    */
-  public function getCardBagEntities(): Collection
+  public function getTopicEntities(): Collection
   {
-    return $this->cardBagEntities;
+    return $this->topicEntities;
   }
 
-  public function addCardBag(CardBagEntity $bag): self
+  public function addTopic(TopicEntity $topic): self
   {
-    if (!$this->cardBagEntities->contains($bag)) {
-      $this->cardBagEntities->add($bag);
+    if (!$this->topicEntities->contains($topic)) {
+      $this->topicEntities->add($topic);
 
       // Keep the relationship in sync!
       // When you add B to A, you must tell B that A is its owner.
-      $bag->setUserEntity($this);
+      $topic->setUserEntity($this);
     }
 
     return $this;
   }
 
-  public function removeCardBag(CardBagEntity $bag): self
+  public function removeTopic(TopicEntity $topic): self
   {
-    if ($this->cardBagEntities->removeElement($bag)) {
+    if ($this->topicEntities->removeElement($topic)) {
       // Set the owning side to null (unless already changed)
-      if ($bag->getUserEntity() === $this) {
-        $bag->setUserEntity(null);
+      if ($topic->getUserEntity() === $this) {
+        $topic->setUserEntity(null);
       }
     }
 

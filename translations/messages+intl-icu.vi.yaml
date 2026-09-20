@@ -65,14 +65,14 @@ verify_email:
 dashboard:
   title: "Trang chủ"
 
-card_bag:
-  title: "Túi thẻ"
-  search_placeholder: "Tìm kiếm túi thẻ hoặc thẻ"
+topic:
+  title: "Chủ đề"
+  search_placeholder: "Tìm kiếm chủ đề hoặc thẻ"
   create_options:
-    new_bag: "Tạo túi mới"
+    new_topic: "Tạo chủ đề mới"
     new_card: "Tạo thẻ mới"
   other_option: "Tùy chọn khác"
-  bag_name: "Tên túi thẻ"
+  topic_name: "Tên chủ đề"
   card_title: "Tiêu đề thẻ"
   card_subtitle: "Phụ đề thẻ"
   card_description: "Mô tả thẻ"
@@ -81,27 +81,27 @@ card_bag:
   card_type_language: "Ngôn ngữ"
   card_color: "Màu thẻ"
   card_text_color: "Màu chữ"
-  bag_list: "Danh sách túi thẻ"
+  topic_list: "Danh sách chủ đề"
   card_list: "Danh sách thẻ"
   delete_confirm: "Bạn có chắc chắn muốn xóa các mục đã chọn?"
   new_card_created: "Thẻ mới đã được tạo thành công"
-  new_bag_created: "Túi thẻ mới đã được tạo thành công"
+  new_topic_created: "Chủ đề mới đã được tạo thành công"
   object_deleted: "Các mục được chọn đã được xóa thành công"
-  bag_not_found: "Không tìm thấy túi thẻ"
+  topic_not_found: "Không tìm thấy chủ đề"
   no_card_found: "Thẻ không tồn tại"
   card_edit_success: "Thẻ đã được cập nhật thành công"
-  card_bag: "Túi thẻ"
+  topic: "Chủ đề"
   created_at: "Thời gian tạo"
-  search_placeholder2: "Tìm kiếm túi"
+  search_placeholder2: "Tìm kiếm chủ đề"
   object_moved: "Các mục được chọn đã được di chuyển thành công"
-  move_object_note: "Đối với các túi thẻ bị trùng lặp, các túi con và thẻ ở trong hai túi đó sẽ được kết hợp lại"
+  move_object_note: "Đối với các chủ đề bị trùng lặp, các chủ đề con và thẻ ở trong hai chủ đề đó sẽ được kết hợp lại"
 
 trash:
   title: "Thùng rác"
-  search_placeholder: "Tìm kiếm túi thẻ hoặc thẻ"
+  search_placeholder: "Tìm kiếm chủ đề hoặc thẻ"
   name_or_title: "Tên hoặc tiêu đề"
   type: "Phân loại"
-  type_bag: "Túi thẻ"
+  type_topic: "Chủ đề"
   type_card: "Thẻ"
   restore_path: "Đường dẫn khôi phục"
   deleted_at: "Ngày xóa"
@@ -111,7 +111,7 @@ trash:
   restore_confirm: "Bạn có chắc chắn muốn khôi phục các mục đã chọn?"
   permanent_delete_success: "Các mục được chọn đã được xóa thành công"
   restore_success: "Các mục được chọn đã được khôi phục thành công"
-  bag_not_found: "Không tìm thấy túi thẻ"
+  topic_not_found: "Không tìm thấy chủ đề"
 
 feature_in_development: "Tính năng đang phát triển"
 
@@ -127,7 +127,7 @@ menu:
   expand: "Mở rộng"
   minimize: "Thu gọn"
   dash_board: "Trang chủ"
-  card_bag: "Túi thẻ"
+  topic: "Chủ đề"
   trash: "Thùng rác"
   logout: "Đăng xuất"
   account: "Tài khoản"
@@ -153,10 +153,10 @@ validation:
   confirm_new_password:
     not_blank: "Mật khẩu xác nhận không được để trống"
     mismatch: "Mật khẩu xác nhận không trùng khớp"
-  new_bag:
-    name_not_blank: "Tên túi không được để trống"
-    name_exist: "Tên túi đã được dùng"
-    name_too_long: "Tên túi không được có độ dài quá {limit} ký tự"
+  new_topic:
+    name_not_blank: "Tên chủ đề không được để trống"
+    name_exist: "Tên chủ đề đã được dùng"
+    name_too_long: "Tên chủ đề không được có độ dài quá {limit} ký tự"
   card:
     title_not_blank: "Tiêu đề thẻ không được để trống"
     card_type_not_blank: "Loại thẻ không được để trống"

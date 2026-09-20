@@ -46,12 +46,12 @@ class Routes
   // User Routes
   public const HOME_ROUTE_URL = '/';
   public const HOME_ROUTE_NAME = 'home';
-  public const CARD_BAG_ROUTE_URL = '/card-bag';
-  public const CARD_BAG_ROUTE_NAME = 'card-bag';
-  public const CARD_BAG_DETAIL_ROUTE_URL = '/card-bag/{id}';
-  public const CARD_BAG_DETAIL_ROUTE_NAME = 'card-bag-detail';
-  public const CREATE_NEW_BAG_ROUTE_URL = '/create-bag';
-  public const CREATE_NEW_BAG_ROUTE_NAME = 'create-bag';
+  public const TOPIC_ROUTE_URL = '/topic';
+  public const TOPIC_ROUTE_NAME = 'topic';
+  public const TOPIC_DETAIL_ROUTE_URL = '/topic/{id}';
+  public const TOPIC_DETAIL_ROUTE_NAME = 'topic-detail';
+  public const CREATE_NEW_TOPIC_ROUTE_URL = '/create-topic';
+  public const CREATE_NEW_TOPIC_ROUTE_NAME = 'create-topic';
   public const CREATE_NEW_CARD_ROUTE_URL = '/create-card';
   public const CREATE_NEW_CARD_ROUTE_NAME = 'create-card';
   public const UPDATE_CARD_ROUTE_URL = '/update-card';
@@ -62,8 +62,8 @@ class Routes
   public const MOVE_OBJECT_ROUTE_NAME = 'move-object';
   public const TRASH_ROUTE_URL = '/trash';
   public const TRASH_ROUTE_NAME = 'trash';
-  public const TRASH_BAG_ROUTE_URL = '/trash/bag/{id}';
-  public const TRASH_BAG_ROUTE_NAME = 'trash-bag';
+  public const TRASH_TOPIC_ROUTE_URL = '/trash/topic/{id}';
+  public const TRASH_TOPIC_ROUTE_NAME = 'trash-topic';
   public const PERMANENT_DELETE_OBJECT_ROUTE_URL = '/permanent-delete-object';
   public const PERMANENT_DELETE_OBJECT_ROUTE_NAME = 'permanent-delete-object';
   public const RESTORE_OBJECT_ROUTE_URL = '/restore-object';
@@ -76,6 +76,6 @@ class Routes
   public const ADMIN_HOME_ROUTE_NAME = 'admin_home';
 
   // User API Routes
-  public const API_USER_CARD_BAG_ROUTE_URL = '/api/card-bag';
-  public const API_USER_CARD_BAG_ROUTE_NAME = 'api-card-bag';
+  public const API_USER_TOPIC_ROUTE_URL = '/api/topic';
+  public const API_USER_TOPIC_ROUTE_NAME = 'api-topic';
 }

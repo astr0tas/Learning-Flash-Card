@@ -23,12 +23,12 @@
                 {{ 'menu.dash_board'|trans }}
               </div>
             </a>
-            <a href="{{ constant('App\\Config\\Routes::CARD_BAG_ROUTE_URL') }}" class="flex items-center cursor-pointer gap-2 rounded-md p-3 select-none {{ constant('App\\Config\\Routes::CARD_BAG_ROUTE_URL') in app.request.pathInfo ? 'text-(--blue)!' : '' }}" {% if constant('App\\Config\\Routes::CARD_BAG_ROUTE_URL') in app.request.pathInfo %} x-bind:class="darkMode?'text-white bg-gray-800 hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200 bg-gray-100'" {% else %} x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200'" {% endif %} title="{{ 'menu.card_bag'|trans }}">
+            <a href="{{ constant('App\\Config\\Routes::TOPIC_ROUTE_URL') }}" class="flex items-center cursor-pointer gap-2 rounded-md p-3 select-none {{ constant('App\\Config\\Routes::TOPIC_ROUTE_URL') in app.request.pathInfo ? 'text-(--blue)!' : '' }}" {% if constant('App\\Config\\Routes::TOPIC_ROUTE_URL') in app.request.pathInfo %} x-bind:class="darkMode?'text-white bg-gray-800 hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200 bg-gray-100'" {% else %} x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200'" {% endif %} title="{{ 'menu.topic'|trans }}">
               <div class="w-6 h-6">
-                {{ include('icons/folder.svg') }}
+                {{ include('icons/topic.svg') }}
               </div>
               <div x-show="!isCollapsed">
-                {{ 'menu.card_bag'|trans }}
+                {{ 'menu.topic'|trans }}
               </div>
             </a>
             <a href="{{ constant('App\\Config\\Routes::TRASH_ROUTE_URL') }}" class="flex items-center cursor-pointer gap-2 rounded-md p-3 select-none {{ app.request.attributes.get('_route') == constant('App\\Config\\Routes::TRASH_ROUTE_NAME') ? 'text-(--blue)!' : '' }}" {% if app.request.attributes.get('_route') == constant('App\\Config\\Routes::TRASH_ROUTE_NAME') %} x-bind:class="darkMode?'text-white bg-gray-800 hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200 bg-gray-100'" {% else %} x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'text-black hover:bg-gray-100 active:bg-gray-200'" {% endif %} title="{{ 'menu.trash'|trans }}">

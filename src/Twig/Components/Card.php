@@ -21,6 +21,6 @@ final class Card
   public bool $editMode = false;
   public bool $listMode = false;
   public bool $allowEdit = true;
-  public ?int $bagId = null;
+  public ?int $topicId = null;
   public array $error = [];
 }

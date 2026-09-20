@@ -14,7 +14,7 @@ class TwigTemplate
 
   // User templates
   public const PAGE_USER_HOME = '/views/user/index.html.twig';
-  public const PAGE_USER_CARD_BAG = '/views/user/card_bag/index.html.twig';
+  public const PAGE_USER_TOPIC = '/views/user/topic/index.html.twig';
   public const PAGE_USER_TRASH = '/views/user/trash/index.html.twig';
 
   // Admin templates

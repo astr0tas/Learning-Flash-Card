@@ -11,7 +11,7 @@
 {% set normal_class = base_class ~ ' border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500 ' ~ password_padding ~ ' ' ~ search_padding ~ ' ' ~ size_class %}
 {% set normal_color_class = base_class ~ ' border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500 h-12 cursor-pointer !w-20 !p-2' %}
 
-{# If the input is "search", when clicking on the search icon, alpine will dispatch a "search" event. The parent component's container will need to catch that. Example in templates\views\user\card_bag\index.html.twig #}
+{# If the input is "search", when clicking on the search icon, alpine will dispatch a "search" event. The parent component's container will need to catch that. Example in templates\views\user\topic\index.html.twig #}
 <div class="w-full flex flex-col component-input" {% if type == 'password' %} x-data="{ showPassword: false }" {% endif %} {% if type == 'search' %} x-data="{ hasValue: false }" {% endif %}>
   {% if label is not empty %}
     <label {% if name|default(id) is not empty %} for="{{ name|default(id) }}" {% endif %} class="text-sm text-zinc-400 mb-1">

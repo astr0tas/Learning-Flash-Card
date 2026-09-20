@@ -6,17 +6,17 @@ use App\Config\Routes;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent]
-final class CardBag
+final class Topic
 {
-  public int $bagId;
-  public string $bagName;
+  public int $topicId;
+  public string $topicName;
   public string $href = "";
   public ?string $model = null;
 
-  public function mount(int $bagId, string $bagName, ?string $model = null, string $href = ""): void
+  public function mount(int $topicId, string $topicName, ?string $model = null, string $href = ""): void
   {
-    $this->bagId = $bagId;
-    $this->bagName = $bagName;
+    $this->topicId = $topicId;
+    $this->topicName = $topicName;
     $this->model = $model;
     $this->href = $href;
   }

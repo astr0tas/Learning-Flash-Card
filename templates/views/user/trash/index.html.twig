@@ -5,17 +5,17 @@
 {% endblock %}
 
 {% set records = [] %}
-{% set RECORD_TYPE_BAG = 2 %}
+{% set RECORD_TYPE_TOPIC = 2 %}
 {% set RECORD_TYPE_CARD = 1 %}
 
-{% for bag in bagList %}
+{% for topic in topicList %}
   {% set records = records|merge([{
-    'record_type': RECORD_TYPE_BAG,
-    'id': bag.id,
-    'name': bag.name,
-    'href': constant('App\\Config\\Routes::TRASH_BAG_ROUTE_URL')|replace({'{id}': bag.id}),
-    'restorePath': bag.restorePath,
-    'deletedAt': bag.deletedAt|date('Y-m-d H:i:s')
+    'record_type': RECORD_TYPE_TOPIC,
+    'id': topic.id,
+    'name': topic.name,
+    'href': constant('App\\Config\\Routes::TRASH_TOPIC_ROUTE_URL')|replace({'{id}': topic.id}),
+    'restorePath': topic.restorePath,
+    'deletedAt': topic.deletedAt|date('Y-m-d H:i:s')
   }]) %}
 {% endfor %}
 
@@ -43,7 +43,7 @@
   {{ parent() }}
   <script>
     const records = {{ records|json_encode|raw }}.sort((a,b) => a.id - b.id);
-    const RECORD_TYPE_BAG = {{ RECORD_TYPE_BAG }};
+    const RECORD_TYPE_TOPIC = {{ RECORD_TYPE_TOPIC }};
     const RECORD_TYPE_CARD = {{ RECORD_TYPE_CARD }};
   </script>
   <script src="{{ asset('scripts/templates/views/user/trash/index.js') }}"></script>
@@ -60,7 +60,7 @@
       {# Control buttons #}
       <div class="flex items-center gap-2">
         <div class="w-42">
-          <twig:Button variant="danger" class="flex items-center" @click="document.getElementById('permanentDeleteObjectModal').setAttribute('open', true)" x-bind:disabled="!selectedBags.length && !selectedCards.length">
+          <twig:Button variant="danger" class="flex items-center" @click="document.getElementById('permanentDeleteObjectModal').setAttribute('open', true)" x-bind:disabled="!selectedTopics.length && !selectedCards.length">
             <div class="w-5 h-5">
               {{ include('icons/trash.svg') }}
             </div>
@@ -68,7 +68,7 @@
           </twig:Button>
         </div>
         <div class="w-36">
-          <twig:Button variant="primary" class="flex items-center" @click="document.getElementById('restoreObjectModal').setAttribute('open', true)" x-bind:disabled="!selectedBags.length && !selectedCards.length">
+          <twig:Button variant="primary" class="flex items-center" @click="document.getElementById('restoreObjectModal').setAttribute('open', true)" x-bind:disabled="!selectedTopics.length && !selectedCards.length">
             <div class="w-5 h-5">
               {{ include('icons/restore.svg') }}
             </div>
@@ -160,14 +160,14 @@
               <tr x-bind:class="{ 'border-t border-gray-400': index, 'bg-(--blue) text-(--white)': selectedRecord === index }"
               class="cursor-pointer select-none active:opacity-80"
               @click.window="if($el.contains($event.target)) { selectedRecord = index }"
-              @dblclick="record.record_type === RECORD_TYPE_BAG ? window.location.href = record.href : openCardDetailModal(record.id)">
+              @dblclick="record.record_type === RECORD_TYPE_TOPIC ? window.location.href = record.href : openCardDetailModal(record.id)">
                 <td class="p-2">
-                  <template x-if="record.record_type === RECORD_TYPE_BAG">
+                  <template x-if="record.record_type === RECORD_TYPE_TOPIC">
                     <twig:ClickInput
                       type="checkbox"
-                      x-model="selectedBags"
+                      x-model="selectedTopics"
                       x-bind:value="record.id"
-                      x-bind:name="`check_bag_${record.id}`"
+                      x-bind:name="`check_topic_${record.id}`"
                       x-bind:style="{borderColor: selectedRecord === index ? 'var(--white)' : ''}"
                       class="cursor-default!"
                       @dblclick.stop>
@@ -186,10 +186,10 @@
                   </template>
                 </td>
                 <td class="p-2">
-                  <template x-if="record.record_type === RECORD_TYPE_BAG">
+                  <template x-if="record.record_type === RECORD_TYPE_TOPIC">
                     <div class="flex items-center gap-1">
                       <div class="w-4 h-4">
-                        {{ include('icons/folder.svg') }}
+                        {{ include('icons/topic.svg') }}
                       </div>
                       <div x-text="record.name"></div>
                     </div>
@@ -203,8 +203,8 @@
                     </div>
                   </template>
                 </td>
-                <template x-if="record.record_type === RECORD_TYPE_BAG">
-                  <td class="p-2">{{ 'trash.type_bag'|trans }}</td>
+                <template x-if="record.record_type === RECORD_TYPE_TOPIC">
+                  <td class="p-2">{{ 'trash.type_topic'|trans }}</td>
                 </template>
                 <template x-if="record.record_type === RECORD_TYPE_CARD">
                   <td class="p-2">{{ 'trash.type_card'|trans }}</td>
@@ -226,11 +226,11 @@
 {% endblock %}
 
 {% block modals %}
-  <twig:Modal x-data="{ selectedBags: [], selectedCards: [] }" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'trash.permanent_delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="submitForm($refs.permanentDeleteObjectFormRef)" id="permanentDeleteObjectModal">
+  <twig:Modal x-data="{ selectedTopics: [], selectedCards: [] }" @update-select-topic.window="selectedTopics = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'trash.permanent_delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="submitForm($refs.permanentDeleteObjectFormRef)" id="permanentDeleteObjectModal">
     <twig:block name="modal_body">
       <twig:Form x-ref="permanentDeleteObjectFormRef" action="{{ constant('App\\Config\\Routes::PERMANENT_DELETE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
-        <template x-for="selectedBag in selectedBags">
-          <input type="hidden" name="bag[]" :value="selectedBag">
+        <template x-for="selectedTopic in selectedTopics">
+          <input type="hidden" name="topic[]" :value="selectedTopic">
         </template>
         <template x-for="selectedCard in selectedCards">
           <input type="hidden" name="card[]" :value="selectedCard">
@@ -246,11 +246,11 @@
       </el-dialog-panel>
     </twig:block>
   </twig:Modal>
-  <twig:Modal x-data="{ selectedBags: [], selectedCards: [] }" @update-select-bag.window="selectedBags = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.restore'|trans }}" actionButtonText="{{ 'action.restore'|trans }}" actionButtonVariant="primary" @modal-action="submitForm($refs.restoreObjectFormRef)" id="restoreObjectModal">
+  <twig:Modal x-data="{ selectedTopics: [], selectedCards: [] }" @update-select-topic.window="selectedTopics = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.restore'|trans }}" actionButtonText="{{ 'action.restore'|trans }}" actionButtonVariant="primary" @modal-action="submitForm($refs.restoreObjectFormRef)" id="restoreObjectModal">
     <twig:block name="modal_body">
       <twig:Form x-ref="restoreObjectFormRef" action="{{ constant('App\\Config\\Routes::RESTORE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
-        <template x-for="selectedBag in selectedBags">
-          <input type="hidden" name="bag[]" :value="selectedBag">
+        <template x-for="selectedTopic in selectedTopics">
+          <input type="hidden" name="topic[]" :value="selectedTopic">
         </template>
         <template x-for="selectedCard in selectedCards">
           <input type="hidden" name="card[]" :value="selectedCard">

@@ -3,12 +3,12 @@ document.addEventListener('alpine:init', () =>
   Alpine.data('trashData', () => ({
     normalInputClass: "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer select-none border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500 !text-base",
     records,
-    RECORD_TYPE_BAG,
+    RECORD_TYPE_TOPIC,
     RECORD_TYPE_CARD,
     filteredRecords: [...records],
     unSortedFilteredRecords: [...records],
     selectCard: '',
-    selectedBags: [],
+    selectedTopics: [],
     selectedCards: [],
     sort: {
       column: null,
@@ -43,10 +43,10 @@ document.addEventListener('alpine:init', () =>
 
       this.filteredRecords = this.records.filter(record =>
       {
-        if (record.record_type === this.RECORD_TYPE_BAG)
+        if (record.record_type === this.RECORD_TYPE_TOPIC)
         {
-          const normalizedBagName = this.removeDiacritics(record.name.toLowerCase());
-          return searchKeywords.some(keyword => normalizedBagName.includes(keyword));
+          const normalizedTopicName = this.removeDiacritics(record.name.toLowerCase());
+          return searchKeywords.some(keyword => normalizedTopicName.includes(keyword));
         } else if (record.record_type === this.RECORD_TYPE_CARD) {
           const normalizedCardTitle = this.removeDiacritics(record.title.toLowerCase());
           return searchKeywords.some(keyword => normalizedCardTitle.includes(keyword));
@@ -60,8 +60,8 @@ document.addEventListener('alpine:init', () =>
     checkAllRecords() {
       this.$refs.check_all_records.checked = this.filteredRecords.length && this.filteredRecords.every(record =>
       {
-        if (record.record_type === this.RECORD_TYPE_BAG) {
-          return this.selectedBags.some(id => id == record.id);
+        if (record.record_type === this.RECORD_TYPE_TOPIC) {
+          return this.selectedTopics.some(id => id == record.id);
         } else if (record.record_type === this.RECORD_TYPE_CARD) {
           return this.selectedCards.some(id => id == record.id);
         }
@@ -71,14 +71,14 @@ document.addEventListener('alpine:init', () =>
     {
       const value = event.target.checked;
 
-      const filteredBags = this.filteredRecords.filter(r => r.record_type === this.RECORD_TYPE_BAG);
+      const filteredTopics = this.filteredRecords.filter(r => r.record_type === this.RECORD_TYPE_TOPIC);
       const filteredCards = this.filteredRecords.filter(r => r.record_type === this.RECORD_TYPE_CARD);
 
       if (value) {
-        this.selectedBags = filteredBags.map(r => r.id);
+        this.selectedTopics = filteredTopics.map(r => r.id);
         this.selectedCards = filteredCards.map(r => r.id);
       } else {
-        this.selectedBags = this.selectedBags.filter(id => !filteredBags.some(r => r.id == id));
+        this.selectedTopics = this.selectedTopics.filter(id => !filteredTopics.some(r => r.id == id));
         this.selectedCards = this.selectedCards.filter(id => !filteredCards.some(r => r.id == id));
       }
     },
@@ -126,8 +126,8 @@ document.addEventListener('alpine:init', () =>
     },
     init()
     {
-      this.$watch('selectedBags', () => {
-        this.$dispatch('update-select-bag', this.selectedBags);
+      this.$watch('selectedTopics', () => {
+        this.$dispatch('update-select-topic', this.selectedTopics);
         this.checkAllRecords();
       });
       this.$watch('selectedCards', () => {

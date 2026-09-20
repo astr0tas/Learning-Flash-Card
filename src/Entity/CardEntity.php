@@ -22,7 +22,7 @@ class CardEntity extends BaseEntity
   #[ORM\Column(type: 'string', length: Constraints::CARD_DESCRIPTION_MAX_LENGTH, nullable: true)]
   private ?string $description = null;
 
-  #[ORM\Column(type: 'string', length: 10, options: ['default' => Constants::FLASH_CARD_DEFAULT_TYPE, 'comment' => 'Possible values: ' . Constants::FLASH_CARD_BAG_TYPES_STR])]
+  #[ORM\Column(type: 'string', length: 10, options: ['default' => Constants::FLASH_CARD_DEFAULT_TYPE, 'comment' => 'Possible values: ' . Constants::FLASH_CARD_TYPES_STR])]
   private string $cardType = Constants::FLASH_CARD_DEFAULT_TYPE;
 
   #[ORM\Column(type: 'string', length: 10, options: ['default' => Constants::FLASH_CARD_DEFAULT_COLOR])]
@@ -31,9 +31,9 @@ class CardEntity extends BaseEntity
   #[ORM\Column(type: 'string', length: 10, options: ['default' => Constants::FLASH_CARD_DEFAULT_TEXT_COLOR])]
   private string $cardTextColor = Constants::FLASH_CARD_DEFAULT_TEXT_COLOR;
 
-  #[ORM\ManyToOne(targetEntity: CardBagEntity::class, inversedBy: 'cardEntities')]
-  #[ORM\JoinColumn(name: 'card_bag_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
-  private ?CardBagEntity $cardBagEntity = null;
+  #[ORM\ManyToOne(targetEntity: TopicEntity::class, inversedBy: 'cardEntities')]
+  #[ORM\JoinColumn(name: 'topic_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
+  private ?TopicEntity $topicEntity = null;
 
   #[ORM\ManyToOne(targetEntity: UserEntity::class, inversedBy: 'cardEntities')]
   #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
@@ -84,25 +84,25 @@ class CardEntity extends BaseEntity
   }
 
   /**
-   * Get the value of cardBagEntity
+   * Get the value of topicEntity
    *
-   * @return ?CardBagEntity
+   * @return ?TopicEntity
    */
-  public function getCardBagEntity(): ?CardBagEntity
+  public function getTopicEntity(): ?TopicEntity
   {
-    return $this->cardBagEntity;
+    return $this->topicEntity;
   }
 
   /**
-   * Set the value of cardBagEntity
+   * Set the value of topicEntity
    *
-   * @param ?CardBagEntity $cardBagEntity
+   * @param ?TopicEntity $topicEntity
    *
    * @return self
    */
-  public function setCardBagEntity(?CardBagEntity $cardBagEntity): self
+  public function setTopicEntity(?TopicEntity $topicEntity): self
   {
-    $this->cardBagEntity = $cardBagEntity;
+    $this->topicEntity = $topicEntity;
 
     return $this;
   }

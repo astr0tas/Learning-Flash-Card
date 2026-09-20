@@ -8,10 +8,10 @@ use App\Config\Routes;
 use App\Config\TwigTemplate;
 use App\Controller\BaseController;
 use App\DTO\EditCardDTO;
-use App\DTO\NewBagDTO;
+use App\DTO\NewTopicDTO;
 use App\DTO\NewCardDTO;
 use App\DTO\SelectObjectDTO;
-use App\Service\CardBagService;
+use App\Service\TopicService;
 use App\Utility\ClassUtility;
 use App\Utility\Utility;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,77 +19,77 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-class CardBagController extends BaseController
+class TopicController extends BaseController
 {
-  public function __construct(private CardBagService $service) {}
+  public function __construct(private TopicService $service) {}
 
-  #[Route(path: Routes::CARD_BAG_ROUTE_URL, name: Routes::CARD_BAG_ROUTE_NAME, methods: [Request::METHOD_GET])]
+  #[Route(path: Routes::TOPIC_ROUTE_URL, name: Routes::TOPIC_ROUTE_NAME, methods: [Request::METHOD_GET])]
   public function index()
   {
     $error = $this->getErrorFlash();
-    $breadcrumb = [['icon' => $this->renderView('icons/folder.svg'), 'label' => $this->translator->trans('menu.card_bag'), 'url' => Routes::CARD_BAG_ROUTE_URL, 'id' => null]];
+    $breadcrumb = [['icon' => $this->renderView('icons/topic.svg'), 'label' => $this->translator->trans('menu.topic'), 'url' => Routes::TOPIC_ROUTE_URL, 'id' => null]];
 
-    return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG, parameters: [
+    return $this->render(view: TwigTemplate::PAGE_USER_TOPIC, parameters: [
       'error' => $error,
-      'bagList' => $this->service->getBagList(null),
+      'topicList' => $this->service->getTopicList(null),
       'cardList' => $this->service->getCardList(null),
       'breadcrumb' => $breadcrumb,
     ]);
   }
 
-  #[Route(path: Routes::CARD_BAG_DETAIL_ROUTE_URL, name: Routes::CARD_BAG_DETAIL_ROUTE_NAME, methods: [Request::METHOD_GET])]
-  public function bagDetail(int $id)
+  #[Route(path: Routes::TOPIC_DETAIL_ROUTE_URL, name: Routes::TOPIC_DETAIL_ROUTE_NAME, methods: [Request::METHOD_GET])]
+  public function topicDetail(int $id)
   {
     $error = $this->getErrorFlash();
-    $bag = $this->service->getBag($id);
+    $topic = $this->service->getTopic($id);
 
-    if ($bag === null) {
-      throw $this->createNotFoundException($this->translator->trans('card_bag.bag_not_found'));
+    if ($topic === null) {
+      throw $this->createNotFoundException($this->translator->trans('topic.topic_not_found'));
     }
 
-    $cards = $bag->getCardEntities();
-    $childrenBags = $bag->getChildrenCardBagEntities();
-    $bagTree = $this->service->getBagTree($id);
+    $cards = $topic->getCardEntities();
+    $childrenTopics = $topic->getChildrenTopicEntities();
+    $topicTree = $this->service->getTopicTree($id);
 
-    // Convert the bag tree to breadcrumbs array
-    $breadcrumb = [['icon' => $this->renderView('icons/folder.svg'), 'label' => $this->translator->trans('menu.card_bag'), 'url' => Routes::CARD_BAG_ROUTE_URL, 'id' => null]];
-    $breadcrumb = $this->service->parseBagTreeToBreadcrumb($bagTree, $breadcrumb);
+    // Convert the topic tree to breadcrumbs array
+    $breadcrumb = [['icon' => $this->renderView('icons/topic.svg'), 'label' => $this->translator->trans('menu.topic'), 'url' => Routes::TOPIC_ROUTE_URL, 'id' => null]];
+    $breadcrumb = $this->service->parseTopicTreeToBreadcrumb($topicTree, $breadcrumb);
 
-    return $this->render(view: TwigTemplate::PAGE_USER_CARD_BAG, parameters: [
+    return $this->render(view: TwigTemplate::PAGE_USER_TOPIC, parameters: [
       'error' => $error,
-      'bagList' => $childrenBags,
+      'topicList' => $childrenTopics,
       'cardList' => $cards,
-      'bag' => $bag,
+      'topic' => $topic,
       'breadcrumb' => $breadcrumb
     ]);
   }
 
-  #[Route(path: Routes::CREATE_NEW_BAG_ROUTE_URL, name: Routes::CREATE_NEW_BAG_ROUTE_NAME, methods: [Request::METHOD_POST])]
-  public function createNewBag(Request $request)
+  #[Route(path: Routes::CREATE_NEW_TOPIC_ROUTE_URL, name: Routes::CREATE_NEW_TOPIC_ROUTE_NAME, methods: [Request::METHOD_POST])]
+  public function createNewTopic(Request $request)
   {
     $flashBag = $this->getFlashBag();
 
     // Get the previous route to redirect back to it
-    $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
+    $previousRoute = $request->headers->get('referer') ?? Routes::TOPIC_ROUTE_URL;
 
     $postData = $request->request->all();
 
     // Pass the form data to a DTO
-    $dto = new NewBagDTO();
+    $dto = new NewTopicDTO();
     ClassUtility::mapArrayToDTO($postData, $dto);
 
     // Validate post data
     $fields = [
-      'newBagName' => [
-        new Assert\NotBlank(message: $this->translator->trans('validation.new_bag.name_not_blank')),
-        new Assert\Length(max: Constraints::CARD_BAG_NAME_MAX_LENGTH, maxMessage: $this->translator->trans('validation.new_bag.name_too_long', ['limit' => Constraints::CARD_BAG_NAME_MAX_LENGTH])),
+      'newTopicName' => [
+        new Assert\NotBlank(message: $this->translator->trans('validation.new_topic.name_not_blank')),
+        new Assert\Length(max: Constraints::TOPIC_NAME_MAX_LENGTH, maxMessage: $this->translator->trans('validation.new_topic.name_too_long', ['limit' => Constraints::TOPIC_NAME_MAX_LENGTH])),
       ]
     ];
     $globals = [
       new Assert\Callback(callback: function (array $data, ExecutionContextInterface $context) {
-        if (count($this->service->getBagByNameAndParentId($data['newBagName'], $data['parentBag'] ?: null)) > 0) {
-          $context->buildViolation($this->translator->trans('validation.new_bag.name_exist'))
-            ->atPath('[newBagName]')
+        if (count($this->service->getTopicByNameAndParentId($data['newTopicName'], $data['parentTopic'] ?: null)) > 0) {
+          $context->buildViolation($this->translator->trans('validation.new_topic.name_exist'))
+            ->atPath('[newTopicName]')
             ->addViolation();
         }
       })
@@ -97,17 +97,17 @@ class CardBagController extends BaseController
     $error = ClassUtility::validateInputDTO($dto, $fields, $globals);
 
     if (count($error) > 0) {
-      $flashBag->add('newBagError', $error);
-      $flashBag->add('newBagName', $dto->getNewBagName());
+      $flashBag->add('newTopicError', $error);
+      $flashBag->add('newTopicName', $dto->getNewTopicName());
       return $this->redirect($previousRoute);
     }
 
-    // $newBag = $this->service->addNewBag($dto);
-    $this->service->addNewBag($dto);
+    // $newTopic = $this->service->addNewTopic($dto);
+    $this->service->addNewTopic($dto);
 
-    Utility::addNoticeToSessionFlash($this->session, 'success', $this->translator->trans('card_bag.new_bag_created'));
+    Utility::addNoticeToSessionFlash($this->session, 'success', $this->translator->trans('topic.new_topic_created'));
 
-    // $redirectUrl = str_replace('{id}', $newBag->getId(), Routes::CARD_BAG_DETAIL_ROUTE_URL);
+    // $redirectUrl = str_replace('{id}', $newTopic->getId(), Routes::TOPIC_DETAIL_ROUTE_URL);
     // return $this->redirect($redirectUrl);
     return $this->redirect($previousRoute);
   }
@@ -118,7 +118,7 @@ class CardBagController extends BaseController
     $flashBag = $this->getFlashBag();
 
     // Get the previous route to redirect back to it
-    $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
+    $previousRoute = $request->headers->get('referer') ?? Routes::TOPIC_ROUTE_URL;
 
     $postData = $request->request->all();
 
@@ -140,7 +140,7 @@ class CardBagController extends BaseController
       ],
       'cardType' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.card.card_type_not_blank')),
-        new Assert\Choice(choices: Constants::FLASH_CARD_BAG_TYPES, message: $this->translator->trans('validation.card.card_type_invalid'))
+        new Assert\Choice(choices: Constants::FLASH_CARD_TYPES, message: $this->translator->trans('validation.card.card_type_invalid'))
       ],
       'cardColor' => [
         new Assert\CssColor(message: $this->translator->trans('validation.color.invalid_color')),
@@ -164,7 +164,7 @@ class CardBagController extends BaseController
 
     $this->service->addNewCard($dto);
 
-    Utility::addNoticeToSessionFlash($this->session, 'success', $this->translator->trans('card_bag.new_card_created'));
+    Utility::addNoticeToSessionFlash($this->session, 'success', $this->translator->trans('topic.new_card_created'));
 
     return $this->redirect($previousRoute);
   }
@@ -173,7 +173,7 @@ class CardBagController extends BaseController
   public function deleteObject(Request $request)
   {
     // Get the previous route to redirect back to it
-    $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
+    $previousRoute = $request->headers->get('referer') ?? Routes::TOPIC_ROUTE_URL;
 
     $postData = $request->request->all();
 
@@ -183,7 +183,7 @@ class CardBagController extends BaseController
 
     $this->service->deleteObject($dto);
 
-    Utility::addNoticeToSessionFlash($this->session, 'info', $this->translator->trans('card_bag.object_deleted'));
+    Utility::addNoticeToSessionFlash($this->session, 'info', $this->translator->trans('topic.object_deleted'));
 
     return $this->redirect($previousRoute);
   }
@@ -194,7 +194,7 @@ class CardBagController extends BaseController
     $flashBag = $this->getFlashBag();
 
     // Get the previous route to redirect back to it
-    $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
+    $previousRoute = $request->headers->get('referer') ?? Routes::TOPIC_ROUTE_URL;
 
     $postData = $request->request->all();
 
@@ -203,7 +203,7 @@ class CardBagController extends BaseController
     ClassUtility::mapArrayToDTO($postData, $dto);
 
     if ($this->service->getCard($dto->getCard()) === null) {
-      Utility::addNoticeToSessionFlash($this->session, 'error', $this->translator->trans('card_bag.no_card_found'));
+      Utility::addNoticeToSessionFlash($this->session, 'error', $this->translator->trans('topic.no_card_found'));
       return $this->redirect($previousRoute);
     }
 
@@ -221,7 +221,7 @@ class CardBagController extends BaseController
       ],
       'cardType' => [
         new Assert\NotBlank(message: $this->translator->trans('validation.card.card_type_not_blank')),
-        new Assert\Choice(choices: Constants::FLASH_CARD_BAG_TYPES, message: $this->translator->trans('validation.card.card_type_invalid'))
+        new Assert\Choice(choices: Constants::FLASH_CARD_TYPES, message: $this->translator->trans('validation.card.card_type_invalid'))
       ],
       'cardColor' => [
         new Assert\CssColor(message: $this->translator->trans('validation.color.invalid_color')),
@@ -246,7 +246,7 @@ class CardBagController extends BaseController
 
     $this->service->editCard($dto);
 
-    Utility::addNoticeToSessionFlash($this->session, 'success', $this->translator->trans('card_bag.card_edit_success'));
+    Utility::addNoticeToSessionFlash($this->session, 'success', $this->translator->trans('topic.card_edit_success'));
 
     return $this->redirect($previousRoute);
   }
@@ -255,7 +255,7 @@ class CardBagController extends BaseController
   public function moveObject(Request $request)
   {
     // Get the previous route to redirect back to it
-    $previousRoute = $request->headers->get('referer') ?? Routes::CARD_BAG_ROUTE_URL;
+    $previousRoute = $request->headers->get('referer') ?? Routes::TOPIC_ROUTE_URL;
 
     $postData = $request->request->all();
 
@@ -263,22 +263,22 @@ class CardBagController extends BaseController
 
     ClassUtility::mapArrayToDTO($postData, $dto);
 
-    $newParentBag = $dto->getNewParentBag();
+    $newParentTopic = $dto->getNewParentTopic();
 
-    if ($newParentBag !== null && $this->service->getBag($newParentBag) === null) {
-      Utility::addNoticeToSessionFlash($this->session, 'error', $this->translator->trans('card_bag.bag_not_found'));
+    if ($newParentTopic !== null && $this->service->getTopic($newParentTopic) === null) {
+      Utility::addNoticeToSessionFlash($this->session, 'error', $this->translator->trans('topic.topic_not_found'));
       return $this->redirect($previousRoute);
     }
 
     $this->service->moveObject($dto);
 
-    Utility::addNoticeToSessionFlash($this->session, 'info', $this->translator->trans('card_bag.object_moved'));
+    Utility::addNoticeToSessionFlash($this->session, 'info', $this->translator->trans('topic.object_moved'));
 
-    if ($newParentBag !== null) {
-      $redirectUrl = str_replace('{id}', $newParentBag, Routes::CARD_BAG_DETAIL_ROUTE_URL);
+    if ($newParentTopic !== null) {
+      $redirectUrl = str_replace('{id}', $newParentTopic, Routes::TOPIC_DETAIL_ROUTE_URL);
       return $this->redirect($redirectUrl);
     } else {
-      return $this->redirect(Routes::CARD_BAG_ROUTE_URL);
+      return $this->redirect(Routes::TOPIC_ROUTE_URL);
     }
   }
 
@@ -292,12 +292,12 @@ class CardBagController extends BaseController
 
     $flashBag = $this->getFlashBag();
 
-    // Get flash errors when creating new bag
-    if ($flashBag->has('newBagError')) {
-      $flashErrors = $flashBag->get('newBagError')[0];
-      $flashNewBagName = $flashBag->get('newBagName')[0];
-      $errors['newBagName'] = $flashNewBagName;
-      $errors['newBagError'] = $flashErrors;
+    // Get flash errors when creating new topic
+    if ($flashBag->has('newTopicError')) {
+      $flashErrors = $flashBag->get('newTopicError')[0];
+      $flashNewTopicName = $flashBag->get('newTopicName')[0];
+      $errors['newTopicName'] = $flashNewTopicName;
+      $errors['newTopicError'] = $flashErrors;
     }
 
     // Get flash errors when creating new card

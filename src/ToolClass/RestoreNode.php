@@ -2,14 +2,14 @@
 
 namespace App\ToolClass;
 
-use App\Entity\CardBagEntity;
+use App\Entity\TopicEntity;
 use App\Entity\CardEntity;
 
 class RestoreNode
 {
   private bool $isRoot = false;
   // private ?CardEntity $card = null;
-  private ?CardBagEntity $cardBag = null;
+  private ?TopicEntity $topic = null;
   /**
    * @var RestoreNode[]
    */
@@ -100,25 +100,25 @@ class RestoreNode
   // }
 
   /**
-   * Get the value of cardBag
+   * Get the value of topic
    *
-   * @return ?CardBagEntity
+   * @return ?TopicEntity
    */
-  public function getCardBag(): ?CardBagEntity
+  public function getTopic(): ?TopicEntity
   {
-    return $this->cardBag;
+    return $this->topic;
   }
 
   /**
-   * Set the value of cardBag
+   * Set the value of topic
    *
-   * @param ?CardBagEntity $cardBag
+   * @param ?TopicEntity $topic
    *
    * @return self
    */
-  public function setCardBag(?CardBagEntity $cardBag): self
+  public function setTopic(?TopicEntity $topic): self
   {
-    $this->cardBag = $cardBag;
+    $this->topic = $topic;
 
     return $this;
   }

@@ -1,0 +1,8 @@
+<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none"
+  xmlns="http://www.w3.org/2000/svg">
+  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+  <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+  <g id="SVGRepo_iconCarrier">
+    <path d="M6,23H20a1,1,0,0,0,1-1V2a1,1,0,0,0-1-1H6A3,3,0,0,0,3,4V20A3,3,0,0,0,6,23ZM5,4A1,1,0,0,1,6,3H7v9l2.5-2L12,12V3h7V21H6a1,1,0,0,1-1-1Z" fill="currentColor"></path>
+  </g>
+</svg>
