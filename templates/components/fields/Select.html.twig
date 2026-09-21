@@ -1,0 +1,49 @@
+{% set name = name|default(id) %}
+{% set id = id|default(name) %}
+{% set display_ref = id ~ '_select_display_div' %}
+{# force text size to be base #}
+{% set base_class = "w-full rounded-lg ps-3.5 pe-7 py-3 outline-none focus:ring-2 focus:ring-offset-0 peer-focus:ring-2 peer-focus:ring-offset-0 transition-all peer select-none !text-base" %}
+{% set normal_border = "border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500 peer-focus:ring-blue-200 peer-focus:ring-offset-white peer-focus:border-blue-500" %}
+{% set error_border = "border border-[var(--red)] text-red-900 placeholder-red-700 focus:ring-red-300 peer-focus:ring-red-300" %}
+{% set normal_class = base_class ~ ' ' ~ normal_border %}
+{% set final_class = error is empty ? normal_class : base_class ~ ' ' ~ error_border %}
+
+{# The real <select> is transparent and sits above the styled display div, so both need their class kept in sync. #}
+{% set on_change %}
+  $refs.{{ display_ref }}.innerHTML = $el.options[$el.selectedIndex]?.text || '&nbsp;';
+{% endset %}
+{% set on_reset %}
+  $refs.{{ name }}_error?.remove();
+  $el.className = '{{ normal_class }} absolute z-20 opacity-0';
+  $refs.{{ display_ref }}.className = '{{ normal_class }}';
+  $el.value = '{{ defaultValue }}';
+  $dispatch('change');
+{% endset %}
+{% set on_set %}
+  $el.value = $event.detail || '{{ defaultValue }}';
+  $dispatch('change');
+{% endset %}
+
+<div class="w-full flex flex-col component-input">
+  {{ include('components/fields/_field_label.html.twig') }}
+
+  <div class="w-full relative">
+    <select x-ref="{{ id }}" name="{{ name }}" id="{{ id }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class ~ " absolute z-20 opacity-0" }) }} placeholder="" default="{{ defaultValue }}" x-on:change="{{ on_change }}" x-on:reset="{{ on_reset }}" x-on:set="{{ on_set }}">
+      <option value="" class="hidden"></option>
+      {% block options %}{% endblock %}
+    </select>
+    <div class="{{ final_class }}" x-ref="{{ display_ref }}" id="{{ display_ref }}">
+      &nbsp;
+    </div>
+    <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500 z-20">
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+      </svg>
+    </div>
+  </div>
+  {% if error is not empty %}
+    <div id="{{ name }}_error" x-ref="{{ name }}_error" class="mt-1 text-xs text-(--red)">
+      {{ error }}
+    </div>
+  {% endif %}
+</div>

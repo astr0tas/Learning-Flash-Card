@@ -9,7 +9,7 @@
 
 {% for topic in topicList %}
   {% set topicTemplate %}
-    <twig:Topic topicId="{{ topic.id }}" topicName="{{ topic.name }}" model="selectedTopics" href="{{ constant('App\\Config\\Routes::TOPIC_DETAIL_ROUTE_URL')|replace({'{id}': topic.id}) }}"/>
+  <twig:Topic topicId="{{ topic.id }}" topicName="{{ topic.name }}" model="selectedTopics" href="{{ constant('App\\Config\\Routes::TOPIC_DETAIL_ROUTE_URL')|replace({'{id}': topic.id}) }}" />
   {% endset %}
 
   {% set topic_array = topic_array|merge([{
@@ -21,7 +21,7 @@
 
 {% for card in cardList %}
   {% set cardTemplate %}
-    <twig:Card :listMode="true" cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubtitle="{{ card.subtitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" cardType="{{ card.cardType }}" model="selectedCards"/>
+  <twig:cards:ListCard cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubtitle="{{ card.subtitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" model="selectedCards" />
   {% endset %}
 
   {% set card_array = card_array|merge([{
@@ -65,8 +65,8 @@
     {# Header panel #}
     <div class="flex items-center justify-between gap-2">
       {# Search bar #}
-      <div class="w-full max-w-[700px]" @search="filterTopicAndCard(document.getElementById('search').value)">
-        <twig:Input type="search" name="search" placeholder="{{ 'topic.search_placeholder'|trans }}" size="9xl" @keyup.enter="filterTopicAndCard(document.getElementById('search').value)"/>
+      <div class="w-full max-w-175" @search="filterTopicAndCard(document.getElementById('search').value)">
+        <twig:Input type="search" name="search" placeholder="{{ 'topic.search_placeholder'|trans }}" size="9xl" @keyup.enter="filterTopicAndCard(document.getElementById('search').value)" />
       </div>
       {# Control buttons #}
       <div class="flex items-center gap-2">
@@ -133,7 +133,9 @@
         {# List of topics #}
         <template x-if="filteredTopicList.length">
           <div class="flex flex-col gap-5">
-            <h2 class="font-medium text-xl">{{ 'topic.topic_list'|trans }}</h2>
+            <h2 class="font-medium text-xl">
+              {{ 'topic.topic_list'|trans }}
+            </h2>
             <div class="gap-4 grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))]">
               <template x-for="topic in filteredTopicList">
                 <div class="w-full" x-html="topic.html"></div>
@@ -142,12 +144,14 @@
           </div>
         </template>
         <template x-if="filteredTopicList.length && filteredCardList.length">
-          <hr class="border-gray-300"/>
+          <hr class="border-gray-300" />
         </template>
         {# List of cards #}
         <template x-if="filteredCardList.length">
           <div class="flex flex-col gap-3">
-            <h2 class="font-medium text-xl">{{ 'topic.card_list'|trans }}</h2>
+            <h2 class="font-medium text-xl">
+              {{ 'topic.card_list'|trans }}
+            </h2>
             <div class="gap-4 grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))]">
               <template x-for="(card,index) in filteredCardList">
                 <div class="w-full h-75" x-bind:class="darkMode?'hover:shadow-gray-700 hover:shadow-2xl':'hover:shadow-xl'" x-html="card.html" @click="openCardDetailModal(card.id)"></div>
@@ -170,10 +174,10 @@
     <twig:block name="modal_body">
       <twig:Form x-ref="newTopicFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_TOPIC_ROUTE_URL') }}" method="POST">
         {% if topic is defined %}
-          <twig:Input hidden name="parent_topic" value="{{ topic.id }}"/>
+          <twig:Input hidden name="parent_topic" value="{{ topic.id }}" />
         {% endif %}
         <div class="mb-3">
-          <twig:Input type="text" name="new_topic_name" label="{{ 'topic.topic_name'|trans }}" aria-label="{{ 'topic.topic_name'|trans }}" required value="{{ new_topic_name }}" error="{{ error.newTopicError is defined and error.newTopicError.new_topic_name is defined ? error.newTopicError.new_topic_name[0] : '' }}" maxlength="{{ constant('App\\Config\\Constraints::TOPIC_NAME_MAX_LENGTH') }}"/>
+          <twig:Input type="text" name="new_topic_name" label="{{ 'topic.topic_name'|trans }}" aria-label="{{ 'topic.topic_name'|trans }}" required value="{{ new_topic_name }}" error="{{ error.newTopicError is defined and error.newTopicError.new_topic_name is defined ? error.newTopicError.new_topic_name[0] : '' }}" maxlength="{{ constant('App\\Config\\Constraints::TOPIC_NAME_MAX_LENGTH') }}" />
         </div>
       </twig:Form>
     </twig:block>
@@ -182,7 +186,7 @@
     <twig:block name="modal_content">
       <el-dialog-panel class="w-full max-w-125 h-150">
         <twig:Form x-ref="newCardFormRef" action="{{ constant('App\\Config\\Routes::CREATE_NEW_CARD_ROUTE_URL') }}" method="POST" class="flex flex-col gap-3">
-          <twig:Card :createMode="true" :error="error" :topicId="topic is defined ? topic.id : null"></twig:Card>
+          <twig:cards:AddCard :error="error" :topicId="topic is defined ? topic.id : null" />
         </twig:Form>
       </el-dialog-panel>
     </twig:block>
@@ -191,89 +195,89 @@
     <twig:block name="modal_body">
       <twig:Form x-ref="moveObjectFormRef" action="{{ constant('App\\Config\\Routes::MOVE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
         <template x-for="selectedTopic in selectedTopics">
-          <input type="hidden" name="topic[]" :value="selectedTopic">
-        </template>
-        <template x-for="selectedCard in selectedCards">
-          <input type="hidden" name="card[]" :value="selectedCard">
-        </template>
-        <input type="hidden" name="newParentTopic" :value="newParentTopic">
-      </twig:Form>
-      <div class="flex flex-col gap-10">
-        <div class="flex flex-col gap-5">
-          <twig:Breadcrumb :items="objectMovingBreadcrumb" id="objectMovingBreadcrumb"></twig:Breadcrumb>
-          <div class="w-full" @search="searchFilter = document.getElementById('search2').value">
-            <twig:Input type="search" name="search2" placeholder="{{ 'topic.search_placeholder2'|trans }}" size="9xl" @keyup.enter="searchFilter = document.getElementById('search2').value"/>
-          </div>
-        </div>
-        <template x-if="filteredParentTopicContent.length && !isLoading">
-          <div class="flex flex-col gap-3">
-            <div class="flex flex-col overflow-auto hide-browser-scollbar">
-              <table>
-                <thead>
-                  <tr class="border-b border-gray-400 select-none">
-                    <th class="text-start py-2">{{ 'topic.topic'|trans }}</th>
-                    <th class="w-50 text-start py-2">{{ 'topic.created_at'|trans }}</th>
-                  </tr>
-                </thead>
-                <tbody x-data="{ selectedRecord: null }" @click.window="selectedRecord = null">
-                  <template x-for="(record,index) in filteredParentTopicContent" :key="record.id">
-                    <tr x-bind:class="{ 'border-t border-gray-400': index, 'bg-(--blue) text-(--white)': selectedRecord === index }"
-                    class="cursor-pointer select-none active:opacity-80"
-                    @click.window="if($el.contains($event.target)) { selectedRecord = index }"
-                    @dblclick="newParentTopic = record.id">
-                      <td class="py-2" x-text="record.name"></td>
-                      <td class="py-2" x-text="dayjs(record.createdAt).format('YYYY-MM-DD HH:mm:ss')"></td>
-                    </tr>
-                  </template>
-                </tbody>
-              </table>
+          <input type="hidden" name="topic[]" :value="selectedTopic"></template>
+          <template x-for="selectedCard in selectedCards">
+            <input type="hidden" name="card[]" :value="selectedCard"></template>
+            <input type="hidden" name="newParentTopic" :value="newParentTopic"></twig:Form>
+            <div class="flex flex-col gap-10">
+              <div class="flex flex-col gap-5">
+                <twig:Breadcrumb :items="objectMovingBreadcrumb" id="objectMovingBreadcrumb"></twig:Breadcrumb>
+                <div class="w-full" @search="searchFilter = document.getElementById('search2').value">
+                  <twig:Input type="search" name="search2" placeholder="{{ 'topic.search_placeholder2'|trans }}" size="9xl" @keyup.enter="searchFilter = document.getElementById('search2').value" />
+                </div>
+              </div>
+              <template x-if="filteredParentTopicContent.length && !isLoading">
+                <div class="flex flex-col gap-3">
+                  <div class="flex flex-col overflow-auto hide-browser-scollbar">
+                    <table>
+                      <thead>
+                        <tr class="border-b border-gray-400 select-none">
+                          <th class="text-start py-2">
+                            {{ 'topic.topic'|trans }}
+                          </th>
+                          <th class="w-50 text-start py-2">
+                            {{ 'topic.created_at'|trans }}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody x-data="{ selectedRecord: null }" @click.window="selectedRecord = null">
+                        <template x-for="(record,index) in filteredParentTopicContent" :key="index">
+                          <tr x-bind:class="{ 'border-t border-gray-400': index, 'bg-(--blue) text-(--white)': selectedRecord === index }" class="cursor-pointer select-none active:opacity-80" @click.window="if($el.contains($event.target)) { selectedRecord = index }" @dblclick="newParentTopic = record.id">
+                            <td class="py-2" x-text="record.name"></td>
+                            <td class="py-2" x-text="dayjs(record.createdAt).format('YYYY-MM-DD HH:mm:ss')"></td>
+                          </tr>
+                        </template>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="text-(--gray) text-sm">
+                    *
+                    {{ 'topic.move_object_note'|trans }}
+                  </div>
+                </div>
+              </template>
+              <template x-if="!filteredParentTopicContent.length && !isLoading">
+                <div class="h-[75px] w-full">
+                  <twig:NoContent></twig:NoContent>
+                </div>
+              </template>
+              <twig:Loading x-show="isLoading" id="topic-content-list-loading" class="opacity-30 h-[75px]!" :displayBackdrop="false"></twig:Loading>
             </div>
-            <div class="text-(--gray) text-sm">
-              *{{ 'topic.move_object_note'|trans }}
-            </div>
-          </div>
-        </template>
-        <template x-if="!filteredParentTopicContent.length && !isLoading">
-          <div class="h-[75px] w-full">
-            <twig:NoContent></twig:NoContent>
-          </div>
-        </template>
-        <twig:Loading x-show="isLoading" id="topic-content-list-loading" class="opacity-30 h-[75px]!" :displayBackdrop="false"></twig:Loading>
-      </div>
-    </twig:block>
-    <twig:block name="action_button">
-      <twig:Button type="button" class="text-sm" variant="primary" title="{{ 'action.confirm'|trans }}" @click="$dispatch('modal-action')" x-bind:disabled="originalParent === newParentTopic" x-bind:class="{ 'cursor-not-allowed!' : originalParent === newParentTopic }">
-        {{ 'action.confirm'|trans }}
-      </twig:Button>
-    </twig:block>
-  </twig:Modal>
-  <twig:Modal x-data="{ selectedTopics: [], selectedCards: [] }" @update-select-topic.window="selectedTopics = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="submitForm($refs.deleteObjectFormRef)" id="deleteObjectModal">
-    <twig:block name="modal_body">
-      <twig:Form x-ref="deleteObjectFormRef" action="{{ constant('App\\Config\\Routes::DELETE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
-        <template x-for="selectedTopic in selectedTopics">
-          <input type="hidden" name="topic[]" :value="selectedTopic">
-        </template>
-        <template x-for="selectedCard in selectedCards">
-          <input type="hidden" name="card[]" :value="selectedCard">
-        </template>
-      </twig:Form>
-      <div>{{ 'topic.delete_confirm'|trans }}</div>
-    </twig:block>
-  </twig:Modal>
-  <twig:Modal id="cardDetailModal" @close-view-card-modal.window="$el.removeAttribute('open')">
-    <twig:block name="modal_content">
-      <el-dialog-panel class="w-full max-w-125 h-150">
-        <twig:Card :viewMode="true"></twig:Card>
-      </el-dialog-panel>
-    </twig:block>
-  </twig:Modal>
-  <twig:Modal @close="$dispatch('set-edit-card-inputs')" open="{{ error.editCardError is defined }}" @submit-form="submitForm($refs.editCardFormRef)" @close-edit-card-modal="document.getElementById('editCardModal').removeAttribute('open'); setTimeout(()=>{$dispatch('close')},250)" id="editCardModal">
-    <twig:block name="modal_content">
-      <el-dialog-panel class="w-full max-w-125 h-150">
-        <twig:Form x-ref="editCardFormRef" action="{{ constant('App\\Config\\Routes::UPDATE_CARD_ROUTE_URL') }}" method="POST" class="flex flex-col gap-3">
-          <twig:Card :editMode="true" :error="error"></twig:Card>
-        </twig:Form>
-      </el-dialog-panel>
-    </twig:block>
-  </twig:Modal>
-{% endblock %}
+          </twig:block>
+          <twig:block name="action_button">
+            <twig:Button type="button" class="text-sm" variant="primary" title="{{ 'action.confirm'|trans }}" @click="$dispatch('modal-action')" x-bind:disabled="originalParent === newParentTopic" x-bind:class="{ 'cursor-not-allowed!' : originalParent === newParentTopic }">
+              {{ 'action.confirm'|trans }}
+            </twig:Button>
+          </twig:block>
+        </twig:Modal>
+        <twig:Modal x-data="{ selectedTopics: [], selectedCards: [] }" @update-select-topic.window="selectedTopics = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.delete'|trans }}" actionButtonText="{{ 'action.delete'|trans }}" actionButtonVariant="danger" @modal-action="submitForm($refs.deleteObjectFormRef)" id="deleteObjectModal">
+          <twig:block name="modal_body">
+            <twig:Form x-ref="deleteObjectFormRef" action="{{ constant('App\\Config\\Routes::DELETE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
+              <template x-for="selectedTopic in selectedTopics">
+                <input type="hidden" name="topic[]" :value="selectedTopic"></template>
+                <template x-for="selectedCard in selectedCards">
+                  <input type="hidden" name="card[]" :value="selectedCard"></template>
+                </twig:Form>
+                <div>
+                  {{ 'topic.delete_confirm'|trans }}
+                </div>
+              </twig:block>
+            </twig:Modal>
+            <twig:Modal id="cardDetailModal" @close-view-card-modal.window="$el.removeAttribute('open')">
+              <twig:block name="modal_content">
+                <el-dialog-panel class="w-full max-w-125 h-150">
+                  <twig:cards:ViewCard/>
+                </el-dialog-panel>
+              </twig:block>
+            </twig:Modal>
+            <twig:Modal @close="$dispatch('set-edit-card-inputs')" open="{{ error.editCardError is defined }}" @submit-form="submitForm($refs.editCardFormRef)" @close-edit-card-modal="document.getElementById('editCardModal').removeAttribute('open'); setTimeout(()=>{$dispatch('close')},250)" id="editCardModal">
+              <twig:block name="modal_content">
+                <el-dialog-panel class="w-full max-w-125 h-150">
+                  <twig:Form x-ref="editCardFormRef" action="{{ constant('App\\Config\\Routes::UPDATE_CARD_ROUTE_URL') }}" method="POST" class="flex flex-col gap-3">
+                    <twig:cards:EditCard :error="error" />
+                  </twig:Form>
+                </el-dialog-panel>
+              </twig:block>
+            </twig:Modal>
+          {% endblock %}
+          

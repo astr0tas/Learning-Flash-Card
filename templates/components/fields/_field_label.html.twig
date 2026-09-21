@@ -1,0 +1,17 @@
+{#
+  Partial, NOT a standalone component: do not render it with <twig:fields:_field_label>
+  or include it from anywhere else. It has no markup of its own beyond the <label> and
+  reads `name` (the resolved field name), `label` and `required` straight from the
+  including template's context, so it only works inside
+  components/fields/Input.html.twig and components/fields/Select.html.twig.
+#}
+{% if label is not empty %}
+  <label {% if name is not empty %} for="{{ name }}" {% endif %} class="text-sm text-zinc-400 mb-1">
+    {{ label }}
+    {% if required %}
+      <span class="text-(--red)">
+        *
+      </span>
+    {% endif %}
+  </label>
+{% endif %}

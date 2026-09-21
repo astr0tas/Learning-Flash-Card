@@ -1,0 +1,38 @@
+{% props allowEdit = true %}
+
+{#
+  Read-only card, rendered once inside the card detail modal and filled by the global
+  "set-view-card-data" event, so only one instance may exist per page.
+  Pass allowEdit="false" to hide the edit button (the trash page has nothing to edit).
+#}
+{% set default_color = constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR') %}
+{% set default_text_color = constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR') %}
+
+{# "set-view-card-data": the modal is rendered once and repopulated from whichever card was clicked. #}
+{% set on_set_data %}
+  id = $event.detail.id ?? null;
+  title = $event.detail.title ?? '';
+  subtitle = $event.detail.subtitle ?? null;
+  description = $event.detail.description ?? null;
+  color = $event.detail.color ?? '{{ default_color }}';
+  type = $event.detail.type ?? '';
+  textColor = $event.detail.textColor ?? '{{ default_text_color }}';
+{% endset %}
+
+<div class="w-full h-full flex flex-col gap-3 relative rounded-md py-20 px-3" x-data="{ id: null, title: '', subtitle: null, description: null, color: '{{ default_color }}', type: '', textColor: '{{ default_text_color }}' }" @set-view-card-data.window="{{ on_set_data }}" x-bind:style="{ backgroundColor: color, color: textColor }">
+  <h2 class="text-5xl text-center" x-text="title"></h2>
+  <h5 class="text-center text-xl" x-text="subtitle"></h5>
+  <div class="flex-1 text-start whitespace-pre-line text-md overflow-auto scroll-container" x-html="description"></div>
+  <div class="absolute right-5 top-5">
+    <div class="w-6 h-6 hover:opacity-80 active:opacity-60 cursor-pointer" x-bind:style="{color: getContrastColor(color)}" @click="$dispatch('close-view-card-modal')">
+      {{ include('icons/close.svg') }}
+    </div>
+  </div>
+  {% if allowEdit %}
+    <div class="absolute left-5 top-5">
+      <div class="w-6 h-6 hover:opacity-80 active:opacity-60 cursor-pointer" x-bind:style="{color: getContrastColor(color)}" @click="$dispatch('edit-card', id)">
+        {{ include('icons/edit.svg') }}
+      </div>
+    </div>
+  {% endif %}
+</div>

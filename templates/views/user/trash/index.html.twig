@@ -21,7 +21,7 @@
 
 {% for card in cardList %}
   {% set viewCardTemplate %}
-    <twig:Card :viewMode="true" :allowEdit="false" cardId="{{ card.id }}" cardTitle="{{ card.title }}" cardSubtitle="{{ card.subtitle }}" cardDescription="{{ card.description }}" cardColor="{{ card.cardColor }}" cardTextColor="{{ card.cardTextColor }}" cardType="{{ card.cardType }}"/>
+  <twig:cards:ViewCard :allowEdit="false" />
   {% endset %}
 
   {% set records = records|merge([{
@@ -55,7 +55,7 @@
     <div class="flex items-center justify-between gap-2">
       {# Search bar #}
       <div class="w-full max-w-[700px]" @search="filterRecords(document.getElementById('search').value)">
-        <twig:Input type="search" name="search" placeholder="{{ 'trash.search_placeholder'|trans }}" size="9xl" @keyup.enter="filterRecords(document.getElementById('search').value)"/>
+        <twig:Input type="search" name="search" placeholder="{{ 'trash.search_placeholder'|trans }}" size="9xl" @keyup.enter="filterRecords(document.getElementById('search').value)" />
       </div>
       {# Control buttons #}
       <div class="flex items-center gap-2">
@@ -64,7 +64,9 @@
             <div class="w-5 h-5">
               {{ include('icons/trash.svg') }}
             </div>
-            <div class="ms-2">{{ 'trash.permanent_delete'|trans }}</div>
+            <div class="ms-2">
+              {{ 'trash.permanent_delete'|trans }}
+            </div>
           </twig:Button>
         </div>
         <div class="w-36">
@@ -72,7 +74,9 @@
             <div class="w-5 h-5">
               {{ include('icons/restore.svg') }}
             </div>
-            <div class="ms-2">{{ 'trash.restore'|trans }}</div>
+            <div class="ms-2">
+              {{ 'trash.restore'|trans }}
+            </div>
           </twig:Button>
         </div>
       </div>
@@ -87,12 +91,13 @@
             <tr class="border-b border-gray-400 select-none">
               <th class="w-[50px] p-2">
                 {# <twig:ClickInput type="checkbox" name="check_all_records"></twig:ClickInput> #}
-                <input class="w-4 h-4" type="checkbox" id="check_all_records" name="check_all_records" x-ref="check_all_records" @change="toggleAllRecords"/>
+                <input class="w-4 h-4" type="checkbox" id="check_all_records" name="check_all_records" x-ref="check_all_records" @change="toggleAllRecords" />
               </th>
-              <th class="p-2 font-bold cursor-pointer active:opacity-80"
-              @click="setSort(COLUMNS.NAME_OR_TITLE, sort.column !== COLUMNS.NAME_OR_TITLE || sort.direction === null ? DIRECTIONS.ASC : (sort.direction === DIRECTIONS.ASC && sort.column === COLUMNS.NAME_OR_TITLE ? DIRECTIONS.DESC : null))">
+              <th class="p-2 font-bold cursor-pointer active:opacity-80" @click="setSort(COLUMNS.NAME_OR_TITLE, sort.column !== COLUMNS.NAME_OR_TITLE || sort.direction === null ? DIRECTIONS.ASC : (sort.direction === DIRECTIONS.ASC && sort.column === COLUMNS.NAME_OR_TITLE ? DIRECTIONS.DESC : null))">
                 <div class="flex items-center gap-2">
-                  <div>{{ 'trash.name_or_title'|trans }}</div>
+                  <div>
+                    {{ 'trash.name_or_title'|trans }}
+                  </div>
                   <template x-if="sort.column !== COLUMNS.NAME_OR_TITLE || sort.direction === null">
                     <div class="w-4 h-4">
                       {{ include('icons/unsort.svg') }}
@@ -110,10 +115,11 @@
                   </template>
                 </div>
               </th>
-              <th class="p-2 font-bold cursor-pointer active:opacity-80"
-              @click="setSort(COLUMNS.TYPE, sort.column !== COLUMNS.TYPE || sort.direction === null ? DIRECTIONS.ASC : (sort.direction === DIRECTIONS.ASC && sort.column === COLUMNS.TYPE ? DIRECTIONS.DESC : null))">
+              <th class="p-2 font-bold cursor-pointer active:opacity-80" @click="setSort(COLUMNS.TYPE, sort.column !== COLUMNS.TYPE || sort.direction === null ? DIRECTIONS.ASC : (sort.direction === DIRECTIONS.ASC && sort.column === COLUMNS.TYPE ? DIRECTIONS.DESC : null))">
                 <div class="flex items-center gap-2">
-                  <div>{{ 'trash.type'|trans }}</div>
+                  <div>
+                    {{ 'trash.type'|trans }}
+                  </div>
                   <template x-if="sort.column !== COLUMNS.TYPE || sort.direction === null">
                     <div class="w-4 h-4">
                       {{ include('icons/unsort.svg') }}
@@ -131,11 +137,14 @@
                   </template>
                 </div>
               </th>
-              <th class="p-2 font-bold text-start">{{ 'trash.restore_path'|trans }}</th>
-              <th class="p-2 font-bold cursor-pointer active:opacity-80"
-              @click="setSort(COLUMNS.DELETED_AT, sort.column !== COLUMNS.DELETED_AT || sort.direction === null ? DIRECTIONS.ASC : (sort.direction === DIRECTIONS.ASC && sort.column === COLUMNS.DELETED_AT ? DIRECTIONS.DESC : null))">
+              <th class="p-2 font-bold text-start">
+                {{ 'trash.restore_path'|trans }}
+              </th>
+              <th class="p-2 font-bold cursor-pointer active:opacity-80" @click="setSort(COLUMNS.DELETED_AT, sort.column !== COLUMNS.DELETED_AT || sort.direction === null ? DIRECTIONS.ASC : (sort.direction === DIRECTIONS.ASC && sort.column === COLUMNS.DELETED_AT ? DIRECTIONS.DESC : null))">
                 <div class="flex items-center gap-2">
-                  <div>{{ 'trash.deleted_at'|trans }}</div>
+                  <div>
+                    {{ 'trash.deleted_at'|trans }}
+                  </div>
                   <template x-if="sort.column !== COLUMNS.DELETED_AT || sort.direction === null">
                     <div class="w-4 h-4">
                       {{ include('icons/unsort.svg') }}
@@ -156,33 +165,14 @@
             </tr>
           </thead>
           <tbody x-data="{ selectedRecord: null }" @click.window="selectedRecord = null">
-            <template x-for="(record,index) in filteredRecords" :key="record.id">
-              <tr x-bind:class="{ 'border-t border-gray-400': index, 'bg-(--blue) text-(--white)': selectedRecord === index }"
-              class="cursor-pointer select-none active:opacity-80"
-              @click.window="if($el.contains($event.target)) { selectedRecord = index }"
-              @dblclick="record.record_type === RECORD_TYPE_TOPIC ? window.location.href = record.href : openCardDetailModal(record.id)">
+            <template x-for="(record,index) in filteredRecords" :key="index">
+              <tr x-bind:class="{ 'border-t border-gray-400': index, 'bg-(--blue) text-(--white)': selectedRecord === index }" class="cursor-pointer select-none active:opacity-80" @click.window="if($el.contains($event.target)) { selectedRecord = index }" @dblclick="record.record_type === RECORD_TYPE_TOPIC ? window.location.href = record.href : openCardDetailModal(record.id)">
                 <td class="p-2">
                   <template x-if="record.record_type === RECORD_TYPE_TOPIC">
-                    <twig:ClickInput
-                      type="checkbox"
-                      x-model="selectedTopics"
-                      x-bind:value="record.id"
-                      x-bind:name="`check_topic_${record.id}`"
-                      x-bind:style="{borderColor: selectedRecord === index ? 'var(--white)' : ''}"
-                      class="cursor-default!"
-                      @dblclick.stop>
-                    </twig:ClickInput>
+                    <twig:ClickInput type="checkbox" x-model="selectedTopics" x-bind:value="record.id" x-bind:name="`check_topic_${record.id}`" x-bind:style="{borderColor: selectedRecord === index ? 'var(--white)' : ''}" class="cursor-default!" @dblclick.stop></twig:ClickInput>
                   </template>
                   <template x-if="record.record_type === RECORD_TYPE_CARD">
-                    <twig:ClickInput
-                      type="checkbox"
-                      x-model="selectedCards"
-                      x-bind:value="record.id"
-                      x-bind:name="`check_card_${record.id}`"
-                      x-bind:style="{borderColor: selectedRecord === index ? 'var(--white)' : ''}"
-                      class="cursor-default!"
-                      @dblclick.stop>
-                    </twig:ClickInput>
+                    <twig:ClickInput type="checkbox" x-model="selectedCards" x-bind:value="record.id" x-bind:name="`check_card_${record.id}`" x-bind:style="{borderColor: selectedRecord === index ? 'var(--white)' : ''}" class="cursor-default!" @dblclick.stop></twig:ClickInput>
                   </template>
                 </td>
                 <td class="p-2">
@@ -204,13 +194,21 @@
                   </template>
                 </td>
                 <template x-if="record.record_type === RECORD_TYPE_TOPIC">
-                  <td class="p-2">{{ 'trash.type_topic'|trans }}</td>
+                  <td class="p-2">
+                    {{ 'trash.type_topic'|trans }}
+                  </td>
                 </template>
                 <template x-if="record.record_type === RECORD_TYPE_CARD">
-                  <td class="p-2">{{ 'trash.type_card'|trans }}</td>
+                  <td class="p-2">
+                    {{ 'trash.type_card'|trans }}
+                  </td>
                 </template>
-                <td class="p-2"><span x-text="record.restorePath"></span></td>
-                <td class="p-2"><span x-text="record.deletedAt"></span></td>
+                <td class="p-2">
+                  <span x-text="record.restorePath"></span>
+                </td>
+                <td class="p-2">
+                  <span x-text="record.deletedAt"></span>
+                </td>
               </tr>
             </template>
           </tbody>
@@ -230,33 +228,34 @@
     <twig:block name="modal_body">
       <twig:Form x-ref="permanentDeleteObjectFormRef" action="{{ constant('App\\Config\\Routes::PERMANENT_DELETE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
         <template x-for="selectedTopic in selectedTopics">
-          <input type="hidden" name="topic[]" :value="selectedTopic">
-        </template>
-        <template x-for="selectedCard in selectedCards">
-          <input type="hidden" name="card[]" :value="selectedCard">
-        </template>
-      </twig:Form>
-      <div>{{ 'trash.permanent_delete_confirm'|trans }}</div>
-    </twig:block>
-  </twig:Modal>
-  <twig:Modal id="cardDetailModal" @close-view-card-modal="$el.removeAttribute('open')">
-    <twig:block name="modal_content">
-      <el-dialog-panel class="w-full max-w-125 h-150">
-        <twig:Card :viewMode="true" :allowEdit="false"></twig:Card>
-      </el-dialog-panel>
-    </twig:block>
-  </twig:Modal>
-  <twig:Modal x-data="{ selectedTopics: [], selectedCards: [] }" @update-select-topic.window="selectedTopics = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.restore'|trans }}" actionButtonText="{{ 'action.restore'|trans }}" actionButtonVariant="primary" @modal-action="submitForm($refs.restoreObjectFormRef)" id="restoreObjectModal">
-    <twig:block name="modal_body">
-      <twig:Form x-ref="restoreObjectFormRef" action="{{ constant('App\\Config\\Routes::RESTORE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
-        <template x-for="selectedTopic in selectedTopics">
-          <input type="hidden" name="topic[]" :value="selectedTopic">
-        </template>
-        <template x-for="selectedCard in selectedCards">
-          <input type="hidden" name="card[]" :value="selectedCard">
-        </template>
-      </twig:Form>
-      <div>{{ 'trash.restore_confirm'|trans }}</div>
-    </twig:block>
-  </twig:Modal>
-{% endblock %}
+          <input type="hidden" name="topic[]" :value="selectedTopic"></template>
+          <template x-for="selectedCard in selectedCards">
+            <input type="hidden" name="card[]" :value="selectedCard"></template>
+          </twig:Form>
+          <div>
+            {{ 'trash.permanent_delete_confirm'|trans }}
+          </div>
+        </twig:block>
+      </twig:Modal>
+      <twig:Modal id="cardDetailModal" @close-view-card-modal="$el.removeAttribute('open')">
+        <twig:block name="modal_content">
+          <el-dialog-panel class="w-full max-w-125 h-150">
+            <twig:cards:ViewCard :allowEdit="false" />
+          </el-dialog-panel>
+        </twig:block>
+      </twig:Modal>
+      <twig:Modal x-data="{ selectedTopics: [], selectedCards: [] }" @update-select-topic.window="selectedTopics = $event.detail" @update-select-card.window="selectedCards = $event.detail" modalTitle="{{ 'action.restore'|trans }}" actionButtonText="{{ 'action.restore'|trans }}" actionButtonVariant="primary" @modal-action="submitForm($refs.restoreObjectFormRef)" id="restoreObjectModal">
+        <twig:block name="modal_body">
+          <twig:Form x-ref="restoreObjectFormRef" action="{{ constant('App\\Config\\Routes::RESTORE_OBJECT_ROUTE_URL') }}" method="POST" class="hidden">
+            <template x-for="selectedTopic in selectedTopics">
+              <input type="hidden" name="topic[]" :value="selectedTopic"></template>
+              <template x-for="selectedCard in selectedCards">
+                <input type="hidden" name="card[]" :value="selectedCard"></template>
+              </twig:Form>
+              <div>
+                {{ 'trash.restore_confirm'|trans }}
+              </div>
+            </twig:block>
+          </twig:Modal>
+        {% endblock %}
+        

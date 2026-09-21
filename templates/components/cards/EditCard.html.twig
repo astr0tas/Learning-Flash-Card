@@ -1,0 +1,46 @@
+{% props error = [] %}
+
+{#
+  The "edit a card" form. Only one instance may exist per page: it owns the
+  edit_card_* element ids and listens for the global "set-edit-card-inputs" event,
+  which carries the card to load.
+#}
+{% set card_id = error.editCardId|default(null) %}
+{% set card_title = error.editCardTitle|default('') %}
+{% set card_subtitle = error.editCardSubtitle|default('') %}
+{% set card_description = error.editCardDescription|default('') %}
+{% set card_type = error.editCardType|default('') %}
+{% set card_color = error.editCardColor|default(constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR')) %}
+{% set card_text_color = error.editCardTextColor|default(constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR')) %}
+{% set errors = error.editCardError|default({}) %}
+{% set default_color = constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR') %}
+{% set default_text_color = constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR') %}
+
+{# Trigger change event in the case of edit card validation error to update the select display div with the correct selected option text #}
+{% set on_init %}
+  $nextTick(() => document.getElementById('edit_card_type').dispatchEvent(new CustomEvent('set', { detail: '{{ card_type }}' })))
+{% endset %}
+{# "set-edit-card-inputs": fill the form from the clicked card, including the contenteditable fields Alpine does not own, and drop the server-rendered errors. #}
+{% set on_set_inputs %}
+  id = $event.detail.id ?? null;
+  document.getElementById('div_edit_card_title').innerText = title = $event.detail.title ?? '';
+  document.getElementById('div_edit_card_subtitle').innerText = subtitle = $event.detail.subtitle ?? '';
+  document.getElementById('div_edit_card_description').innerHTML = description = $event.detail.description ?? '';
+  document.getElementById('edit_card_type').dispatchEvent(new CustomEvent('set', { detail: $event.detail.type ?? '' }));
+  cardColor = $event.detail.color ?? '{{ default_color }}';
+  document.getElementById('edit_card_color').dispatchEvent(new CustomEvent('set', { detail: cardColor }));
+  textColor = $event.detail.textColor ?? '{{ default_text_color }}';
+  document.getElementById('edit_card_text_color').dispatchEvent(new CustomEvent('set', { detail: textColor }));
+  document.getElementById('edit_card_title_error')?.remove();
+  document.getElementById('edit_card_subtitle_error')?.remove();
+  document.getElementById('edit_card_description_error')?.remove();
+{% endset %}
+
+<div class="flex flex-col gap-5 z-50 w-full h-full" x-data="{ id: {{ card_id ? card_id : 'null' }}, title: {{ card_title|json_encode }}, subtitle: {{ card_subtitle|json_encode }}, description: {{ card_description|json_encode }}, cardColor: '{{ card_color }}', textColor: '{{ card_text_color }}' }" x-init="{{ on_init }}" @set-edit-card-inputs.window="{{ on_set_inputs }}">
+  <input hidden name="card" :value="id">
+  <input hidden name="title" :value="title">
+  <input hidden name="subtitle" :value="subtitle">
+  <input hidden name="description" :value="description">
+  {{ include('components/cards/_editable_face.html.twig', { id_prefix: 'edit_card' }) }}
+  {{ include('components/cards/_editor_fields.html.twig', { field_prefix: 'edit_', submit_label: 'action.edit', cancel_event: 'close-edit-card-modal' }) }}
+</div>

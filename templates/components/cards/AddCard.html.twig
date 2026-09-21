@@ -1,0 +1,41 @@
+{% props error = [], topicId = null %}
+
+{#
+  The "create a card" form. Only one instance may exist per page: it owns the
+  new_card_* element ids and listens for the global "reset-new-card-inputs" event.
+#}
+{% set card_title = error.newCardTitle|default('') %}
+{% set card_subtitle = error.newCardSubtitle|default('') %}
+{% set card_description = error.newCardDescription|default('') %}
+{% set card_type = error.newCardType|default('') %}
+{% set card_color = error.newCardColor|default(constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR')) %}
+{% set card_text_color = error.newCardTextColor|default(constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR')) %}
+{% set errors = error.newCardError|default({}) %}
+
+{# Trigger change event in the case of new card creation validation error to update the select display div with the correct selected option text #}
+{% set on_init %}
+  $nextTick(() => document.getElementById('card_type').dispatchEvent(new CustomEvent('set', { detail: '{{ card_type }}' })))
+{% endset %}
+{# "reset-new-card-inputs": blank every field, including the contenteditable ones Alpine does not own, and drop the server-rendered errors. #}
+{% set on_reset_inputs %}
+  document.getElementById('div_new_card_title').innerText = ''; title = '';
+  document.getElementById('div_new_card_subtitle').innerText = ''; subtitle = '';
+  document.getElementById('div_new_card_description').innerHTML = ''; description = '';
+  document.getElementById('card_type').dispatchEvent(new Event('reset'));
+  document.getElementById('card_color').dispatchEvent(new Event('reset'));
+  document.getElementById('card_text_color').dispatchEvent(new Event('reset'));
+  document.getElementById('new_card_title_error')?.remove();
+  document.getElementById('new_card_subtitle_error')?.remove();
+  document.getElementById('new_card_description_error')?.remove();
+{% endset %}
+
+<div class="flex flex-col gap-5 z-50 w-full h-full" x-data="{ title: {{ card_title|json_encode }}, subtitle: {{ card_subtitle|json_encode }}, description: {{ card_description|json_encode }}, cardColor: '{{ card_color }}', textColor: '{{ card_text_color }}' }" x-init="{{ on_init }}" @reset-new-card-inputs.window="{{ on_reset_inputs }}">
+  {% if topicId %}
+    <input hidden name="topic" value="{{ topicId }}" />
+  {% endif %}
+  <input hidden name="title" :value="title">
+  <input hidden name="subtitle" :value="subtitle">
+  <input hidden name="description" :value="description">
+  {{ include('components/cards/_editable_face.html.twig', { id_prefix: 'new_card' }) }}
+  {{ include('components/cards/_editor_fields.html.twig', { field_prefix: '', submit_label: 'action.add', cancel_event: 'close-create-new-card-modal' }) }}
+</div>

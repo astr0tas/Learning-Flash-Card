@@ -1,0 +1,71 @@
+{% set name = name|default(id) %}
+{% set id = id|default(name) %}
+{% set base_class = "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer select-none" %}
+{% set normal_border = "border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500" %}
+{% set error_border = "border border-[var(--red)] text-red-900 placeholder-red-700 focus:ring-red-300" %}
+{# A color swatch is a fixed-size box; every other type keeps its padding and a forced base text size. #}
+{% set variant_class = type == 'color'
+    ? "h-12 cursor-pointer !w-20 !p-2"
+    : (type == 'password' ? '!pe-9 ' : '') ~ (type == 'search' ? '!ps-14 !pe-9 ' : '') ~ '!text-base' %}
+{% set normal_class = base_class ~ ' ' ~ normal_border ~ ' ' ~ variant_class %}
+{% set final_class = error is empty ? normal_class : base_class ~ ' ' ~ error_border ~ ' ' ~ variant_class %}
+
+{# "reset": back to the default value, dropping the server-rendered error styling. "set": adopt the dispatched value. #}
+{% set on_reset %}
+  $refs.{{ name }}_error?.remove();
+  $el.className = '{{ normal_class }}';
+  $el.value = '{{ defaultValue }}';
+  $el.dispatchEvent(new Event('input'));
+{% endset %}
+{% set on_set %}
+  $el.value = $event.detail || '{{ defaultValue }}';
+  $el.dispatchEvent(new Event('input'));
+{% endset %}
+
+{# If the input is "search", clicking the search icon dispatches a "search" event. The parent component's container needs to catch that. Example in templates/views/user/topic/index.html.twig #}
+<div class="w-full flex flex-col component-input" {% if type in ['password', 'search'] %} x-data="{ showPassword: false, hasValue: false }" {% endif %}>
+  {{ include('components/fields/_field_label.html.twig') }}
+
+  <div class="w-full relative">
+    {% if type == 'search' %}
+      <div class="w-10 h-10 absolute left-2 top-1 cursor-pointer rounded-full p-4 flex items-center justify-center hover:text-(--blue) active:text-(--blue)" x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'hover:bg-gray-100 active:bg-gray-200'" @click="$dispatch('search', $refs.{{ name }}.value)">
+        <div class="w-5 h-5 absolute">
+          {{ include('icons/search.svg') }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if type == 'textarea' %}
+      <textarea x-ref="{{ name }}" name="{{ name }}" id="{{ id }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class }) }} x-on:reset="{{ on_reset }}" x-on:set="{{ on_set }}">
+        {{ value|default('') }}
+      </textarea>
+    {% else %}
+      <input x-ref="{{ name }}" {% if type == 'password' %} x-bind:type="showPassword ? 'text' : 'password'" {% else %} type="{{ type == 'search' ? 'text' : type }}" {% endif %} {% if type == 'search' %} @input="hasValue = $el.value.length > 0" {% endif %} name="{{ name }}" id="{{ id }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class }) }} value="{{ value|default('') }}" x-on:reset="{{ on_reset }}" x-on:set="{{ on_set }}">
+      {% endif %}
+
+      {% if error is not empty %}
+        <div id="{{ name }}_error" x-ref="{{ name }}_error" class="mt-1 text-xs text-(--red)">
+          {{ error }}
+        </div>
+      {% endif %}
+
+      {% if type == 'password' %}
+        <div class="absolute cursor-pointer w-5 h-5 opacity-80 hover:opacity-60 active:opacity-40 right-3 top-3.75" @click="showPassword = !showPassword">
+          <div x-show="showPassword">
+            {{ include('icons/show.svg') }}
+          </div>
+          <div x-show="!showPassword">
+            {{ include('icons/hide.svg') }}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if type == 'search' %}
+        <div x-show="hasValue" class="w-10 h-10 absolute right-2 top-1 cursor-pointer rounded-full p-4 flex items-center justify-center" x-bind:class="darkMode?'text-white hover:bg-gray-800 active:bg-gray-700':'hover:bg-gray-100 active:bg-gray-200'" @click="$refs.{{ name }}.value = ''; hasValue = false; $dispatch('search', '')">
+          <div class="w-4 h-4 absolute">
+            {{ include('icons/close.svg') }}
+          </div>
+        </div>
+      {% endif %}
+  </div>
+</div>
