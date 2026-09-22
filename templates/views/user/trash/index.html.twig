@@ -55,7 +55,7 @@
     <div class="flex items-center justify-between gap-2">
       {# Search bar #}
       <div class="w-full max-w-[700px]" @search="filterRecords(document.getElementById('search').value)">
-        <twig:Input type="search" name="search" placeholder="{{ 'trash.search_placeholder'|trans }}" size="9xl" @keyup.enter="filterRecords(document.getElementById('search').value)" />
+        <twig:Search name="search" placeholder="{{ 'trash.search_placeholder'|trans }}" size="9xl" @keyup.enter="filterRecords(document.getElementById('search').value)" />
       </div>
       {# Control buttons #}
       <div class="flex items-center gap-2">

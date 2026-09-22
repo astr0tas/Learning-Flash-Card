@@ -50,10 +50,10 @@
           <twig:Input name="email" label="{{ 'register.email'|trans }}" aria-label="{{ 'register.email'|trans }}" type="text" autocomplete="email" value="{{ email }}" required error="{{ error.email is defined ? error.email[0] : '' }}" />
         </div>
         <div class="mt-3">
-          <twig:Input name="password" label="{{ 'register.password'|trans }}" aria-label="{{ 'register.password'|trans }}" type="password" required autocomplete="off" error="{{ error.password is defined ? error.password[0] : '' }}" />
+          <twig:Password name="password" label="{{ 'register.password'|trans }}" aria-label="{{ 'register.password'|trans }}" required autocomplete="off" error="{{ error.password is defined ? error.password[0] : '' }}" />
         </div>
         <div class="mt-3">
-          <twig:Input name="confirm_password" label="{{ 'register.confirm_password'|trans }}" aria-label="{{ 'register.confirm_password'|trans }}" type="password" required autocomplete="off" error="{{ error.confirm_password is defined ? error.confirm_password[0] : '' }}" />
+          <twig:Password name="confirm_password" label="{{ 'register.confirm_password'|trans }}" aria-label="{{ 'register.confirm_password'|trans }}" required autocomplete="off" error="{{ error.confirm_password is defined ? error.confirm_password[0] : '' }}" />
         </div>
         <twig:Button type="submit" variant="primary" class="my-5">
           {{ 'register.submit'|trans }}

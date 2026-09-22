@@ -42,7 +42,7 @@
         <twig:Input name="email" label="{{ 'login.email'|trans }}" aria-label="{{ 'login.email'|trans }}" type="text" autocomplete="email" value="{{ email }}" required error="{{ error.email is defined ? error.email[0] : '' }}" />
       </div>
       <div class="my-3">
-        <twig:Input name="password" label="{{ 'login.password'|trans }}" aria-label="{{ 'login.password'|trans }}" type="password" autocomplete="current-password" required error="{{ error.password is defined ? error.password[0] : '' }}" />
+        <twig:Password name="password" label="{{ 'login.password'|trans }}" aria-label="{{ 'login.password'|trans }}" autocomplete="current-password" required error="{{ error.password is defined ? error.password[0] : '' }}" />
       </div>
       <div class="flex justify-between items-center">
         <twig:ClickInput name="remember_me" label="{{ 'login.remember_me'|trans }}" type="checkbox" checked="{{ remember_me|default('') == 'checked' }}" />

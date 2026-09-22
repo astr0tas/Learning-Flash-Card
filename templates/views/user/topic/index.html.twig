@@ -66,7 +66,7 @@
     <div class="flex items-center justify-between gap-2">
       {# Search bar #}
       <div class="w-full max-w-175" @search="filterTopicAndCard(document.getElementById('search').value)">
-        <twig:Input type="search" name="search" placeholder="{{ 'topic.search_placeholder'|trans }}" size="9xl" @keyup.enter="filterTopicAndCard(document.getElementById('search').value)" />
+        <twig:Search name="search" placeholder="{{ 'topic.search_placeholder'|trans }}" size="9xl" @keyup.enter="filterTopicAndCard(document.getElementById('search').value)" />
       </div>
       {# Control buttons #}
       <div class="flex items-center gap-2">
@@ -203,7 +203,7 @@
               <div class="flex flex-col gap-5">
                 <twig:Breadcrumb :items="objectMovingBreadcrumb" id="objectMovingBreadcrumb"></twig:Breadcrumb>
                 <div class="w-full" @search="searchFilter = document.getElementById('search2').value">
-                  <twig:Input type="search" name="search2" placeholder="{{ 'topic.search_placeholder2'|trans }}" size="9xl" @keyup.enter="searchFilter = document.getElementById('search2').value" />
+                  <twig:Search name="search2" placeholder="{{ 'topic.search_placeholder2'|trans }}" size="9xl" @keyup.enter="searchFilter = document.getElementById('search2').value" />
                 </div>
               </div>
               <template x-if="filteredParentTopicContent.length && !isLoading">

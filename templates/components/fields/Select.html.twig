@@ -25,7 +25,16 @@
 {% endset %}
 
 <div class="w-full flex flex-col component-input">
-  {{ include('components/fields/_field_label.html.twig') }}
+  {% if label is not empty %}
+    <label {% if name is not empty %} for="{{ name }}" {% endif %} class="text-sm text-zinc-400 mb-1">
+      {{ label }}
+      {% if required %}
+        <span class="text-(--red)">
+          *
+        </span>
+      {% endif %}
+    </label>
+  {% endif %}
 
   <div class="w-full relative">
     <select x-ref="{{ id }}" name="{{ name }}" id="{{ id }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class ~ " absolute z-20 opacity-0" }) }} placeholder="" default="{{ defaultValue }}" x-on:change="{{ on_change }}" x-on:reset="{{ on_reset }}" x-on:set="{{ on_set }}">

@@ -81,7 +81,7 @@ src/
 
 ### Twig Components
 
-Each `src/Twig/Components/X.php` (with `#[AsTwigComponent]`) pairs with `templates/components/X.html.twig` of the **same name** — this pairing is implicit (Symfony UX convention), not visible via imports, so renaming one requires renaming the other. Current components: `Card`, `Topic`, `Breadcrumb`, `Button`, `ClickInput`, `Dropdown`, `Form`, `Input`, `Loading`, `Modal`, `NoContent`, `Select`, `AppJsScript`, `AppSetting`.
+Each `src/Twig/Components/X.php` (with `#[AsTwigComponent]`) pairs with `templates/components/X.html.twig` of the **same name** — this pairing is implicit (Symfony UX convention), not visible via imports, so renaming one requires renaming the other. Current components: `Topic`, `Breadcrumb`, `Button`, `ClickInput`, `Dropdown`, `Form`, `Loading`, `Modal`, `NoContent`, `AppJsScript`, `AppSetting`, plus the field components `Input`, `Password`, `Search`, `Textarea` and `Select`, whose classes point at `templates/components/fields/X.html.twig` through the attribute's `template:` argument.
 
 ### Frontend (Alpine.js) pairing
 

@@ -16,6 +16,9 @@
 {% set default_color = constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR') %}
 {% set default_text_color = constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR') %}
 
+{# contenteditable keeps pasted markup unless we force the clipboard down to plain text. #}
+{% set on_paste = "document.execCommand('insertText', false, $event.clipboardData.getData('text/plain'))" %}
+
 {# Trigger change event in the case of edit card validation error to update the select display div with the correct selected option text #}
 {% set on_init %}
   $nextTick(() => document.getElementById('edit_card_type').dispatchEvent(new CustomEvent('set', { detail: '{{ card_type }}' })))
@@ -41,6 +44,62 @@
   <input hidden name="title" :value="title">
   <input hidden name="subtitle" :value="subtitle">
   <input hidden name="description" :value="description">
-  {{ include('components/cards/_editable_face.html.twig', { id_prefix: 'edit_card' }) }}
-  {{ include('components/cards/_editor_fields.html.twig', { field_prefix: 'edit_', submit_label: 'action.edit', cancel_event: 'close-edit-card-modal' }) }}
+  <div class="w-full h-full flex flex-col gap-5 relative rounded-md py-10 px-3" x-bind:style="{ backgroundColor: cardColor, color: textColor }">
+    <div class="flex flex-col gap-3 text-center">
+      <h2 class="text-5xl" id="div_edit_card_title" contenteditable @paste.prevent="{{ on_paste }}" @input="title = $el.innerText" data-placeholder="{{ 'topic.card_title'|trans }}">{{ card_title }}</h2>
+      {% if errors.title is defined %}
+        <div id="edit_card_title_error" class="mt-1 text-xs text-(--red)">
+          {{ errors.title[0] }}
+        </div>
+      {% endif %}
+    </div>
+    <div class="flex flex-col gap-3 text-center">
+      <h5 class="text-xl" id="div_edit_card_subtitle" contenteditable @paste.prevent="{{ on_paste }}" @input="subtitle = $el.innerText" data-placeholder="{{ 'topic.card_subtitle'|trans }}">{{ card_subtitle }}</h5>
+      {% if errors.subtitle is defined %}
+        <div id="edit_card_subtitle_error" class="mt-1 text-xs text-(--red)">
+          {{ errors.subtitle[0] }}
+        </div>
+      {% endif %}
+    </div>
+    <div class="flex flex-col gap-3 text-start">
+      <div class="flex-1 whitespace-pre-line text-md overflow-auto scroll-container" id="div_edit_card_description" contenteditable @paste.prevent="{{ on_paste }}" @input="description = $el.innerHTML" data-placeholder="{{ 'topic.card_description'|trans }}">{{ card_description|raw }}</div>
+      {% if errors.description is defined %}
+        <div id="edit_card_description_error" class="mt-1 text-xs text-(--red)">
+          {{ errors.description[0] }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-5 w-full text-start p-5 rounded-md" :class="darkMode ? 'bg-(--dark-theme-bg-color) text-(--white)' : 'bg-(--white) text-(--black)'">
+    <div>
+      <twig:Select name="card_type" id="edit_card_type" label="{{ 'topic.card_type'|trans }}" aria-label="{{ 'topic.card_type'|trans }}" required error="{{ errors.card_type is defined ? errors.card_type[0] : '' }}" defaultValue="">
+        <twig:block name="options">
+          {% for type in constant('App\\Config\\Constants::FLASH_CARD_TYPES') %}
+            <option value="{{ type }}">
+              {{ ('topic.card_type_'~(type|lower))|trans }}
+            </option>
+          {% endfor %}
+        </twig:block>
+      </twig:Select>
+    </div>
+    <div>
+      <twig:Input type="color" name="card_color" id="edit_card_color" label="{{ 'topic.card_color'|trans }}" aria-label="{{ 'topic.card_color'|trans }}" x-model="cardColor" defaultValue="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_COLOR') }}" error="{{ errors.card_color is defined ? errors.card_color[0] : '' }}" />
+    </div>
+    <div>
+      <twig:Input type="color" name="card_text_color" id="edit_card_text_color" label="{{ 'topic.card_text_color'|trans }}" aria-label="{{ 'topic.card_text_color'|trans }}" x-model="textColor" defaultValue="{{ constant('App\\Config\\Constants::FLASH_CARD_DEFAULT_TEXT_COLOR') }}" error="{{ errors.card_text_color is defined ? errors.card_text_color[0] : '' }}" />
+    </div>
+    <div class="pb-3 pt-2 flex flex-row-reverse gap-3">
+      <div class="inline-flex">
+        <twig:Button type="button" class="text-sm" variant="primary" title="{{ 'action.edit'|trans }}" @click="$dispatch('submit-form')">
+          {{ 'action.edit'|trans }}
+        </twig:Button>
+      </div>
+      <div class="inline-flex">
+        <twig:Button type="button" class="text-sm" variant="outline" title="{{ 'action.cancel'|trans }}" @click="$dispatch('close-edit-card-modal')">
+          {{ 'action.cancel'|trans }}
+        </twig:Button>
+      </div>
+    </div>
+  </div>
 </div>

@@ -3,8 +3,7 @@
 {% set base_class = "w-full rounded-lg px-3.5 py-3 outline-none focus:ring-2 focus:ring-offset-0 transition-all peer select-none" %}
 {% set normal_border = "border border-gray-400 focus:ring-blue-200 focus:ring-offset-white focus:border-blue-500" %}
 {% set error_border = "border border-[var(--red)] text-red-900 placeholder-red-700 focus:ring-red-300" %}
-{# A color swatch is a fixed-size box; every other type keeps its padding and a forced base text size. #}
-{% set variant_class = type == 'color' ? "h-12 cursor-pointer !w-20 !p-2" : '!text-base' %}
+{% set variant_class = "!text-base" %}
 {% set normal_class = base_class ~ ' ' ~ normal_border ~ ' ' ~ variant_class %}
 {% set final_class = error is empty ? normal_class : base_class ~ ' ' ~ error_border ~ ' ' ~ variant_class %}
 
@@ -33,7 +32,9 @@
   {% endif %}
 
   <div class="w-full relative">
-    <input x-ref="{{ name }}" type="{{ type }}" name="{{ name }}" id="{{ id }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class }) }} value="{{ value|default('') }}" x-on:reset="{{ on_reset }}" x-on:set="{{ on_set }}">
+    <textarea x-ref="{{ name }}" name="{{ name }}" id="{{ id }}" {% if label is not empty %} aria-label="{{ label }}" {% endif %} {{ attributes.defaults({ class: final_class }) }} x-on:reset="{{ on_reset }}" x-on:set="{{ on_set }}">
+      {{ value|default('') }}
+    </textarea>
 
     {% if error is not empty %}
       <div id="{{ name }}_error" x-ref="{{ name }}_error" class="mt-1 text-xs text-(--red)">
